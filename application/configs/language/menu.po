@@ -1,0 +1,651 @@
+# ISAK Spanish translation, navigation.
+# Copyright (C) 2011 District A/S
+# This file is distributed under the same license as the DISTRICT package.
+# Victor Villca <victor.villca@swissbytes.ch>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: ISAK 2.0.0 alpha 1\n"
+"Report-Msgid-Bugs-To: jrvictor69@gmail.com\n"
+"POT-Creation-Date: 2011-05-03 10:14+0100\n"
+"PO-Revision-Date: 2011-05-03 11:17-0400\n"
+"Last-Translator: Victor Villca <victor.villca@swissbytes.ch>\n"
+"Language-Team: Support <jrvictor69@gmail.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: \n"
+"X-Language: es_ES\n"
+
+#: locale/menu.dep:3
+#: locale/menu.dep:7
+#: locale/menu.dep:11
+#: locale/menu.dep:14
+#: locale/menu.dep:17
+#: locale/menu.dep:20
+msgid "Data"
+msgstr "Data"
+
+#: locale/menu.dep:4
+#: locale/menu.dep:8
+#: locale/menu.dep:12
+#: locale/menu.dep:15
+#: locale/menu.dep:18
+msgid "Actions"
+msgstr "Handlinger"
+
+#: locale/menu.dep:5
+#: locale/menu.dep:9
+#: locale/menu.dep:13
+#: locale/menu.dep:16
+#: locale/menu.dep:19
+#: locale/menu.dep:34
+#: locale/menu.dep:35
+#: locale/menu.dep:68
+#: locale/menu.dep:69
+#: locale/menu.dep:98
+#: locale/menu.dep:99
+#: locale/menu.dep:192
+msgid "Communication"
+msgstr "Kommunikation"
+
+#: locale/menu.dep:6
+#: locale/menu.dep:10
+msgid "Lists"
+msgstr "Lister"
+
+#: locale/menu.dep:21
+#: locale/menu.dep:40
+msgid "Amp import"
+msgstr "Amp import"
+
+#: locale/menu.dep:22
+msgid "Manual"
+msgstr "Manuel"
+
+#: locale/menu.dep:23
+msgid "Logout"
+msgstr "Log ud"
+
+#: locale/menu.dep:24
+msgid "Consultant"
+msgstr "Konsulent"
+
+#: locale/menu.dep:25
+#: locale/menu.dep:59
+#: locale/menu.dep:91
+msgid "Summary"
+msgstr "Oversigt"
+
+#: locale/menu.dep:26
+msgid "My page"
+msgstr "Min side"
+
+#: locale/menu.dep:27
+msgid "Our page"
+msgstr "Vores side"
+
+#: locale/menu.dep:28
+#: locale/menu.dep:29
+msgid "Reports"
+msgstr "Rapporter"
+
+#: locale/menu.dep:30
+#: locale/menu.dep:51
+#: locale/menu.dep:84
+#: locale/menu.dep:112
+msgid "Calendar"
+msgstr "Kalender"
+
+#: locale/menu.dep:31
+#: locale/menu.dep:52
+#: locale/menu.dep:85
+msgid "Day"
+msgstr "Dag"
+
+#: locale/menu.dep:32
+#: locale/menu.dep:53
+#: locale/menu.dep:86
+msgid "Week"
+msgstr "Uge"
+
+#: locale/menu.dep:33
+#: locale/menu.dep:54
+#: locale/menu.dep:87
+msgid "Month"
+msgstr "Måned"
+
+#: locale/menu.dep:36
+#: locale/menu.dep:71
+#: locale/menu.dep:100
+#: locale/menu.dep:101
+#: locale/menu.dep:119
+#: locale/menu.dep:181
+msgid "Log"
+msgstr "Log"
+
+#: locale/menu.dep:37
+msgid "Consultant Log"
+msgstr "Konsulentlog"
+
+#: locale/menu.dep:38
+msgid "Candidate Log"
+msgstr "Kandidatlog"
+
+#: locale/menu.dep:39
+msgid "Company log"
+msgstr "Virksomhedslog"
+
+#: locale/menu.dep:41
+msgid "Candidate"
+msgstr "Kandidat"
+
+#: locale/menu.dep:42
+#: locale/menu.dep:43
+#: locale/menu.dep:74
+#: locale/menu.dep:75
+#: locale/menu.dep:104
+#: locale/menu.dep:105
+msgid "Search"
+msgstr "Søg"
+
+#: locale/menu.dep:44
+#: locale/menu.dep:76
+#: locale/menu.dep:106
+msgid "Result"
+msgstr "Resultat"
+
+#: locale/menu.dep:45
+#: locale/menu.dep:77
+#: locale/menu.dep:107
+msgid "History"
+msgstr "Historik"
+
+#: locale/menu.dep:46
+#: locale/menu.dep:78
+msgid "Lists and profiles"
+msgstr "Lister & Profiler"
+
+#: locale/menu.dep:47
+#: locale/menu.dep:62
+#: locale/menu.dep:79
+#: locale/menu.dep:94
+msgid "Focuslists"
+msgstr "Fokuslister"
+
+#: locale/menu.dep:48
+#: locale/menu.dep:63
+#: locale/menu.dep:80
+msgid "Searchprofiles"
+msgstr "Søgeprofiler"
+
+#: locale/menu.dep:49
+#: locale/menu.dep:81
+#: locale/menu.dep:108
+msgid "New"
+msgstr "Ny"
+
+#: locale/menu.dep:50
+msgid "Create candidate"
+msgstr "Opret kandidat"
+
+#: locale/menu.dep:55
+#: locale/menu.dep:88
+#: locale/menu.dep:89
+#: locale/menu.dep:115
+#: locale/menu.dep:116
+msgid "Identity card"
+msgstr "Stamkort"
+
+#: locale/menu.dep:56
+msgid "Identity"
+msgstr "Identitet"
+
+#: locale/menu.dep:57
+#: locale/menu.dep:90
+msgid "Extra information"
+msgstr "Ekstra oplysninger"
+
+#: locale/menu.dep:58
+msgid "Course history"
+msgstr "Forløbshistorik"
+
+#: locale/menu.dep:60
+#: locale/menu.dep:92
+#: locale/menu.dep:103
+#: locale/menu.dep:148
+msgid "Protocol"
+msgstr "Protokol"
+
+#: locale/menu.dep:61
+#: locale/menu.dep:93
+msgid "Activation/Job"
+msgstr "Aktivering/Job"
+
+#: locale/menu.dep:64
+msgid "Journals"
+msgstr "Journaler"
+
+#: locale/menu.dep:65
+msgid "CV"
+msgstr "CV"
+
+#: locale/menu.dep:66
+msgid "Documents"
+msgstr "Dokumenter"
+
+#: locale/menu.dep:67
+msgid "Notes"
+msgstr "Noter"
+
+#: locale/menu.dep:70
+msgid "log"
+msgstr "log"
+
+#: locale/menu.dep:72
+#: locale/menu.dep:102
+msgid "Archive"
+msgstr "Arkiv"
+
+#: locale/menu.dep:73
+msgid "Company"
+msgstr "Virksomhed"
+
+#: locale/menu.dep:82
+#: locale/menu.dep:109
+msgid "Create manually"
+msgstr "Opret manuelt"
+
+#: locale/menu.dep:83
+msgid "Create using NNE"
+msgstr "Opret via NNE"
+
+#: locale/menu.dep:95
+msgid "Search profiles"
+msgstr "Søgeprofiler"
+
+#: locale/menu.dep:96
+#: locale/menu.dep:97
+msgid "Contacts"
+msgstr "Kontaktpersoner"
+
+#: locale/menu.dep:110
+#: locale/menu.dep:111
+#: locale/menu.dep:114
+msgid "Registration"
+msgstr "Registrering"
+
+#: locale/menu.dep:113
+msgid "Planning"
+msgstr "Planlægning"
+
+#: locale/menu.dep:117
+#: locale/menu.dep:125
+msgid "Consultants"
+msgstr "Konsulenter"
+
+#: locale/menu.dep:118
+#: locale/menu.dep:129
+msgid "Candidates"
+msgstr "Kandidater"
+
+#: locale/menu.dep:120
+msgid "Planning log"
+msgstr "Planlægningslog"
+
+#: locale/menu.dep:121
+msgid "Candidate log"
+msgstr "Kandidatlog"
+
+#: locale/menu.dep:122
+msgid "Consultant log"
+msgstr "Konsulentlog"
+
+#: locale/menu.dep:123
+msgid "Administration"
+msgstr "Administration"
+
+#: locale/menu.dep:124
+msgid "Organization"
+msgstr "Organisation"
+
+#: locale/menu.dep:126
+msgid "Department regions"
+msgstr "Afdelingsregioner"
+
+#: locale/menu.dep:127
+msgid "Departments"
+msgstr "Afdelinger"
+
+#: locale/menu.dep:128
+msgid "Employment types"
+msgstr "Ansættelsestyper"
+
+#: locale/menu.dep:130
+msgid "Qualification tree"
+msgstr "Kvalifikationstræ"
+
+#: locale/menu.dep:131
+msgid "Education tree"
+msgstr "Uddannelsestræ"
+
+#: locale/menu.dep:132
+msgid "Job position tree"
+msgstr "Stillingstræ"
+
+#: locale/menu.dep:133
+msgid "Journal Categories"
+msgstr "Journalkategorier"
+
+#: locale/menu.dep:134
+msgid "Effort options"
+msgstr "Indsatsområder"
+
+#: locale/menu.dep:135
+msgid "Pension terms"
+msgstr "Pensionsforhold"
+
+#: locale/menu.dep:136
+msgid "Special terms"
+msgstr "Specielle forhold"
+
+#: locale/menu.dep:137
+msgid "Medical Diagnoses"
+msgstr "Medicinsk diagnose"
+
+#: locale/menu.dep:138
+msgid "Source of income"
+msgstr "Indtægskilde"
+
+#: locale/menu.dep:139
+msgid "Companies"
+msgstr "Virksomheder"
+
+#: locale/menu.dep:140
+msgid "Company main groups"
+msgstr "Virksomhedshovedgrupper"
+
+#: locale/menu.dep:141
+msgid "Company groups"
+msgstr "Virksomhedsgrupper"
+
+#: locale/menu.dep:142
+msgid "Contactperson interests"
+msgstr "Kontaktpersoninteresser"
+
+#: locale/menu.dep:143
+msgid "Business areas (NACE)"
+msgstr "Forretningsområder (NACE)"
+
+#: locale/menu.dep:144
+msgid "Company ratings"
+msgstr "Virksomhedsrating"
+
+#: locale/menu.dep:145
+msgid "Company forms"
+msgstr "Selskabsformer"
+
+#: locale/menu.dep:146
+msgid "Peak workload"
+msgstr "Spidsbelastning"
+
+#: locale/menu.dep:147
+#: locale/menu.dep:152
+msgid "Status types"
+msgstr "Statustyper"
+
+#: locale/menu.dep:149
+msgid "Attendee status types"
+msgstr "Deltager statustyper"
+
+#: locale/menu.dep:150
+#: locale/menu.dep:182
+msgid "Activity types"
+msgstr "Aktivitetstyper"
+
+#: locale/menu.dep:151
+msgid "JobPlan"
+msgstr "Jobplan"
+
+#: locale/menu.dep:153
+msgid "Jobplan types"
+msgstr "Jobplanstyper"
+
+#: locale/menu.dep:154
+msgid "Jobplan templates"
+msgstr "Jobplansskabeloner"
+
+#: locale/menu.dep:155
+msgid "Tasks"
+msgstr "Opgaver"
+
+#: locale/menu.dep:156
+msgid "Public/private settlements"
+msgstr "Overenskomster"
+
+#: locale/menu.dep:157
+msgid "Wage type/rate"
+msgstr "Løntype/-rate"
+
+#: locale/menu.dep:158
+msgid "Task types"
+msgstr "Opgavetyper"
+
+#: locale/menu.dep:159
+msgid "Task status"
+msgstr "Opgavestatus"
+
+#: locale/menu.dep:160
+msgid "Time Templates"
+msgstr "Tidsskabeloner"
+
+#: locale/menu.dep:161
+msgid "Agreements"
+msgstr "Aftaler"
+
+#: locale/menu.dep:162
+msgid "Contractors"
+msgstr "Kontrahenter"
+
+#: locale/menu.dep:163
+msgid "Contract types"
+msgstr "Aftaletyper"
+
+#: locale/menu.dep:164
+msgid "Contract categories"
+msgstr "Aftalekategorier"
+
+#: locale/menu.dep:165
+msgid "Contracts"
+msgstr "Aftaler"
+
+#: locale/menu.dep:166
+msgid "Course types"
+msgstr "Forløbstyper"
+
+#: locale/menu.dep:167
+msgid "Candidate course status types"
+msgstr "Kandidatforløbsstatustyper"
+
+#: locale/menu.dep:168
+msgid "Candidate course status type lists"
+msgstr "Kandidatforløbstatustypelister"
+
+#: locale/menu.dep:169
+msgid "Project"
+msgstr "Projekt"
+
+#: locale/menu.dep:170
+msgid "Security"
+msgstr "Sikkerhed"
+
+#: locale/menu.dep:171
+msgid "User-right groups"
+msgstr "Brugerrettighedsgrupper"
+
+#: locale/menu.dep:172
+msgid "Surveillance logs"
+msgstr "Overvågningslogs"
+
+#: locale/menu.dep:173
+msgid "Logs"
+msgstr "Logs"
+
+#: locale/menu.dep:174
+msgid "SMS log"
+msgstr "SMS-log"
+
+#: locale/menu.dep:175
+msgid "Auditing log"
+msgstr "Sikkerhedslog"
+
+#: locale/menu.dep:176
+#: locale/menu.dep:194
+msgid "System"
+msgstr "System"
+
+#: locale/menu.dep:177
+msgid "Function areas"
+msgstr "Funktionsområder"
+
+#: locale/menu.dep:178
+msgid "Geographical areas"
+msgstr "Geografiske områder"
+
+#: locale/menu.dep:179
+msgid "Holidays"
+msgstr "Helligdage"
+
+#: locale/menu.dep:180
+msgid "ERP"
+msgstr "ERP"
+
+#: locale/menu.dep:183
+msgid "Activity groups"
+msgstr "Aktivitetsgrupper"
+
+#: locale/menu.dep:184
+msgid "Activity status"
+msgstr "Aktivitetsstatus"
+
+#: locale/menu.dep:185
+msgid "Activity event type list"
+msgstr "Aktivitetseventtypeliste"
+
+#: locale/menu.dep:186
+msgid "Resources"
+msgstr "Ressourcer"
+
+#: locale/menu.dep:187
+msgid "External webs"
+msgstr "Eksterne webs"
+
+#: locale/menu.dep:188
+msgid "Application web"
+msgstr "Ansøgningsweb"
+
+#: locale/menu.dep:189
+msgid "Company web"
+msgstr "Virksomhedsweb"
+
+#: locale/menu.dep:190
+msgid "Candidate web"
+msgstr "Kandidatweb"
+
+#: locale/menu.dep:191
+msgid "Templates"
+msgstr "Skabeloner"
+
+#: locale/menu.dep:193
+msgid "Form template"
+msgstr "Formsskabeloner"
+
+#: locale/menu.dep:194
+msgid "Who We?"
+msgstr "Quienes Somos?"
+
+#: locale/menu.dep:195
+msgid "Our History"
+msgstr "Nuestra Historia"
+
+#: locale/menu.dep:196
+msgid "Our Logo"
+msgstr "Nuestro Logo"
+
+#~ msgid "Integration"
+#~ msgstr "Integration"
+
+#~ msgid "Protocol log"
+#~ msgstr "Protokollog"
+
+#~ msgid "Log search"
+#~ msgstr "Søg log"
+
+#~ msgid "Create via CPR"
+#~ msgstr "Opret via CPR"
+
+#~ msgid "Financial"
+#~ msgstr "Finans"
+
+#~ msgid "Affiliation"
+#~ msgstr "Tilhørsforhold"
+
+#~ msgid "SMS"
+#~ msgstr "SMS"
+
+#~ msgid "Warnings"
+#~ msgstr "Advarsler"
+
+#~ msgid "Lists and Profiles"
+#~ msgstr "Lister & Profiler"
+
+#~ msgid "Manually"
+#~ msgstr "Manuelt"
+
+#~ msgid "Navne og Numre"
+#~ msgstr "Navne & Numre"
+
+#~ msgid "Requirements"
+#~ msgstr "Behov"
+
+#~ msgid "new protocol"
+#~ msgstr "Ny protokol"
+
+#~ msgid "Company preferences"
+#~ msgstr "Virksomhedspræferencer"
+
+#~ msgid "Bank and tax"
+#~ msgstr "Bank og skat"
+
+#~ msgid "Settlement"
+#~ msgstr "Overenskomst"
+
+#~ msgid "List and Profiles"
+#~ msgstr "Lister & Profiler"
+
+#~ msgid "Help"
+#~ msgstr "Hjælp"
+
+#~ msgid "Print"
+#~ msgstr "Udskriv"
+
+#~ msgid "Preferences"
+#~ msgstr "Præferencer"
+
+#~ msgid "Certificates"
+#~ msgstr "Certifikater"
+
+#~ msgid "Courses"
+#~ msgstr "Forløb"
+
+#~ msgid "Educations"
+#~ msgstr "Uddannelser"
+
+#~ msgid "Positions"
+#~ msgstr "Stillinger"
+
+#~ msgid "Project descriptions"
+#~ msgstr "Projektbeskrivelser"
+
+#~ msgid "Qualifications"
+#~ msgstr "Kvalifikationer"
