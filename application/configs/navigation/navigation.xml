@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <nav>
+    	<home>
+	   		<label>Home</label>
+	   		<action>index</action>
+			<controller>index</controller>
+	   		<pages>
+		    	<about>
+			   		<label>About</label>			   		   
+					<action>about</action>
+			   		<controller>index</controller>			   		 	
+		    	</about>
+		    	<contact>
+			   		<label>Contact</label>
+			   		<action>contact</action>
+			   		<controller>index</controller>    	
+			    </contact>
+	   		</pages>    		
+    	</home>
+    	
+    	<who_we>
+	   		<label>Who We?</label>
+	   		<uri>#</uri>
+	   		
+	   		<pages>
+		    	<history>
+			   		<label>Our History</label>
+			   		<action>history</action>
+			   		<controller>whowe</controller>
+			   	</history>
+			   	<visionMission>
+			   		<label>Our Vision and Mission</label>
+			   		<action>visionmission</action>
+			   		<controller>whowe</controller>  
+			    </visionMission>
+		    	<logo>
+			   		<label>Our Logo</label>
+			   		<action>logo</action>
+			   		<controller>whowe</controller>    	
+			    </logo>
+			    <belief>
+			   		<label>Our Belief</label>
+			   		<action>belief</action>
+			   		<controller>whowe</controller>    	
+			    </belief>
+	   		</pages>    		
+    	</who_we>
+    	
+    	<news>
+    		<label>News</label>
+	   		<action>index</action>
+			<controller>news</controller>
+    		<pages>
+     			<ja>
+					<label>Young</label>
+					<action>ja</action>
+					<controller>news</controller>
+				</ja>
+				<guides>
+					<label>More Guides</label>
+					<action>guias</action>
+					<controller>news</controller>
+				</guides>
+			</pages>
+    	</news>	
+   	</nav>
+</config>

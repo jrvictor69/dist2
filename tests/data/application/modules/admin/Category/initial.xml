@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>	
+	<table name="tblCategory">
+		<column>id</column>
+		<column>name</column>
+		<column>description</column>
+		<column>created</column>
+		<column>changed</column>
+		<column>state</column>
+		<row>
+			<value>1</value><!-- id -->
+			<value>Category 1</value>
+			<value>Description category 1</value>
+			<value>2011-09-01 10:00:22</value>
+			<null/>
+			<value>1</value>
+		</row>
+		<!-- ROW 2 -->
+		<row>
+			<value>2</value><!-- id -->
+			<value>Category 2</value>
+			<value>Description category 3</value>
+			<value>2011-09-01 10:00:22</value>
+			<null/>
+			<value>1</value>
+		</row>
+		<!-- ROW 3 -->		
+		<row>
+			<value>3</value><!-- id -->
+			<value>Category 3</value>
+			<value>Description category 3</value>
+			<value>2011-09-01 10:00:22</value>
+			<null/>
+			<value>1</value>
+		</row>
+		<!-- ROW 4 -->
+		<row>
+			<value>4</value><!-- id -->
+			<value>Category 4</value>
+			<value>Description category 4</value>
+			<value>2011-09-01 10:00:22</value>
+			<null/>
+			<value>1</value>
+		</row>	
+		<!-- ROW 5 -->
+		<row>
+			<row>
+			<value>1</value><!-- id -->
+			<value>Category 1</value>
+			<value>Description category 1</value>
+			<value>2011-09-01 10:00:22</value>
+			<null/>
+			<value>1</value>
+		</row>
+		</row>
+	</table>
+</dataset>

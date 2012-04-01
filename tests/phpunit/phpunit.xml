@@ -1,0 +1,12 @@
+<phpunit bootstrap="../../library/TestCase/bootstrap/ControllerBootstrap.php" colors="true">
+	<testsuite name="App">
+		<file>./application/modules/admin/CategoryControllerTest.php</file>
+	</testsuite>
+	<php>
+		<var name="DB_DSN"	value="mysql:dbname=dbch;host=localhost" />
+		<var name="DB_HOST"	value="localhost" />
+		<var name="DB_USER"	value="root" />
+		<var name="DB_PWD"	value="" />
+		<var name="DB_DBNAME" value="dbch" />
+	</php>
+</phpunit>

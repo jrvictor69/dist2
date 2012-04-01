@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<navigation>
+		<search>
+			<id>search</id>
+			<label>Search</label>
+			<module>member</module>
+			<controller>search</controller>
+			<action>index</action>
+			<params>
+				<type>search</type>
+			</params>
+			<pages>
+				<search>
+					<label>Search</label>
+					<module>member</module>
+					<controller>search</controller>
+					<action>index</action>
+					<params>
+						<type>search</type>
+					</params>
+				</search>
+				<result>
+					<label>Result</label>
+					<module>member</module>
+					<controller>search</controller>
+					<action>result</action>
+					<params>
+						<type>search</type>
+					</params>
+				</result>
+				<history>
+					<label>History</label>
+					<module>member</module>
+					<controller>search</controller>
+					<action>search-history</action>
+					<params>
+						<type>search</type>
+					</params>
+				</history>
+			</pages>			
+		</search>
+	</navigation>
+</config>

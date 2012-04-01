@@ -1,0 +1,54 @@
+<?php $this->headScript()->appendFile($this->baseUrl() . "/js/lib/app/Select.js","text/javascript"); ?>
+<?php $this->headScript()->appendFile($this->baseUrl() . "/js/modules/admin/Department.js","text/javascript");?>
+<div style="margin:20px;">
+	<?php echo $this->tableHeader('filterHeader', _("Filter Department"));?>
+	<div id="containerFormFilter">
+		<?php echo $this->formFilter; ?>
+	</div>
+	<br>
+	<?php echo $this->tableHeader('departmentHeader', _("Departments"));?>
+	<?php echo $this->tableList("tblDepartment");?>	
+	<div class="buttons right">
+		<?php echo $this->buttonRemove("delete-department", $this->translate('Remove'), $this->url(array('action'=>'delete')));?>
+		<?php echo $this->buttonAdd("create-department", $this->translate('Add'), $this->url(array('action'=>'create')));?>
+	</div>
+		
+	<div id="dialog"><!-- Loads ajax dialog form --></div>
+</div>
+
+<style type="text/css">
+   .ui-button { margin-left: -1px; }
+   .ui-button-icon-only .ui-button-text { padding: 0.35em; }
+   .ui-autocomplete-input { margin: 0; padding: 0.48em 0 0.47em 0.45em; }
+   .ui-autocomplete { height: 200px; overflow-y: scroll; overflow-x: hidden;}
+</style>
+<script type="text/javascript">
+//	$("#countryFilter").combobox();
+	
+	$(document).ready(function() {
+	var department = new com.em.Department();
+		
+	// network
+	department.setUrl({
+		toTable : '<?php echo $this->url(array('action'=>'read-items'));?>',
+		toBase : '<?php echo $this->baseUrl(); ?>',
+		toUpdate : '<?php echo $this->url(array('action'=>'update')); ?>'
+	});
+	
+	var headers = new Object();
+	headers.headerArray = new Array(
+		'<?php echo $this->translate('Name'); ?>',
+		'<?php echo $this->translate('Description'); ?>',
+		'<?php echo $this->translate('Country'); ?>',
+		'<?php echo $this->translate('Created'); ?>',
+		'<?php echo $this->translate('Changed'); ?>');
+	department.setHeaders(headers);
+	// configuration of widgets
+	department.configureTable('#tblDepartment', true);
+	
+	// CRUD
+	department.clickToAdd('#create-department');
+	department.clickToUpdate('#tblDepartment a[id^=update-department-]');
+	department.clickToDelete('#delete-department');
+});
+</script>

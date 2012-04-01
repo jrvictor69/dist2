@@ -1,0 +1,42 @@
+<phpunit bootstrap="../../library/TestCase/bootstrap/SeleniumBootstrap.php" colors="true">
+	<testsuite name="App">
+	<!-- <directory>./</directory>-->
+		<file>./application/modules/admin/CategoryTest.php</file>
+<!--		<file>./application/modules/admin/DepartmentTest.php</file>-->
+	</testsuite>
+	<!-- 
+	<filter>
+		<whitelist>
+			<directory suffix=".php">../application/</directory>
+			<exclude>
+				<directory suffix="Bootstrap.php">../application/</directory>
+			</exclude>
+		</whitelist>
+	</filter>
+	<logging>
+		<log type="coverage-html" target="../var/phpunit/report" charset="UTF-8"
+			yui="true" highlight="true"
+			lowUpperBound="35" highLowerBound="70" />
+		<log type="testdox-html" target="../var/phpunit/testdox.html" />
+	</logging>
+	 -->
+	<php>
+		<var name="DB_DSN"	value="mysql:dbname=dbch;host=localhost" />
+		<var name="DB_HOST"	value="localhost" />
+		<var name="DB_USER"	value="root" />
+		<var name="DB_PWD"	value="" />
+		<var name="DB_DBNAME" value="dbch" />
+		
+		<var name="SELENIUM_BROWSER_URL" 	value="http://dist2/" />
+		<var name="SELENIUM_BROWSER" 		value="*firefox" />
+		<var name="SELENIUM_NAME" 			value="Firefox browser" />
+		<var name="SELENIUM_HOST" 			value="localhost" />
+		<var name="SELENIUM_PORT" 			value="4444" />
+		<var name="SELENIUM_TIMEOUT" 		value="30000" />
+		
+		<!-- This has to be a local path where the selenium server is running -->
+		<var name="SELENIUM_SCREENSHOT" value="FALSE" />
+		<var name="SELENIUM_SCREENSHOTPATH" value="/tmp/seleniumScreenshots" />
+		<var name="SELENIUM_SCREENSHOTURL" value="file:///tmp/seleniumScreenshots" />
+	</php>
+</phpunit>
