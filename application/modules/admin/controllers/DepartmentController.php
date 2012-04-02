@@ -24,7 +24,6 @@ class Admin_DepartmentController extends App_Controller_Action {
 	 * @access public
 	 */
 	public function indexAction() {
-		$countryMapper = new Model_CountryMapper();
 		$countriesNames = $this->getCountriesFilter();
 
 		$formFilter = new Admin_Form_DepartmentFilter();
@@ -305,7 +304,7 @@ class Admin_DepartmentController extends App_Controller_Action {
 	
 	/**
 	 * 
-	 * Enter description here ...
+	 * Returns the ids, names and the item "All" of countries
 	 */
 	private function getCountriesFilter() {
 		$countries = $this->getCountries();
