@@ -57,6 +57,8 @@ class Admin_CategoryController extends App_Controller_Action {
                 	$categoryMapper = new Model_CategoryMapper();
                 	if (!$categoryMapper->verifyExistName($formData['name'])) {
                 		$category = new Model_Category($formData);
+                		$category->setCreatedBy(Zend_Auth::getInstance()->getIdentity()->id);
+                		
                 		$categoryMapper->save($category);
                 	
                 		$this->view->success = TRUE;
@@ -142,7 +144,8 @@ class Admin_CategoryController extends App_Controller_Action {
                 	$category = $categoryMapper->find($id);
                 	if ($category) {
                 		$category->setName($formData['name'])
-                				->setDescription($formData['description']);
+                				->setDescription($formData['description'])
+                				->setChangedBy(Zend_Auth::getInstance()->getIdentity()->id);
                 			
                 		$categoryMapper->update($id, $category);
                 		

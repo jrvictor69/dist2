@@ -23,6 +23,18 @@ class Model_Category extends Model_Entity {
 	 */
 	protected $_description;
 	
+	/**
+	 * 
+	 * @var int
+	 */
+	protected $_createdBy;
+	
+	/**
+	 * 
+	 * @var int
+	 */
+	protected $_changedBy;
+	
     public function __construct(array $options = null) {
         if (is_array($options)) {
             $this->setOptions($options);
@@ -58,6 +70,38 @@ class Model_Category extends Model_Entity {
 	 */
 	public function setDescription($description) {
 		$this->_description = $description;
+		return $this;
+	}
+	
+	/**
+	 * @return int
+	 */
+	public function getCreatedBy() {
+		return $this->_createdBy;
+	}
+
+	/**
+	 * @param int $createdBy
+	 * @return Model_Category
+	 */
+	public function setCreatedBy($createdBy) {
+		$this->_createdBy = $createdBy;
+		return $this;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getChangedBy() {
+		return $this->_changedBy;
+	}
+
+	/**
+	 * @param int $changedBy
+	 * @return Model_Category
+	 */
+	public function setChangedBy($changedBy) {
+		$this->_changedBy = $changedBy;
 		return $this;
 	}
 }

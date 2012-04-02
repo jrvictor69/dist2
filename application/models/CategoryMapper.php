@@ -54,6 +54,7 @@ class Model_CategoryMapper extends Model_TemporalMapper {
             'name' => $category->getName(),
             'description' => $category->getDescription(),
             'created' => date('Y-m-d H:i:s'),
+			'createdBy' => $category->getCreatedBy(),
         	self::STATE_FIELDNAME => TRUE
         );
 
@@ -76,7 +77,8 @@ class Model_CategoryMapper extends Model_TemporalMapper {
 	 	$data = array(
             'name' => $category->getName(),
             'description' => $category->getDescription(),
-            'changed' => date('Y-m-d H:i:s')
+            'changed' => date('Y-m-d H:i:s'),
+	 		'changedBy' => $category->getChangedBy()
         );
 
         $this->getDbTable()->update($data, array('id = ?' => $id));
