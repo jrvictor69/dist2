@@ -58,10 +58,13 @@ class Model_NewsMapper extends Model_TemporalMapper {
 			'imagename' => $news->getImagename(),
 			'newsdate' => $news->getNewsdate(),
             'created' => date('Y-m-d H:i:s'),
+			'newsdate' => date('Y-m-d H:i:s'),
 			'createdBy' => $news->getCreatedBy(),
+			'categoryId' => 1,
+			'managerialId' => 1,
         	self::STATE_FIELDNAME => TRUE
         );
-
+        
 		unset($data['id']);
 		$this->getDbTable()->insert($data);
     }
@@ -126,8 +129,8 @@ class Model_NewsMapper extends Model_TemporalMapper {
         
         $categoryMapper = new Model_CategoryMapper();
         $category = $categoryMapper->find($row->categoryId);
-        	
-        $news = new Model_News();
+        
+		$news = new Model_News();
         $news->setTitle($row->title)
         	->setSummary($row->summary)
 			->setContain($row->contain)
@@ -140,7 +143,7 @@ class Model_NewsMapper extends Model_TemporalMapper {
 			->setChangedBy($row->changedBy)
 			->setCategory($category)
 			->setId($row->id);
-				
+		
    		return $news;
     }
         
@@ -197,11 +200,11 @@ class Model_NewsMapper extends Model_TemporalMapper {
 				break;
 				
 			case 3:
-				$order = 'created';
+				$order = 'categoryId';
 				break;
 				
 			case 4:
-				$order = 'changed';
+				$order = 'created';
 				break;
 				
 			default: $order = 'title';
@@ -211,7 +214,7 @@ class Model_NewsMapper extends Model_TemporalMapper {
 		
 		$whereState = sprintf("%s = 1", self::STATE_FIELDNAME);
         $resultSet = $this->getDbTable()->fetchAll("$whereState $where", $sortOrder, $limit, $offset);
-        $resultSet = $this->getDbTable()->fetchAll();
+        
         $entries = array();
         foreach ($resultSet as $row) {
         	$categoryMapper = new Model_CategoryMapper();
@@ -234,7 +237,7 @@ class Model_NewsMapper extends Model_TemporalMapper {
 			$entries[] = $entry;
         }
         
-        return $resultSet;
+        return $entries;
     }
      
     /**
