@@ -9,15 +9,16 @@
  */
 
 class Admin_Form_News extends Zend_Form {
-		
+	
 	public function init() {
-		$this->setAttrib('id', 'formId');
-        $this->setAttrib('enctype', 'multipart/form-data');
-        
-        $title = new Zend_Form_Element_Text('titleNews');
+		$this->setAttrib('id', 'formId')
+			->setMethod('post')
+       		->setAttrib('enctype', 'multipart/form-data');
+       	
+        $title = new Zend_Form_Element_Text('title');
         $title
         	->setLabel(_('Title'))
-            ->setRequired(true)
+            ->setRequired(TRUE)
         	->addFilter('StripTags')
             ->addFilter('StringTrim')
             ;
@@ -27,7 +28,7 @@ class Admin_Form_News extends Zend_Form {
         	->setLabel(_('Summary'))
         	->setAttrib('cols', 10)
         	->setAttrib('rows', 2)
-        	->setRequired(true)
+        	->setRequired(TRUE)
            	->addFilter('StripTags')
             ->addFilter('StringTrim')
             ;
@@ -37,37 +38,34 @@ class Admin_Form_News extends Zend_Form {
         	->setLabel(_('Contain'))
         	->setAttrib('cols', 10)
         	->setAttrib('rows', 3)
-        	->setRequired(true)
+        	->setRequired(TRUE)
            	->addFilter('StripTags')
             ->addFilter('StringTrim')
             ;
-            
-            
+       
        $fount = new Zend_Form_Element_Text('fount');
        $fount
         	->setLabel(_('Fount'))
-            ->setRequired(true)
+            ->setRequired(TRUE)
         	->addFilter('StripTags')
             ->addFilter('StringTrim')
             ;
               
         $file = new Zend_Form_Element_File('imageFile');
-		$file->setLabel('Upload File')
-			->setRequired(true)
-//			->setDestination(APPLICATION_PATH.'/../data/uploads')
+		$file->setLabel(_('Upload Image'))
+			->setDestination(APPLICATION_PATH.'/../data/upload')
 			->addValidator('Count', false, 1)//ensure only 1 file
-			->addValidator('Extension', false, 'jpg, png, gif')//only images            
+			->addValidator('Extension', false, 'jpg, png, gif')            
             ;
         	
         $category = new Zend_Form_Element_Select('categoryId');
 		$category
 			->setLabel(_('Category'))
-			->setRequired(true)
+			->setRequired(TRUE)
 			;
 			
         $submit = new Zend_Form_Element_Submit('submit');
-        $submit
-        	->setLabel(_('Save'));
+        $submit->setLabel(_('Save'));
 
         $this->addElements(array($title, $summary, $contain, $fount, $file, $category, $submit));
 	}

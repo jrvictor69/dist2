@@ -29,10 +29,91 @@ class Admin_NewsController extends App_Controller_Action {
 	 * @access public
 	 */
 	public function createAction() {
-		$this->_helper->layout()->disableLayout();
-		
 		$form = new Admin_Form_News();
+		$form->setAction('/admin/news/create/type/information');
 		$form->getElement('categoryId')->setMultiOptions($this->getCategories());
+		
+		if ($this->_request->isPost()) {
+            $formData = $this->getRequest()->getPost();
+            if ($form->isValid($formData)) { 
+            	$imageName = $_FILES['imageFile']['name'];            	
+            	$imageFile = $form->getElement('imageFile');
+            	
+            	try {
+			 		$imageFile->receive();
+				} catch (Zend_File_Transfer_Exception $e) {
+					$e->getMessage();
+				}
+				
+				// Managerial
+				$managerialId = Zend_Auth::getInstance()->getIdentity()->id;
+				$managerial = new Model_Managerial();
+				$managerial->setId($managerialId);
+//				$managerialMapper = new Model_ManagerialMapper();
+//				$managerialMapper->find($managerialId, $managerial);
+
+				// Category
+				$categoryMapper = new Model_CategoryMapper();
+				$category = $categoryMapper->find($formData['categoryId']);
+				
+				$news = new Model_News($form->getValues());				
+				$news->setCategory($category)
+					->setManagerial($managerial)
+					->setTitle($formData['title'])
+					->setImagename($imageName);
+				
+				$newsMapper = new Model_NewsMapper();
+				$newsMapper->save($news);
+				
+            	$this->_helper->redirector('index');
+            } else {
+                $form->populate($formData);
+            }
+        } else {
+        	$this->_helper->layout()->disableLayout();
+        }
+        
+        $this->view->form = $form;
+	}
+	
+	/**
+	 * 
+	 * This action shows the form in update mode for News.
+	 * @access public
+	 */
+	public function updateAction() {
+		$form = new Admin_Form_News();
+		$form->setAction('/admin/news/update/type/information');
+        $form->getElement('categoryId')->setMultiOptions($this->getCategories());
+        
+        if ($this->_request->isPost()) {
+        	$formData = $this->getRequest()->getPost();
+				
+            $this->_helper->redirector('index');
+        } else {
+        	$this->_helper->layout()->disableLayout();
+        	
+        	try {
+           		$id = $this->_getParam('id', 0);
+            	$newsMapper = new Model_NewsMapper();
+            	$news = $newsMapper->find($id);
+                if ($news != NULL) {//security
+					$form->getElement('title')->setValue($news->getTitle());
+					$form->getElement('summary')->setValue($news->getSummary());
+					$form->getElement('categoryId')->setValue($news->getCategory()->getId());
+                } else {
+                	// response to client
+	               	$this->view->success = FALSE;
+	                $this->_messenger->addSuccess(_("The requested record was not found."));
+	                $this->view->message = $this->view->seeMessages();
+	                $this->_helper->json($this->view);
+                }
+        	} catch (Exception $e) {
+              	$this->exception($this->view, $e);
+                $this->_helper->json($this->view);
+        	}
+        }
+        
         $this->view->form = $form;
 	}
 	
@@ -101,19 +182,19 @@ class Admin_NewsController extends App_Controller_Action {
 		
 		// condition when: country != All and name == ''
 		if ($filterParams['countryFilter'] != -1 && $filterParams['nameFilter'] == '') {
-			$filters[] = array('field' => 'countryId', 'filter' => $filterParams['countryFilter'], 'operator' => '=' );
+			$filters[] = array('field' => 'categoryId', 'filter' => $filterParams['countryFilter'], 'operator' => '=' );
 			return $filters;
 		}
 
 		// condition when: mainGroup != All and name != ''
 		if ($filterParams['countryFilter'] != -1 && $filterParams['nameFilter'] != '') {
-			$filters[] = array('field' => 'countryId', 'filter' => $filterParams['countryFilter'], 'operator' => '=' );
-			$filters[] = array('field' => 'name', 'filter' => '%'.$filterParams['nameFilter'].'%', 'operator' => 'LIKE');
+			$filters[] = array('field' => 'categoryId', 'filter' => $filterParams['countryFilter'], 'operator' => '=' );
+			$filters[] = array('field' => 'title', 'filter' => '%'.$filterParams['nameFilter'].'%', 'operator' => 'LIKE');
 			return $filters;
 		}
 		
 		if (!empty($filterParams['nameFilter'])) {
-			$filters[] = array('field' => 'name', 'filter' => '%'.$filterParams['nameFilter'].'%', 'operator' => 'LIKE');
+			$filters[] = array('field' => 'title', 'filter' => '%'.$filterParams['nameFilter'].'%', 'operator' => 'LIKE');
 		}
 				
 		return $filters;

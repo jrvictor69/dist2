@@ -73,6 +73,22 @@ class Model_News extends Model_Entity {
 	 */
 	private $category;
 	
+	/**
+	 * 
+	 * Id of the Managerial this model is associated with.
+	 * @var int
+	 */
+	private $managerialId;
+	
+	/**
+	 * 
+	 * Managerial this model is associated with.
+	 * @var Model_Managerial
+	 */
+	private $managerial;
+	
+	
+	
 	public function __construct(array $options = null) {
         if (is_array($options)) {
             $this->setOptions($options);
@@ -92,6 +108,7 @@ class Model_News extends Model_Entity {
 	 */
 	public function setTitle($title) {
 		$this->title = $title;
+		return $this;
 	}
 
 	/**
@@ -107,6 +124,7 @@ class Model_News extends Model_Entity {
 	 */
 	public function setSummary($summary) {
 		$this->summary = $summary;
+		return $this;
 	}
 
 	/**
@@ -122,6 +140,7 @@ class Model_News extends Model_Entity {
 	 */
 	public function setContain($contain) {
 		$this->contain = $contain;
+		return $this;
 	}
 
 	/**
@@ -137,6 +156,7 @@ class Model_News extends Model_Entity {
 	 */
 	public function setFount($fount) {
 		$this->fount = $fount;
+		return $this;
 	}
 
 	/**
@@ -153,6 +173,7 @@ class Model_News extends Model_Entity {
 	 */
 	public function setImagename($imagename) {
 		$this->imagename = $imagename;
+		return $this;
 	}
 
 	/**
@@ -168,6 +189,7 @@ class Model_News extends Model_Entity {
 	 */
 	public function setNewsdate($newsdate) {
 		$this->newsdate = $newsdate;
+		return $this;
 	}
 
 	/**
@@ -182,7 +204,8 @@ class Model_News extends Model_Entity {
 	 * @return Model_News
 	 */
 	public function setCreatedBy($createdBy) {
-		$this->createBy = $createdBy;
+		$this->createdBy = $createdBy;
+		return $this;
 	}
 
 	/**
@@ -198,6 +221,7 @@ class Model_News extends Model_Entity {
 	 */
 	public function setChangedBy($changedBy) {
 		$this->changedBy = $changedBy;
+		return $this;
 	}
 	
 	/**
@@ -215,5 +239,24 @@ class Model_News extends Model_Entity {
 	public function setCategory(Model_Category $category) {
 		$this->category = $category;
 		$this->categoryId = $category->getId();
+		return $this;
+	}
+	
+	/**
+	 * @return Model_Managerial
+	 */
+	public function getManagerial() {
+		$managerialMapper = new Model_ManagerialMapper();
+		return $managerialMapper->find($this->categoryId);
+	}
+
+	/**
+	 * @param Model_Category $category
+	 * @return Model_Category
+	 */
+	public function setManagerial(Model_Managerial $managerial) {
+		$this->managerial = $managerial;
+		$this->managerialId = $managerial->getId();
+		return $this;
 	}
 }

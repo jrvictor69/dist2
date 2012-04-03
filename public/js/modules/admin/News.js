@@ -257,7 +257,7 @@ com.em.News.prototype = {
 			// Sends request by ajax
 			$.ajax({
 				url: action ,
-				type: "POST",
+				type: "GET",
 				beforeSend : function(XMLHttpRequest) {
 					processingDisplay(true);
 				},
@@ -307,7 +307,7 @@ com.em.News.prototype = {
 			// Sends request by ajax
 			$.ajax({
 				url: action,
-				type: "POST",
+				type: "GET",
 				beforeSend: function(XMLHttpRequest) {
 					processingDisplay(true);
 				},

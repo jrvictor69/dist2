@@ -1,0 +1,27 @@
+<form id="<?php echo $this->element->getAttrib('id');?>" method="post" enctype="multipart/form-data">
+	<table>
+		<tbody>
+			<tr class="odd">
+				<td><?php echo $this->element->getElement('title')->renderLabel() ?></td>
+				<td><?php echo $this->element->getElement('title')->renderViewHelper() ?></td>
+			</tr>
+			<tr class="even">
+				<td><?php echo $this->element->getElement('summary')->renderLabel() ?></td>
+				<td><?php echo $this->element->getElement('summary')->renderViewHelper() ?></td>
+			</tr>
+			<tr class="odd">
+				<td><?php echo $this->element->getElement('contain')->renderLabel() ?></td>
+				<td><?php echo $this->element->getElement('contain')->renderViewHelper() ?></td>
+			</tr>
+			<tr class="even">
+				<td><?php echo $this->element->getElement('fount')->renderLabel() ?></td>
+				<td><?php echo $this->element->getElement('fount')->renderViewHelper() ?></td>
+			</tr>
+			<tr class="odd" >
+				<td><?php echo $this->element->getElement('categoryId')->renderLabel(); ?></td>
+				<td><?php echo $this->element->getElement('categoryId')->renderViewHelper(); ?></td>
+			</tr>
+		</tbody>
+	</table>
+	<input type="hidden" value="0" id="duplicateName" name="duplicateName"/>
+</form>
