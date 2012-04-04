@@ -135,7 +135,7 @@
 					<label>Privileges</label>
 			   		<module>admin</module>
 			   		<controller>privilege</controller>
-			   		<action>index</action>
+			   		<action>read</action>
 			   		<params>
 						<type>security</type>
 					</params>
