@@ -180,10 +180,13 @@ com.em.News.prototype = {
 				return '<a id="update-news-'+oObj.aData[0]+'" href="'+url.toUpdate+'/id/'+oObj.aData[0]+'">'+oObj.aData[1]+'</a>';
 				}
 			});
-		columns.push({"sWidth": "38%"});
-		columns.push({"sWidth": "20%"});
+		columns.push({"sWidth": "25%"});
+		columns.push({"sWidth": "15%"});
 		columns.push({"sWidth": "10%"});
+		columns.push({"sWidth": "8%"});
 		columns.push({"sWidth": "10%"});
+		columns.push({"sWidth": "5%"});
+		columns.push({"sWidth": "5%"});
 		columns.push({
 			"bSortable": false,
 			"sWidth": "2%",
@@ -228,7 +231,7 @@ com.em.News.prototype = {
 	configureDialogForm: function(selector) {with (this) {
 		dialogForm = $(selector).dialog({
 			autoOpen: false,
-			height: 350,
+			height: 400,
 			width: 350,
 			modal: true,
 			close: function(event, ui) {
@@ -407,14 +410,18 @@ com.em.News.prototype = {
 	setValidatorForm : function(selector) {
 		validator = $(selector).validate({
 	        rules:{
-//	        	"name":{
-////					required: true,
-////					minlength: 3,
-//					maxlength: 100
-//				},
-				"description":{
+	        	'title':{
 					required: true,
-					minlength: 3
+					maxlength: 255
+				},
+				'summary':{
+					required: true
+				},
+				'fount':{
+					required: true
+				},
+				'imageFile':{
+					accept: "git|jpg|png"
 				}
 	        }
 	    });

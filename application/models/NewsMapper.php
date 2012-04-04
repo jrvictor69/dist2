@@ -56,11 +56,10 @@ class Model_NewsMapper extends Model_TemporalMapper {
 			'contain' => $news->getContain(),
 			'fount' => $news->getFount(),
 			'imagename' => $news->getImagename(),
-			'newsdate' => $news->getNewsdate(),
-            'created' => date('Y-m-d H:i:s'),
 			'newsdate' => date('Y-m-d H:i:s'),
+            'created' => date('Y-m-d H:i:s'),
 			'createdBy' => $news->getCreatedBy(),
-			'categoryId' => 1,
+			'categoryId' => $news->getCategory()->getId(),
 			'managerialId' => 1,
         	self::STATE_FIELDNAME => TRUE
         );
@@ -89,7 +88,9 @@ class Model_NewsMapper extends Model_TemporalMapper {
 			'imagename' => $news->getImagename(),
 			'newsdate' => $news->getNewsdate(),
             'changed' => date('Y-m-d H:i:s'),
-	 		'changedBy' => $news->getChangedBy()
+	 		'changedBy' => $news->getChangedBy(),
+	 		'categoryId' => $news->getCategory()->getId(),
+	 		'managerialId' => 1,
         );
 
         $this->getDbTable()->update($data, array('id = ?' => $id));
@@ -204,7 +205,23 @@ class Model_NewsMapper extends Model_TemporalMapper {
 				break;
 				
 			case 4:
+				$order = 'imagename';
+				break;
+				
+			case 5:
+				$order = 'newsdate';
+				break;
+				
+			case 6:
+				$order = 'fount';
+				break;
+				
+			case 7:
 				$order = 'created';
+				break;
+				
+			case 8:
+				$order = 'changed';
 				break;
 				
 			default: $order = 'title';
@@ -251,6 +268,21 @@ class Model_NewsMapper extends Model_TemporalMapper {
 		$resultSet = $this->getDbTable()->fetchAll("$whereState $where");
 		
 		return count($resultSet);
+    }
+    
+	/**
+     * 
+     * Verifies if the title news already exist it.
+     * @return boolean
+     */
+	public function verifyExistTitle($title) {
+    	$whereState = sprintf("%s = 1", self::STATE_FIELDNAME);
+    	$resultSet = $this->getDbTable()->fetchRow("$whereState AND title = '$title'");
+    	if ($resultSet != NULL) {
+    		return TRUE;
+    	} else {
+    		return FALSE;
+    	}
     }
     
 	/**
