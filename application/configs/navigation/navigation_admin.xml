@@ -131,15 +131,15 @@
 						<type>security</type>
 					</params>
 				</userGroup>
-		    	<logs>
-					<label>User Groups</label>
+		    	<privilege>
+					<label>Privileges</label>
 			   		<module>admin</module>
-			   		<controller>security-logs</controller>
+			   		<controller>privilege</controller>
 			   		<action>index</action>
 			   		<params>
 						<type>security</type>
 					</params>
-				</logs>
+				</privilege>
 			</pages>
 		</security>
 	</navigation>
