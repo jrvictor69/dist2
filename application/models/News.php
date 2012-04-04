@@ -87,8 +87,6 @@ class Model_News extends Model_Entity {
 	 */
 	private $managerial;
 	
-	
-	
 	public function __construct(array $options = null) {
         if (is_array($options)) {
             $this->setOptions($options);

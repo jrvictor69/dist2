@@ -13,7 +13,10 @@ class Admin_Form_News extends Zend_Form {
 	public function init() {
 		$this->setAttrib('id', 'formId')
 			->setMethod('post')
-       		->setAttrib('enctype', 'multipart/form-data');
+       		->setAttrib('enctype', 'multipart/form-data')
+       		;
+       	
+       	$hidden = new Zend_Form_Element_Hidden('newsId');
        	
         $title = new Zend_Form_Element_Text('title');
         $title
@@ -26,7 +29,7 @@ class Admin_Form_News extends Zend_Form {
         $summary = new Zend_Form_Element_Textarea('summary');
         $summary
         	->setLabel(_('Summary'))
-        	->setAttrib('cols', 10)
+        	->setAttrib('cols', 50)
         	->setAttrib('rows', 2)
         	->setRequired(TRUE)
            	->addFilter('StripTags')
@@ -36,8 +39,8 @@ class Admin_Form_News extends Zend_Form {
        	$contain = new Zend_Form_Element_Textarea('contain');
         $contain
         	->setLabel(_('Contain'))
-        	->setAttrib('cols', 10)
-        	->setAttrib('rows', 3)
+        	->setAttrib('cols', 50)
+        	->setAttrib('rows', 5)
         	->setRequired(TRUE)
            	->addFilter('StripTags')
             ->addFilter('StringTrim')
@@ -65,8 +68,9 @@ class Admin_Form_News extends Zend_Form {
 			;
 			
         $submit = new Zend_Form_Element_Submit('submit');
-        $submit->setLabel(_('Save'));
+        $submit->setLabel(_('Save'))
+        	->setAttrib('style', 'visibility:hidden');
 
-        $this->addElements(array($title, $summary, $contain, $fount, $file, $category, $submit));
+        $this->addElements(array($hidden, $title, $summary, $contain, $fount, $file, $category, $submit));
 	}
 }

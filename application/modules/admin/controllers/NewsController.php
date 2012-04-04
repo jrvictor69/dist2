@@ -19,6 +19,8 @@ class Admin_NewsController extends App_Controller_Action {
 		$countriesNames = $this->getCategoriesFilter();
 
 		$formFilter = new Admin_Form_DepartmentFilter();
+		$formFilter->getElement('nameFilter')->setLabel(_('Title news'));
+		$formFilter->getElement('countryFilter')->setLabel(_('Category'));
 		$formFilter->getElement('countryFilter')->setMultiOptions($countriesNames);
 		$this->view->formFilter = $formFilter;
 	}
@@ -65,7 +67,7 @@ class Admin_NewsController extends App_Controller_Action {
 				$newsMapper = new Model_NewsMapper();
 				$newsMapper->save($news);
 				
-            	$this->_helper->redirector('index');
+            	$this->_helper->redirector('index', 'news', 'admin', array('type'=>'information'));
             } else {
                 $form->populate($formData);
             }
@@ -88,8 +90,50 @@ class Admin_NewsController extends App_Controller_Action {
         
         if ($this->_request->isPost()) {
         	$formData = $this->getRequest()->getPost();
-				
-            $this->_helper->redirector('index');
+        	if ($form->isValid($formData)) {
+        		$newsId = $formData['newsId'];
+        		$newsMapper = new Model_NewsMapper();
+        		$news = $newsMapper->find($newsId);
+        		if ($news != NULL) {
+        			$imageName = $_FILES['imageFile']['name'];            	
+	            	$imageFile = $form->getElement('imageFile');
+	            	
+	            	try {
+				 		$imageFile->receive();
+					} catch (Zend_File_Transfer_Exception $e) {
+						$e->getMessage();
+					}
+					
+					// Managerial
+					$managerialId = Zend_Auth::getInstance()->getIdentity()->id;
+					$managerial = new Model_Managerial();
+					$managerial->setId($managerialId);
+	//				$managerialMapper = new Model_ManagerialMapper();
+	//				$managerialMapper->find($managerialId, $managerial);
+	
+					// Category
+					$categoryMapper = new Model_CategoryMapper();
+					$category = $categoryMapper->find($formData['categoryId']);
+					
+					$news->setCategory($category)
+						->setManagerial($managerial)
+						->setSummary($formData['summary'])
+						->setFount($formData['fount'])
+						->setTitle($formData['title'])
+						->setContain($formData['contain'])
+						->setImagename($imageName)
+						->setManagerial($managerial);
+						;
+					
+					$newsMapper->update($newsId, $news);
+        		} else {
+        			// Don't exits the news
+        			
+        		}
+            	$this->_helper->redirector('index', 'news', 'admin', array('type'=>'information'));
+            } else {
+                $form->populate($formData);
+            }
         } else {
         	$this->_helper->layout()->disableLayout();
         	
@@ -98,8 +142,11 @@ class Admin_NewsController extends App_Controller_Action {
             	$newsMapper = new Model_NewsMapper();
             	$news = $newsMapper->find($id);
                 if ($news != NULL) {//security
+                	$form->getElement('newsId')->setValue($id);
 					$form->getElement('title')->setValue($news->getTitle());
 					$form->getElement('summary')->setValue($news->getSummary());
+					$form->getElement('contain')->setValue($news->getContain());
+					$form->getElement('fount')->setValue($news->getFount());
 					$form->getElement('categoryId')->setValue($news->getCategory()->getId());
                 } else {
                 	// response to client
@@ -115,6 +162,50 @@ class Admin_NewsController extends App_Controller_Action {
         }
         
         $this->view->form = $form;
+	}
+	
+	/**
+	 * 
+	 * Deletes news
+	 * @access public
+	 * @internal
+	 * 1) Get the model news
+	 * 2) Validate the existance of dependencies
+	 * 3) Change the state field or records to delete 
+	 */
+	public function deleteAction() {
+		$this->_helper->viewRenderer->setNoRender(TRUE);
+		
+        if ($this->_request->isPost()) {
+        	$itemIds = $this->_getParam('itemIds', array());
+            if (!empty($itemIds) ) {
+            	try {
+            		$removeCount = 0;
+                	foreach ($itemIds as $id) {
+                		$newsMapper = new Model_NewsMapper();
+	                	$newsMapper->delete($id);
+	                	$removeCount++;
+                	}
+                	$message = sprintf(ngettext('%d news removed.', '%d news removed.', $removeCount), $removeCount);
+                	
+                	$this->view->success = TRUE;
+                    $this->_messenger->addSuccess(_($message));
+                    $this->view->message = $this->view->seeMessages();
+                } catch (Exception $e) {
+                	$this->exception($this->view, $e);
+                }
+            } else {
+                $this->view->success = FALSE;
+            	$this->_messenger->addNotice(_("Data submitted is empty."));
+                $this->view->message = $this->view->seeMessages();
+            }
+        } else {
+        	$this->view->success = FALSE;
+        	$this->_messenger->addNotice(_("Data submitted were not processed."));
+        	$this->view->message = $this->view->seeMessages();
+        }
+        // send response to client
+        $this->_helper->json($this->view);
 	}
 	
 	/**
@@ -146,13 +237,19 @@ class Admin_NewsController extends App_Controller_Action {
 		$posRecord = $start+1;
 		$data = array();
 		foreach ($news as $information) {
+			$created = new Zend_Date($information->getCreated());
+			$changed = new Zend_Date($information->getChanged());
+		
 			$row = array();
 			$row[] = $information->getId();
 			$row[] = $information->getTitle();
 			$row[] = $information->getSummary();
 			$row[] = $information->getCategory()->getName();
-			$row[] = $information->getCreated();
-			$row[] = $information->getChanged();
+			$row[] = $information->getImagename();
+			$row[] = $information->getNewsdate();
+			$row[] = $information->getFount();
+			$row[] = $created->toString("dd.MM.YYYY");
+			$row[] = $changed->toString("dd.MM.YYYY");
 			$row[] = '[]';
 			$data[] = $row;
 			$posRecord++;
