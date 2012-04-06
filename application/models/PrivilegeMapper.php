@@ -184,10 +184,22 @@ class Model_PrivilegeMapper extends Model_TemporalMapper {
 				break;
 				
 			case 3:
-				$order = 'created';
+				$order = 'module';
 				break;
 				
 			case 4:
+				$order = 'controller';
+				break;
+				
+			case 5:
+				$order = 'action';
+				break;
+				
+			case 6:
+				$order = 'created';
+				break;
+				
+			case 7:
 				$order = 'changed';
 				break;
 				
