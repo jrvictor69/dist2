@@ -34,6 +34,7 @@ class Admin_PrivilegeController extends App_Controller_Action {
 	 */
 	public function readAction() {
 		$formFilter = new Admin_Form_CategoryFilter();
+		$formFilter->getElement('nameFilter')->setLabel(_('Name Privilege'));
 		$this->view->formFilter = $formFilter;
 	}
 	
@@ -58,40 +59,34 @@ class Admin_PrivilegeController extends App_Controller_Action {
         $this->_helper->viewRenderer->setNoRender(TRUE);
         
         $form = new Admin_Form_Privilege();
-                
-        if ($this->_request->isPost()) {
-        	$formData = $this->getRequest()->getPost();
-            if ($form->isValid($formData)) {          	
-                try {
-                	$privilegeMapper = new Model_PrivilegeMapper();
-                	if (!$privilegeMapper->verifyExistName($formData['name'])) {
-                		$privilege = new Model_Privilege($formData);
-                		$privilege->setCreatedBy(Zend_Auth::getInstance()->getIdentity()->id);
+        
+        $formData = $this->_request->getPost();
+        if ($form->isValid($formData)) {          	
+        	try {
+           		$privilegeMapper = new Model_PrivilegeMapper();
+               	if (!$privilegeMapper->verifyExistName($formData['name'])) {
+               		$privilege = new Model_Privilege($formData);
+                	$privilege->setCreatedBy(Zend_Auth::getInstance()->getIdentity()->id);
                 		
-                		$privilegeMapper->save($privilege);
+                	$privilegeMapper->save($privilege);
                 	
-                		$this->view->success = TRUE;
-                		$this->_messenger->clearMessages();
-                    	$this->_messenger->addSuccess(_("Privilege saved"));
-                    	$this->view->message = $this->view->seeMessages();
-                	} else {
-						$this->view->success = FALSE;
-                    	$this->_messenger->addError(_("The Privilege already exists"));
-                    	$this->view->message = $this->view->seeMessages();                			
-                	}
-                } catch (Exception $e) {
-                	$this->exception($this->view, $e);
+                	$this->view->success = TRUE;
+                	$this->_messenger->clearMessages();
+                    $this->_messenger->addSuccess(_("Privilege saved"));
+                    $this->view->message = $this->view->seeMessages();
+                } else {
+					$this->view->success = FALSE;
+                    $this->_messenger->addError(_("The Privilege already exists"));
+                    $this->view->message = $this->view->seeMessages();                			
                 }
-            } else {
-				$this->view->success = FALSE;
-				$this->_messenger->addError(implode("<br/>", $form->getMessages('name')));
-				$this->view->message = $this->view->seeMessages();
-            }
-        } else {
-        	$this->view->success = FALSE;
-        	$this->_messenger->addNotice(_("Data submitted were not processed."));        	
-        	$this->view->message = $this->view->seeMessages();
-        }
+          	} catch (Exception $e) {
+            	$this->exception($this->view, $e);
+           	}
+     	} else {
+			$this->view->success = FALSE;
+			$this->_messenger->addError(implode("<br/>", $form->getMessages('name')));
+			$this->view->message = $this->view->seeMessages();
+       	}
         // send response to client
         $this->_helper->json($this->view);
 	}
@@ -144,42 +139,74 @@ class Admin_PrivilegeController extends App_Controller_Action {
 		
 		$form = new Admin_Form_Category();
 		
-        if ($this->_request->isPost()) {
-            $formData = $this->getRequest()->getPost();
-            if ($form->isValid($formData)) {
-                try {
-                	$id = $this->_getParam('id', 0);
+		$formData = $this->_request->getPost();
+        if ($form->isValid($formData)) {
+            try {
+                $id = $this->_getParam('id', 0);
                 	
-                	$privilegeMapper = new Model_PrivilegeMapper();
-                	$privilege = $privilegeMapper->find($id);
-                	if ($privilege != NULL) {
-                		$privilege->setName($formData['name'])
-                				->setDescription($formData['description'])
-                				->setModule($formData['module'])
-                				->setController($formData['controller'])
-                				->setAction($formData['action'])
-                				->setChangedBy(Zend_Auth::getInstance()->getIdentity()->id);
+                $privilegeMapper = new Model_PrivilegeMapper();
+                $privilege = $privilegeMapper->find($id);
+                if ($privilege != NULL) {
+               		$privilege->setName($formData['name'])
+                			->setDescription($formData['description'])
+                			->setModule($formData['module'])
+                			->setController($formData['controller'])
+                			->setAction($formData['action'])
+                			->setChangedBy(Zend_Auth::getInstance()->getIdentity()->id);
                 			
-                		$privilegeMapper->update($id, $privilege);
+                	$privilegeMapper->update($id, $privilege);
                 		
-                		$this->view->success = TRUE;
-                		$this->_messenger->clearMessages();
-                    	$this->_messenger->addSuccess(_("Privilege updated"));
-                    	$this->view->message = $this->view->seeMessages();
-                	}
-                } catch (Exception $e) {
-                	$this->exception($this->view, $e);
+                	$this->view->success = TRUE;
+                	$this->_messenger->clearMessages();
+                    $this->_messenger->addSuccess(_("Privilege updated"));
+                    $this->view->message = $this->view->seeMessages();
                 }
-            } else {
-            	$this->view->success = FALSE;
-				$this->_messenger->addError(implode("<br/>", $form->getMessages('name')));
-				$this->view->message = $this->view->seeMessages();
-            }
-        } else {
+        	} catch (Exception $e) {
+                $this->exception($this->view, $e);
+         	}
+		} else {
+            $this->view->success = FALSE;
+			$this->_messenger->addError(implode("<br/>", $form->getMessages('name')));
+			$this->view->message = $this->view->seeMessages();
+    	}
+        // send response to client
+        $this->_helper->json($this->view);
+	}
+	
+	/**
+	 * 
+	 * Deletes privileges
+	 * @access public
+	 * @internal
+	 * 1) Get the model privilege
+	 * 2) Validate the existance of dependencies
+	 * 3) Change the state field or records to delete
+	 */
+	public function deleteAction() {
+		$this->_helper->viewRenderer->setNoRender(TRUE);
+		
+        $itemIds = $this->_getParam('itemIds', array());
+       	if (!empty($itemIds) ) {
+        	try {
+           		$privilegeMapper = new Model_PrivilegeMapper();
+           		$removeCount = 0;
+               	foreach ($itemIds as $id) {              		
+	                $privilegeMapper->delete($id);
+	                $removeCount++;
+                }
+                $message = sprintf(ngettext('%d privilege removed.', '%d privileges removed.', $removeCount), $removeCount);
+                	
+                $this->view->success = TRUE;
+               	$this->_messenger->addSuccess(_($message));
+               	$this->view->message = $this->view->seeMessages();
+        	} catch (Exception $e) {
+            	$this->exception($this->view, $e);
+           	}
+      	} else {
         	$this->view->success = FALSE;
-        	$this->_messenger->addNotice(_("Data submitted were not processed."));        	
+            $this->_messenger->addNotice(_("Data submitted is empty."));
         	$this->view->message = $this->view->seeMessages();
-        }
+      	}
         // send response to client
         $this->_helper->json($this->view);
 	}
