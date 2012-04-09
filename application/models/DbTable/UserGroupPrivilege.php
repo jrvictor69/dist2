@@ -12,12 +12,12 @@ class Model_DbTable_UserGroupPrivilege extends Zend_Db_Table_Abstract {
     protected $_referenceMap    = array(
         'UserGroup' => array(
             'columns'           => array('userGroupId'),
-            'refTableClass'     => 'UserGroup',
+            'refTableClass'     => 'Model_DbTable_UserGroup',
             'refColumns'        => array('id')
         ),
         'Privilege' => array(
             'columns'           => array('privilegeId'),
-            'refTableClass'     => 'Privilege',
+            'refTableClass'     => 'Model_DbTable_Privilege',
             'refColumns'        => array('id')
         )
      );

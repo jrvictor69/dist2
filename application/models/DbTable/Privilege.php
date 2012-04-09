@@ -8,5 +8,5 @@
 
 class Model_DbTable_Privilege extends Zend_Db_Table_Abstract {
 	protected $_name = 'tblPrivilege';
-	protected $_dependentTables = array('UserGroupPrivilege');
+	protected $_dependentTables = array('Model_DbTable_UserGroupPrivilege');
 }

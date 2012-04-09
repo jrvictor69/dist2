@@ -1,3 +1,6 @@
+<?php //$this->headLink()->appendStylesheet($this->baseUrl() . "/js/lib/jquery.multiSelect-1.2.3/jquery.multiSelect.css"); ?>
+<?php $this->headScript()->appendFile($this->baseUrl() . "/js/lib/jquery.multiSelect-1.2.3/jquery.multiSelect.js");?>
+<?php $this->headScript()->appendFile($this->baseUrl() . "/js/lib/jquery.multiSelect-1.2.3/jquery.bgiframe.min.js");?>
 <?php $this->headScript()->appendFile($this->baseUrl() . "/js/modules/admin/UserGroup.js","text/javascript");?>
 <div style="margin:20px;">
 	<?php echo $this->tableHeader('filterHeader', _("Filter User Group"));?>

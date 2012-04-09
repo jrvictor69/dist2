@@ -47,6 +47,8 @@ class Admin_UserGroupController extends App_Controller_Action {
 		$this->_helper->layout()->disableLayout();
 		
 		$form = new Admin_Form_UserGroup();
+		$form->getElement('privilege')->setMultiOptions($this->getPrivileges());
+			
         $this->view->form = $form;
 	}
 	
@@ -59,15 +61,32 @@ class Admin_UserGroupController extends App_Controller_Action {
         $this->_helper->viewRenderer->setNoRender(TRUE);
         
         $form = new Admin_Form_UserGroup();
+        $form->getElement('privilege')->setMultiOptions($this->getPrivileges());
         
         $formData = $this->_request->getPost();
-        if ($form->isValid($formData)) {          	
+        if ($form->isValid($formData)) {         	
         	try {
            		$userGroupMapper = new Model_UserGroupMapper();
                	if (!$userGroupMapper->verifyExistName($formData['name'])) {
                		$userGroup = new Model_UserGroup($formData);
+               		
+               		$privilegeIds = $formData['privilege'];
+               		if (!empty($privilegeIds)) {
+               			$privilegeMapper = new Model_PrivilegeMapper();
+               			$privileges = array();
+               			foreach ($privilegeIds as $id) {
+               				$privilege = $privilegeMapper->find($id);
+               				if ($privilege != NULL) {
+               					$privileges[] = $privilege;
+               				} else {
+               					//id not is valid
+               				}
+               			}
+               		}
+               		
+               		$userGroup->setPrivileges($privileges);
                 	$userGroup->setCreatedBy(Zend_Auth::getInstance()->getIdentity()->id);
-                		
+                	
                 	$userGroupMapper->save($userGroup);
                 	
                 	$this->view->success = TRUE;
@@ -269,5 +288,15 @@ class Admin_UserGroupController extends App_Controller_Action {
 		}
 				
 		return $filters;
+	}
+	
+	/**
+	 * 
+	 * Returns the ids and names of privileges
+	 * @return array
+	 */
+	private function getPrivileges() {
+		$privilegeMapper = new Model_PrivilegeMapper();
+		return $privilegeMapper->findAllName();
 	}
 }

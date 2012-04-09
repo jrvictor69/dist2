@@ -35,6 +35,13 @@ class Model_UserGroup extends Model_Entity {
 	 */
 	protected $_changedBy;
 	
+	/**
+	 * 
+	 * Array of Privileges Models 
+	 * @var array
+	 */
+	protected $privileges;
+	
     public function __construct(array $options = null) {
         if (is_array($options)) {
             $this->setOptions($options);
@@ -50,7 +57,7 @@ class Model_UserGroup extends Model_Entity {
 
 	/**
 	 * @param string $name
-	 * @return Model_Category
+	 * @return Model_UserGroup
 	 */
 	public function setName($name) {
 		$this->_name = $name;
@@ -66,7 +73,7 @@ class Model_UserGroup extends Model_Entity {
 
 	/**
 	 * @param string $description
-	 * @return Model_Category
+	 * @return Model_UserGroup
 	 */
 	public function setDescription($description) {
 		$this->_description = $description;
@@ -82,7 +89,7 @@ class Model_UserGroup extends Model_Entity {
 
 	/**
 	 * @param int $createdBy
-	 * @return Model_Category
+	 * @return Model_UserGroup
 	 */
 	public function setCreatedBy($createdBy) {
 		$this->_createdBy = $createdBy;
@@ -98,10 +105,28 @@ class Model_UserGroup extends Model_Entity {
 
 	/**
 	 * @param int $changedBy
-	 * @return Model_Category
+	 * @return Model_UserGroup
 	 */
 	public function setChangedBy($changedBy) {
 		$this->_changedBy = $changedBy;
 		return $this;
+	}
+	
+	/**
+	 * Sets the Privileges models
+	 * @param array $privileges
+	 * @return Model_UserGroup
+	 */
+	public function setPrivileges(array $privileges) {
+		$this->privileges = $privileges;
+		return $this;
+	}
+	
+	/**
+	 * Returns the Privileges models
+	 * @return array
+	 */
+	public function getPrivileges() {
+		return $this->privileges;
 	}
 }

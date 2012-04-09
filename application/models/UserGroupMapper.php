@@ -19,6 +19,13 @@ class Model_UserGroupMapper extends Model_TemporalMapper {
 	protected $_dbTable;
 	
 	/**
+	 * 
+	 * This class abstract is from a table many to many
+	 * @var Zend_Db_Table_Abstract
+	 */
+	protected $_dbTableManyToMany;
+	
+	/**
 	 * (non-PHPdoc)
 	 * @see Model_TemporalMapper::setDbTable()
 	 */
@@ -43,7 +50,36 @@ class Model_UserGroupMapper extends Model_TemporalMapper {
         }
         return $this->_dbTable;
     }
-
+    
+    /**
+     * 
+     * Creates a new object Zend_Db_Table_Abstract for a table many to many
+     * @param string $dbTableManyToMany
+     * @throws Exception
+     */
+    public function setDbTableManyToMany($dbTableManyToMany) {
+        if (is_string($dbTableManyToMany)) {
+            $dbTableManyToMany = new $dbTableManyToMany();
+        }
+        if (!$dbTableManyToMany instanceof Zend_Db_Table_Abstract) {
+            throw new Exception('Invalid table data gateway provided');
+        }
+        $this->_dbTableManyToMany = $dbTableManyToMany;
+        return $this;
+    }
+    
+    /**
+     * 
+     * Returns the class abstract for a table many to many
+     * @return Zend_Db_Table_Abstract
+     */
+    public function getDbTableManyToMany() {
+        if (null === $this->_dbTableManyToMany) {
+            $this->setDbTableManyToMany('Model_DbTable_UserGroupPrivilege');
+        }
+        return $this->_dbTableManyToMany;
+    }
+    
     /**
      * 
      * Saves model
@@ -57,11 +93,36 @@ class Model_UserGroupMapper extends Model_TemporalMapper {
 			'createdBy' => $userGroup->getCreatedBy(),
         	self::STATE_FIELDNAME => TRUE
         );
-
+		
 		unset($data['id']);
 		$this->getDbTable()->insert($data);
+		
+		$userGroupId = (int)$this->getDbTable()->getAdapter()->lastInsertId();
+		$userGroup->setId($userGroupId);
+		
+		$privileges = $userGroup->getPrivileges();
+		foreach ($privileges as $privilege) {
+			$this->saveManyToMany($userGroup, $privilege);
+		}
     }
 
+	/**
+     * 
+     * Saves the data in the table many to many (tblUserGroup_Privilege)
+     * @param Model_UserGroup $userGroup
+     * @param Model_Privilege $privilege
+     */
+	public function saveManyToMany(Model_UserGroup $userGroup, Model_Privilege $privilege) {
+		$data = array(
+            'userGroupId' => $userGroup->getId(),
+            'privilegeId' => $privilege->getId(),
+			'created' => date('Y-m-d H:i:s')
+        );
+
+		unset($data['id']);
+		$this->getDbTableManyToMany()->insert($data);
+    }
+    
     /**
      * 
      * Updates model
@@ -84,6 +145,23 @@ class Model_UserGroupMapper extends Model_TemporalMapper {
         $this->getDbTable()->update($data, array('id = ?' => $id));
     }
     
+	/**
+     * 
+     * Updates the data in the table many to many (tblUserGroup_Privilege)
+     * @param int $id
+     * @param Model_UserGroup $userGroup
+     * @param Model_Privilege $privilege
+     */
+	public function updateManyToMany($id, Model_UserGroup $userGroup, Model_Privilege $privilege) {
+		$data = array(
+            'userGroupId' => $userGroup->getId(),
+            'privilegeId' => $privilege->getId(),
+			'created' => date('Y-m-d H:i:s')
+        );
+        
+		$this->getDbTableManyToMany()->update($data, array('id = ?' => $id));
+    }
+    
     /**
      * 
      * Deletes model
@@ -102,7 +180,7 @@ class Model_UserGroupMapper extends Model_TemporalMapper {
         
     	$this->getDbTable()->update($data, array('id = ?' => $id));
     }
-        
+    
     /**
      * (non-PHPdoc)
      * @see Model_TemporalMapper::find()
@@ -115,10 +193,27 @@ class Model_UserGroupMapper extends Model_TemporalMapper {
         }
         
         $row = $result->current();
-        
+
+        // Many to many
+        $privilegesRowSet  = $row->findManyToManyRowset('Model_DbTable_Privilege', 'Model_DbTable_UserGroupPrivilege');
+        $privileges = array();
+        foreach ($privilegesRowSet as $privilegeRow) {
+        	$privilege = new Model_Privilege();
+        	$privilege->setName($privilegeRow->name)
+            	->setDescription($privilegeRow->description)
+            	->setModule($privilegeRow->module)
+            	->setController($privilegeRow->controller)
+            	->setAction($privilegeRow->action)
+            	->setCreated($privilegeRow->created)
+            	->setChanged($privilegeRow->changed)
+            	->setId($privilegeRow->id);
+            $privileges[] = $privilege;
+        }
+         
         $userGroup = new Model_UserGroup();
         $userGroup->setName($row->name)
         		->setDescription($row->description)
+        		->setPrivileges($privileges)
         		->setCreated($row->created)
         		->setChanged($row->changed)
         		->setId($row->id)
@@ -229,7 +324,7 @@ class Model_UserGroupMapper extends Model_TemporalMapper {
      * Finds the names of the models
      * @return array
      */
-	public function fetchAllName() {
+	public function findAllName() {
 		$whereState = sprintf("%s = 1", self::STATE_FIELDNAME);
     	$resultSet = $this->getDbTable()->fetchAll($whereState);
         $data = array();
