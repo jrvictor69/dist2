@@ -83,4 +83,27 @@ class SeleniumTestCase extends PHPUnit_Extensions_SeleniumTestCase {
 	{
 		$this->dbTestCase->assertTablesEqual($expected, $actual, $message);
 	}
+	
+	/**
+  	 * 
+  	 * Generates random the text
+  	 * @param string $prefix
+  	 * @param int $length
+  	 * @param string $chars
+  	 */
+	protected function random($prefix = "", $length = 7, $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890') {
+		//Length of character list
+		$charsLength = (strlen($chars) - 1);
+
+		// Start our string
+		$string = '';
+
+		// Generate random string
+		for ($i = 1; $i < $length; $i = strlen($string)) {
+			// Grab a random character from our list
+			$string .= $chars{rand(0, $charsLength)};
+		}
+
+		return $prefix . $string;
+	}
 }
