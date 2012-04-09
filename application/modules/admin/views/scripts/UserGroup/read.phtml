@@ -1,0 +1,44 @@
+<?php $this->headScript()->appendFile($this->baseUrl() . "/js/modules/admin/UserGroup.js","text/javascript");?>
+<div style="margin:20px;">
+	<?php echo $this->tableHeader('filterHeader', _("Filter User Group"));?>
+	<div id="containerFormFilter">
+		<?php echo $this->formFilter; ?>
+	</div>
+	<br>
+	<?php echo $this->tableHeader('userGroupHeader', _("User groups"));?>
+	<?php echo $this->tableList("tblUserGroup");?>	
+	<div class="buttons right">
+		<?php echo $this->buttonRemove("delete-userGroup", $this->translate('Remove'), $this->url(array('action'=>'delete')));?>
+		<?php echo $this->buttonAdd("create-userGroup", $this->translate('Add'), $this->url(array('action'=>'create')));?>
+	</div>
+		
+	<div id="dialog"><!-- Loads ajax dialog form --></div>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+	var userGroup = new com.em.UserGroup();
+	
+	// network
+	userGroup.setUrl({
+		toTable : '<?php echo $this->url(array('action'=>'read-items'));?>',
+		toBase : '<?php echo $this->baseUrl(); ?>',
+		toUpdate : '<?php echo $this->url(array('action'=>'update')); ?>'
+	});
+	
+	var headers = new Object();
+	headers.headerArray = new Array(
+		'<?php echo $this->translate('Name'); ?>',
+		'<?php echo $this->translate('Description'); ?>',
+		'<?php echo $this->translate('Created'); ?>',
+		'<?php echo $this->translate('Changed'); ?>');
+	userGroup.setHeaders(headers);
+	// configuration of widgets
+	userGroup.configureTable('#tblUserGroup', true);
+	
+	// CRUD
+	userGroup.clickToAdd('#create-userGroup');
+	userGroup.clickToUpdate('#tblUserGroup a[id^=update-userGroup-]');
+	userGroup.clickToDelete('#delete-userGroup');
+});
+</script>
