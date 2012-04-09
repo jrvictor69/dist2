@@ -262,7 +262,7 @@ class Model_PrivilegeMapper extends Model_TemporalMapper {
      * Finds the names of the models
      * @return array
      */
-	public function fetchAllName() {
+	public function findAllName() {
 		$whereState = sprintf("%s = 1", self::STATE_FIELDNAME);
     	$resultSet = $this->getDbTable()->fetchAll($whereState);
         $data = array();

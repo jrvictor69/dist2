@@ -30,6 +30,11 @@ class Admin_Form_UserGroup extends Zend_Form {
 					array('StringTrim')
 				)
 			))
+			
+			->addElement('MultiSelect', 'privilege', array(
+				'label' => _('Privileges'),
+				'required'   => TRUE
+			))
 			;
 	}
 	
