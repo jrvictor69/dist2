@@ -12,21 +12,21 @@
 			<li class="consultant <?php echo (isset($this->layout()->activeAdmin)) ? 'active' : ''; ?>">
 				<a href="<?php echo $this->url(array('module'=>'admin', 'controller'=>'index', 'action'=>'index', 'type'=>'home')); ?>" class="consultant">
 					<span class="left consultant"></span>
-					<span class="center consultant"><?php echo $this->translate("Qualifications"); ?></span>
+					<span class="center consultant"><?php echo $this->translate("Administration"); ?></span>
 					<span class="right consultant"></span>
 				</a>
 			</li>
 			<li class="candidate <?php echo (isset($this->layout()->activeUser)) ? 'active' : ''; ?>">
 				<a href="<?php echo $this->url(array('module'=>'user', 'controller'=>'auth', 'action'=>'index', 'type'=>'um'),null,true); ?>" class="candidate">
 					<span class="left candidate"></span>
-					<span class="center candidate"><?php echo $this->translate("Meta Users"); ?></span>
+					<span class="center candidate"><?php echo $this->translate("Login"); ?></span>
 					<span class="right candidate"></span>
 				</a>
 			</li>
 			<li class="protocol <?php echo (isset($this->layout()->activeProtocol)) ? 'active' : ''; ?>">
 				<a href="<?php echo $this->url(array('module'=>'member', 'controller'=>'index', 'action'=>'index', 'type'=>'search'),null,true); ?>" class="candidate">
 					<span class="left candidate"></span>
-					<span class="center candidate"><?php echo $this->translate("Meta Users"); ?></span>
+					<span class="center candidate"><?php echo $this->translate("Member church"); ?></span>
 					<span class="right candidate"></span>
 				</a>
 			</li>
