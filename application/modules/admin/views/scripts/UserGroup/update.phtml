@@ -3,6 +3,9 @@
 </div>
 
 <script type="text/javascript">
+//	$("#privilege").multiselect();
+	$("#privilege").multiselect().multiselectfilter();
+	
 	com.em.UserGroup.prototype.dialogButtons = {
 			'<?php echo $this->translate('Update'); ?>': function() {
 			$.ajax({

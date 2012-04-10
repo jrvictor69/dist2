@@ -143,6 +143,11 @@ class Model_UserGroupMapper extends Model_TemporalMapper {
         );
 
         $this->getDbTable()->update($data, array('id = ?' => $id));
+        
+		$privileges = $userGroup->getPrivileges();
+		foreach ($privileges as $privilege) {
+			$this->updateManyToMany($id, $userGroup, $privilege);
+		}
     }
     
 	/**
@@ -156,7 +161,7 @@ class Model_UserGroupMapper extends Model_TemporalMapper {
 		$data = array(
             'userGroupId' => $userGroup->getId(),
             'privilegeId' => $privilege->getId(),
-			'created' => date('Y-m-d H:i:s')
+			'changed' => date('Y-m-d H:i:s')
         );
         
 		$this->getDbTableManyToMany()->update($data, array('id = ?' => $id));

@@ -126,6 +126,14 @@ class Admin_UserGroupController extends App_Controller_Action {
             if ($userGroup != NULL) {//security
 				$form->getElement('name')->setValue($userGroup->getName());
 				$form->getElement('description')->setValue($userGroup->getDescription());
+				$form->getElement('privilege')->setMultiOptions($this->getPrivileges());
+				
+				$privelegeIds = array();
+				$privileges = $userGroup->getPrivileges();
+				foreach ($privileges as $privilege) {
+					$privelegeIds[] = $privilege->getId();
+				}
+				$form->getElement('privilege')->setValue($privelegeIds);
           	} else {
             	// response to client
 	            $this->view->success = FALSE;
