@@ -2,14 +2,7 @@
 	<?php echo $this->form; ?>	
 </div>
 
-<script type="text/javascript">
-	$("#name").bind('keyup', function(e) {
-		var nameVal = $('#name').val();
-		if (nameVal != '') {
-			$("#name").parent().find('.error').remove();
-		}
-	});
-	
+<script type="text/javascript">	
 	com.em.Privilege.prototype.dialogButtons = {
 			'<?php echo $this->translate('Save'); ?>': function() {
 			$.ajax({
@@ -36,10 +29,30 @@
 						} else {
 							if (data.message == 'name_warning') {
 							
-							} else {		
-								$("#name").parent().find('.error').remove();	
+							} else {
+								
+//								if (messages.name = undefined) {
+//									$('#name').parent().find('.error').remove();
+//									$('#name').parent().append('<label class="error" for="name" generated="true">'+data.message+'</label>');
+//								}
+//								
+//								if (messages.module = undefined) {
+//									$('#module').parent().find('.error').remove();
+//									$('#module').parent().append('<label class="error" for="name" generated="true">'+data.message+'</label>');
+//								}
+//
+//								if (messages.controller = undefined) {
+//									$('#controller').parent().find('.error').remove();
+//									$('#controller').parent().append('<label class="error" for="name" generated="true">'+data.message+'</label>');
+//								}
+//								
+//								if (messages.action = undefined) {
+//									$('#action').parent().find('.error').remove();
+//									$('#action').parent().append('<label class="error" for="name" generated="true">'+data.message+'</label>');	
+//								}
 
-								$("#name").parent().append('<ul id="error-name" class="error"><li>'+data.message+'</li> </ul>');						
+								$("#name").parent().find('.error').remove();
+								$("#name").parent().append('<label class="error" for="name" generated="true">'+data.message+'</label>');						
 								com.em.Privilege.prototype.showAlert(data.message, {header: com.em.Alert.ERROR});
 							}
 						}

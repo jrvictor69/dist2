@@ -10,9 +10,9 @@
 var com = com || {};
 com.em = com.em ||{};
 	com.em.Privilege = function () {
-		// For create or update register
+		// For create or update a register
 		this.dialogForm;
-		// For show message to client
+		// For show a message to client
 		this.alert;
 		// For data table
 		this.table;
@@ -67,8 +67,6 @@ com.em.Privilege.prototype = {
 	initDisplayStart: function() {with(this) {
 		var oSettings = table.fnSettings();
 		oSettings._iDisplayStart = 0;
-		//rows by page
-//		oSettings._iDisplayLength = 3;
 	}},
 	
 	/**
@@ -188,21 +186,6 @@ com.em.Privilege.prototype = {
 		settings.oApi._fnProcessingDisplay(settings, bShow);
 	},
 	
-//	processingDisplay : function(bShow) {
-//		if(bShow)
-//			$.blockUI({ css:{ 
-//				border					: 'none', 
-//				padding					: '15px', 
-//				backgroundColor			: '#000', 
-//				'-webkit-border-radius'	: '10px', 
-//				'-moz-border-radius'	: '10px', 
-//				opacity					: .5, 
-//				color					: '#fff' 
-//			} }); 
-//		else
-//			$.unblockUI();
-//	},
-	
 	/**
 	 * 
 	 * Configures the form
@@ -217,11 +200,7 @@ com.em.Privilege.prototype = {
 			close: function(event, ui) {
 				$(this).remove();
 			}
-		});				
-		
-//		$('#formId').submit(function() {
-//			return false;
-//		});
+		});
 		
 		// Configs font-size for header dialog and buttons
 		$(selector).parent().css('font-size','0.7em');
@@ -392,9 +371,27 @@ com.em.Privilege.prototype = {
 	        rules:{
 	        	'name':{
 					required: true,
-					maxlength: 100
+					maxlength: 125
+				},
+				'module':{
+					required: true,
+					maxlength: 45
+				},
+				'controller':{
+					required: true,
+					maxlength: 45
+				},
+				'action':{
+					required: true,
+					maxlength: 45
 				}
-	        }
+	        },
+	        messages:{
+				'name':{
+					required: "No puede ser vacio inserte un valor",
+					maxlength: "El limite es de 125"
+				}
+			}
 	    });
 	},
 	
