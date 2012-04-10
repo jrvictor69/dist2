@@ -74,8 +74,8 @@ class Admin_UserGroupController extends App_Controller_Action {
                		if (!empty($privilegeIds)) {
                			$privilegeMapper = new Model_PrivilegeMapper();
                			$privileges = array();
-               			foreach ($privilegeIds as $id) {
-               				$privilege = $privilegeMapper->find($id);
+               			foreach ($privilegeIds as $privilegeId) {
+               				$privilege = $privilegeMapper->find($privilegeId);
                				if ($privilege != NULL) {
                					$privileges[] = $privilege;
                				} else {
@@ -162,18 +162,35 @@ class Admin_UserGroupController extends App_Controller_Action {
 		$this->_helper->viewRenderer->setNoRender(TRUE);
 		
 		$form = new Admin_Form_UserGroup();
+		$form->getElement('privilege')->setMultiOptions($this->getPrivileges());
 		
 		$formData = $this->_request->getPost();
+		
         if ($form->isValid($formData)) {
             try {
                 $id = $this->_getParam('id', 0);
-                	
+                                	
                 $userGroupMapper = new Model_UserGroupMapper();
                 $userGroup = $userGroupMapper->find($id);
                 if ($userGroup != NULL) {
+                	$privilegeIds = $formData['privilege'];
+               		if (!empty($privilegeIds)) {
+               			$privilegeMapper = new Model_PrivilegeMapper();
+               			$privileges = array();
+               			foreach ($privilegeIds as $privilegeId) {
+               				$privilege = $privilegeMapper->find($privilegeId);
+               				if ($privilege != NULL) {
+               					$privileges[] = $privilege;
+               				} else {
+               					//id not is valid
+               				}
+               			}
+               		}
+               		
                		$userGroup->setName($formData['name'])
                 			->setDescription($formData['description'])
-                			->setChangedBy(Zend_Auth::getInstance()->getIdentity()->id);
+                			->setChangedBy(Zend_Auth::getInstance()->getIdentity()->id)
+                			->setPrivileges($privileges);
                 			
                 	$userGroupMapper->update($id, $userGroup);
                 		
@@ -181,6 +198,8 @@ class Admin_UserGroupController extends App_Controller_Action {
                 	$this->_messenger->clearMessages();
                     $this->_messenger->addSuccess(_("User group updated"));
                     $this->view->message = $this->view->seeMessages();
+                } else {
+                	//Id is not valid
                 }
         	} catch (Exception $e) {
                 $this->exception($this->view, $e);

@@ -112,7 +112,7 @@ class Model_UserGroupMapper extends Model_TemporalMapper {
      * @param Model_UserGroup $userGroup
      * @param Model_Privilege $privilege
      */
-	public function saveManyToMany(Model_UserGroup $userGroup, Model_Privilege $privilege) {
+	private function saveManyToMany(Model_UserGroup $userGroup, Model_Privilege $privilege) {
 		$data = array(
             'userGroupId' => $userGroup->getId(),
             'privilegeId' => $privilege->getId(),
@@ -130,7 +130,8 @@ class Model_UserGroupMapper extends Model_TemporalMapper {
      * @param Model_UserGroup $userGroup
      */
 	public function update($id, Model_UserGroup $userGroup) {
-        $result = $this->getDbTable()->find($id); 
+        $result = $this->getDbTable()->find($id);
+        
         if (0 == count($result)) {
             return;
         }
@@ -144,9 +145,17 @@ class Model_UserGroupMapper extends Model_TemporalMapper {
 
         $this->getDbTable()->update($data, array('id = ?' => $id));
         
-		$privileges = $userGroup->getPrivileges();
+        // Deletes all rows of the table many to many
+		$row = $result->current();
+		$privilegesRowSet = $row->findManyToManyRowset('Model_DbTable_Privilege', 'Model_DbTable_UserGroupPrivilege');
+        foreach ($privilegesRowSet as $privilegeRow) {
+        	$this->getDbTableManyToMany()->delete(array('userGroupId = ?' => $id, 'privilegeId = ?' => $privilegeRow->id));
+        }
+		
+        // Creates new rows in the table many to many
+        $privileges = $userGroup->getPrivileges();
 		foreach ($privileges as $privilege) {
-			$this->updateManyToMany($id, $userGroup, $privilege);
+			$this->saveManyToMany($userGroup, $privilege);
 		}
     }
     
@@ -157,7 +166,7 @@ class Model_UserGroupMapper extends Model_TemporalMapper {
      * @param Model_UserGroup $userGroup
      * @param Model_Privilege $privilege
      */
-	public function updateManyToMany($id, Model_UserGroup $userGroup, Model_Privilege $privilege) {
+	private function updateManyToMany($id, Model_UserGroup $userGroup, Model_Privilege $privilege) {
 		$data = array(
             'userGroupId' => $userGroup->getId(),
             'privilegeId' => $privilege->getId(),
@@ -186,6 +195,24 @@ class Model_UserGroupMapper extends Model_TemporalMapper {
     	$this->getDbTable()->update($data, array('id = ?' => $id));
     }
     
+	/**
+     * 
+     * Deletes tuple in the table many to many (tblUserGroup_Privilege)
+     * @param int $id
+     */
+    private function deleteManyToMany($id) {
+    	$result = $this->getDbTableManyToMany()->find($id);
+        if (0 == count($result)) {
+            return;
+        }
+        
+        $data = array(
+            'changed' => date('Y-m-d H:i:s')
+        );
+        
+    	$this->getDbTableManyToMany()->delete(array('id = ?' => $id));
+    }
+    
     /**
      * (non-PHPdoc)
      * @see Model_TemporalMapper::find()
@@ -200,7 +227,7 @@ class Model_UserGroupMapper extends Model_TemporalMapper {
         $row = $result->current();
 
         // Many to many
-        $privilegesRowSet  = $row->findManyToManyRowset('Model_DbTable_Privilege', 'Model_DbTable_UserGroupPrivilege');
+        $privilegesRowSet = $row->findManyToManyRowset('Model_DbTable_Privilege', 'Model_DbTable_UserGroupPrivilege');
         $privileges = array();
         foreach ($privilegesRowSet as $privilegeRow) {
         	$privilege = new Model_Privilege();
