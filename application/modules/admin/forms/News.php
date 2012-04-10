@@ -39,8 +39,9 @@ class Admin_Form_News extends Zend_Form {
        	$contain = new Zend_Form_Element_Textarea('contain');
         $contain
         	->setLabel(_('Contain'))
-        	->setAttrib('cols', 50)
-        	->setAttrib('rows', 5)
+        	->setAttrib('cols', 80)
+        	->setAttrib('rows', 15)
+        	->setAttrib('class', 'contain')
         	->setRequired(TRUE)
            	->addFilter('StripTags')
             ->addFilter('StringTrim')
@@ -69,7 +70,7 @@ class Admin_Form_News extends Zend_Form {
 			
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setLabel(_('Save'))
-        	->setAttrib('style', 'visibility:hidden');
+        	->setAttrib('class', 'green buttonNg');
 
         $this->addElements(array($hidden, $title, $summary, $contain, $fount, $file, $category, $submit));
 	}

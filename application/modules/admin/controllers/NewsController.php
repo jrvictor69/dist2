@@ -37,6 +37,7 @@ class Admin_NewsController extends App_Controller_Action {
 		
 		if ($this->_request->isPost()) {
             $formData = $this->getRequest()->getPost();
+            var_dump($formData); exit;
             if ($form->isValid($formData)) { 
             	$imageName = $_FILES['imageFile']['name'];            	
             	$imageFile = $form->getElement('imageFile');
@@ -164,6 +165,122 @@ class Admin_NewsController extends App_Controller_Action {
         $this->view->form = $form;
 	}
 	
+	public function addAction() {
+		$form = new Admin_Form_News();
+//		$form->setAction('/admin/news/edit/type/information');
+		$form->getElement('categoryId')->setMultiOptions($this->getCategories());
+		
+		if ($this->_request->isPost()) {
+            $formData = $this->getRequest()->getPost();
+            if ($form->isValid($formData)) { 
+            	$imageName = $_FILES['imageFile']['name'];            	
+            	$imageFile = $form->getElement('imageFile');
+            	
+            	try {
+			 		$imageFile->receive();
+				} catch (Zend_File_Transfer_Exception $e) {
+					$e->getMessage();
+				}
+				
+				// Managerial
+				$managerialId = Zend_Auth::getInstance()->getIdentity()->id;
+				$managerial = new Model_Managerial();
+				$managerial->setId($managerialId);
+//				$managerialMapper = new Model_ManagerialMapper();
+//				$managerialMapper->find($managerialId, $managerial);
+
+				// Category
+				$categoryMapper = new Model_CategoryMapper();
+				$category = $categoryMapper->find($formData['categoryId']);
+				
+				$news = new Model_News($form->getValues());				
+				$news->setCategory($category)
+					->setManagerial($managerial)
+					->setTitle($formData['title'])
+					->setImagename($imageName);
+				
+				$newsMapper = new Model_NewsMapper();
+				$newsMapper->save($news);
+				
+            	$this->_helper->redirector('index', 'news', 'admin', array('type'=>'information'));
+            } else {
+                $form->populate($formData);
+            }
+        }
+        
+		$this->view->form = $form;
+	}
+	
+	
+	public function editAction() {
+		$form = new Admin_Form_News();
+        $form->getElement('categoryId')->setMultiOptions($this->getCategories());
+        
+        if ($this->_request->isPost()) {
+        	$formData = $this->getRequest()->getPost();
+        	if ($form->isValid($formData)) {
+        		$newsId = $formData['newsId'];
+        		$newsMapper = new Model_NewsMapper();
+        		$news = $newsMapper->find($newsId);
+        		if ($news != NULL) {
+        			$imageName = $_FILES['imageFile']['name'];            	
+	            	$imageFile = $form->getElement('imageFile');
+	            	
+	            	try {
+				 		$imageFile->receive();
+					} catch (Zend_File_Transfer_Exception $e) {
+						$e->getMessage();
+					}
+					
+					// Managerial
+					$managerialId = Zend_Auth::getInstance()->getIdentity()->id;
+					$managerial = new Model_Managerial();
+					$managerial->setId($managerialId);
+	//				$managerialMapper = new Model_ManagerialMapper();
+	//				$managerialMapper->find($managerialId, $managerial);
+	
+					// Category
+					$categoryMapper = new Model_CategoryMapper();
+					$category = $categoryMapper->find($formData['categoryId']);
+					
+					$news->setCategory($category)
+						->setManagerial($managerial)
+						->setSummary($formData['summary'])
+						->setFount($formData['fount'])
+						->setTitle($formData['title'])
+						->setContain($formData['contain'])
+						->setImagename($imageName)
+						->setManagerial($managerial);
+						;
+					
+					$newsMapper->update($newsId, $news);
+        		} else {
+        			// Don't exits the news
+        			
+        		}
+            	$this->_helper->redirector('index', 'news', 'admin', array('type'=>'information'));
+            } else {
+                $form->populate($formData);
+            }
+        } else {
+           	$id = $this->_getParam('id', 0);
+           	
+            $newsMapper = new Model_NewsMapper();
+            $news = $newsMapper->find($id);
+          	if ($news != NULL) {//security
+            	$form->getElement('newsId')->setValue($id);
+				$form->getElement('title')->setValue($news->getTitle());
+				$form->getElement('summary')->setValue($news->getSummary());
+				$form->getElement('contain')->setValue($news->getContain());
+				$form->getElement('fount')->setValue($news->getFount());
+				$form->getElement('categoryId')->setValue($news->getCategory()->getId());
+        	} else {
+                	
+       		}
+        }
+        
+        $this->view->form = $form;
+	}
 	/**
 	 * 
 	 * Deletes news
