@@ -3,8 +3,8 @@
 </div>
 
 <script type="text/javascript">
-//	Options displayed in comma-separated list
-//	$("#privileges").multiSelect({ oneOrMoreSelected: '*' });
+//	$("#privilege").multiselect();
+	$("#privilege").multiselect().multiselectfilter();
 
 	$("#name").bind('keyup', function(e) {
 		var nameVal = $('#name').val();
