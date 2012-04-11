@@ -93,13 +93,17 @@ class Model_ManagerialMapper extends Model_TemporalMapper {
 		unset($data['id']);
         $this->getDbTablePerson()->insert($data);
        	
-		$person = $this->getDbTablePerson()->fetchRow("name = '".$managerial->getName()."'");
+        $personId = (int)$this->getDbTablePerson()->getAdapter()->lastInsertId();
+        
         $data = array(
-      		'personId' => (int)$person->id,
+      		'personId' => $personId,
+        	'provinceId' => $managerial->getProvince()->getId(),
+//        	'userGroupId' => $managerial->getUse,
         	'created'  => date('Y-m-d H:i:s'),
-        	'state'    => TRUE
+        	self::STATE_FIELDNAME => TRUE
         );
-        // insert Managerial
+        // Saves a managerial
+        unset($data['id']);
         $this->getDbTable()->insert($data);
     }
 

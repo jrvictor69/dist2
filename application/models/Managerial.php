@@ -9,7 +9,12 @@ class Model_Managerial extends Model_Person {
 	 */
 	protected $_visible;
 	
-//	protected $_personId;
+	/**
+	 * 
+	 * Id of the Person this model is associated with.
+	 * @var int
+	 */
+	protected $_personId;
 
 	/**
 	 * 
