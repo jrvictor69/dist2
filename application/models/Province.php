@@ -1,9 +1,9 @@
 <?php
 /**
- * DIST
- * Done
+ * Model for Dist 2
+ * 
  * @category Dist
- * @package application\models
+ * @package Models
  * @author Victor Villca <victor.villca@swissbytes.ch>
  * @copyright Copyright (c) 2012 GISOFT A/S
  * @license Proprietary
@@ -13,14 +13,14 @@ class Model_Province extends Model_Entity {
 	
 	/**
 	 * 
-	 * Name Province
+	 * Name province
 	 * @var string
 	 */
 	protected $_name;
 	
 	/**
 	 * 
-	 * Description Province
+	 * Description province
 	 * @var string
 	 */
 	protected $_description;
@@ -43,7 +43,6 @@ class Model_Province extends Model_Entity {
         if (is_array($options)) {
             $this->setOptions($options);
         }
-        $this->department = new Model_Department();
     }
     
 	/**
@@ -83,8 +82,7 @@ class Model_Province extends Model_Entity {
 	 */
 	public function getDepartment() {
 		$departmentMapper = new Model_DepartmentMapper();
-		$departmentMapper->find($this->_departmentId, $this->department);
-		return $this->department;
+		return $departmentMapper->find($this->_departmentId);
 	}
 
 	/**
