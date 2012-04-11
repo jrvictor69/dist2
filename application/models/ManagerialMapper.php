@@ -1,30 +1,34 @@
 <?php
-class Model_ManagerialMapper {
+/**
+ * DataMapper for Dist 2.
+ *
+ * @category Dist
+ * @package Models
+ * @author Victor Villca <victor.villca@swissbytes.ch>
+ * @copyright Copyright (c) 2012 Gisof A/S
+ * @license Proprietary
+ */
+
+class Model_ManagerialMapper extends Model_TemporalMapper {
+	
 	/**
 	 * 
-	 * Enter description here ...
-	 * @var unknown_type
+	 * This class abstract for the table tblPerson
+	 * @var Zend_Db_Table_Abstract
 	 */
 	protected $_dbTablePerson;
 	
 	/**
 	 * 
-	 * Enter description here ...
-	 * @var unknown_type
+	 * This class abstract is from Zend framework
+	 * @var Zend_Db_Table_Abstract
 	 */
 	protected $_dbTable;
 	
-	public function setDbTablePerson($dbTable) {
-        if (is_string($dbTable)) {
-            $dbTable = new $dbTable();
-        }
-        if (!$dbTable instanceof Zend_Db_Table_Abstract) {
-            throw new Exception('Invalid table data gateway provided');
-        }
-        $this->_dbTablePerson = $dbTable;
-        return $this;
-    }
-    
+    /**
+     * (non-PHPdoc)
+     * @see Model_TemporalMapper::setDbTable()
+     */
     public function setDbTable($dbTable) {
         if (is_string($dbTable)) {
             $dbTable = new $dbTable();
@@ -36,6 +40,28 @@ class Model_ManagerialMapper {
         return $this;
     }
 
+    /**
+     * (non-PHPdoc)
+     * @see Model_TemporalMapper::getDbTable()
+     */
+ 	public function getDbTable() {
+        if (null === $this->_dbTable) {
+            $this->setDbTable('Model_DbTable_Managerial');
+        }
+        return $this->_dbTable;
+    }
+    
+	public function setDbTablePerson($dbTable) {
+        if (is_string($dbTable)) {
+            $dbTable = new $dbTable();
+        }
+        if (!$dbTable instanceof Zend_Db_Table_Abstract) {
+            throw new Exception('Invalid table data gateway provided');
+        }
+        $this->_dbTablePerson = $dbTable;
+        return $this;
+    }
+    
 	public function getDbTablePerson() {
         if (null === $this->_dbTablePerson) {
             $this->setDbTablePerson('Model_DbTable_Person');
@@ -43,13 +69,11 @@ class Model_ManagerialMapper {
         return $this->_dbTablePerson;
     }
     
-    public function getDbTable() {
-        if (null === $this->_dbTable) {
-            $this->setDbTable('Model_DbTable_Managerial');
-        }
-        return $this->_dbTable;
-    }
-	
+    /**
+     * 
+     * Saves model
+     * @param Model_Managerial $managerial
+     */
 	public function save(Model_Managerial $managerial) {
         $data = array(
       		'name'   	  => $managerial->getName(),
@@ -62,9 +86,11 @@ class Model_ManagerialMapper {
         	'sex'         => $managerial->getSex(),
         	'type'        => 1,
         	'created'     => date('Y-m-d H:i:s'),
-        	'state'       => TRUE
+        	self::STATE_FIELDNAME  => TRUE
         );
-		// insert Person 
+        
+		// Saves a person 
+		unset($data['id']);
         $this->getDbTablePerson()->insert($data);
        	
 		$person = $this->getDbTablePerson()->fetchRow("name = '".$managerial->getName()."'");
@@ -77,6 +103,12 @@ class Model_ManagerialMapper {
         $this->getDbTable()->insert($data);
     }
 
+    /**
+     * 
+     * Updates model
+     * @param int $id
+     * @param Model_Managerial $managerial
+     */
     public function update($id, Model_Managerial $managerial) {
     	$result = $this->getDbTable()->find($id);
         if (0 == count($result)) {
@@ -108,6 +140,11 @@ class Model_ManagerialMapper {
         $this->getDbTable()->update($data, array('id = ?' => $id));
     }
     
+    /**
+     * 
+     * Deletes model
+     * @param int $id
+     */
 	public function delete($id) {
     	$result = $this->getDbTable()->find($id);
         if (0 == count($result)) {
@@ -130,71 +167,75 @@ class Model_ManagerialMapper {
         $this->getDbTable()->update($data, array('id = ?' => $id));
     }
     
-	public function find($id, Model_Managerial $managerial) {
+	/**
+     * (non-PHPdoc)
+     * @see Model_TemporalMapper::find()
+     * @return Model_Managerial
+     */
+	public function find($id) {
         $result = $this->getDbTable()->find($id);
-        if (0 == count($result)) {
-            return;
+    	if (0 == count($result)) {
+            return NULL;
         }
         
         $row = $result->current();
-        $resultPerson = $this->getDbTablePerson()->find((int)$row->personId);
-		if (0 == count($resultPerson)) {
-            return;
-        }
         
-        $row = $result->current();
-        $rowPerson = $resultPerson->current();
+        $managerial = new Model_Managerial();
         
-//        $managerial->setName($name)
-//        			->setFirstName($firstName)
-//        			->setLastName($lastName)
-//        			->setDateOfBirth($dateOfBirth)
-//        			->setSex($sex)
-        			
+   		return $managerial;
+    }
         
-        			
-
-//        $managerial->setId($row->id)
-//        		->setName($rowPerson->name)
-//       			->setFirstName($rowPerson->firstName)
-//            	->setLastName($rowPerson->lastName)
-//            	->setDateOfBirth($rowPerson->dateOfBirth)
-//            	->setPhone($rowPerson->phone)
-//            	->setPhonework($rowPerson->phonework)
-//            	->setPhonemobil($rowPerson->phonemobil)
-//            	->setSex($rowPerson->sex)
-//            	->setCreated($rowPerson->created)
-//            	->set
-//          	 
-	}
-	
-    public function findOri($id, Model_Person $person) {
-        $result = $this->getDbTable()->find($id);
-        if (0 == count($result)) {
-            return;
-        }
+    /**
+     * (non-PHPdoc)
+     * @see Model_TemporalMapper::findAll()
+     */
+    public function findAll() {
+    	$whereState = sprintf("%s = 1", self::STATE_FIELDNAME);
+        $resultSet = $this->getDbTable()->fetchAll($whereState);
         
-        $row = $result->current();
-        $resultPerson = $this->getDbTablePerson()->find((int)$row->personId);
-//        $this->getDbTablePerson()->update($data, array('id = ?' => (int)$row->personId));
+        $entries = array();
+         
+        return $entries;
+    }
         
-        $row = $result->current();
-        $person->setId($row->id)
-        	->setName($row->name)
-       		->setFirstName($row->firstName)
-            ->setLastName($row->lastName)
-            ->setDateOfBirth($row->dateOfBirth)
-            ->setPhone($row->phone)
-            ->setPhonework($row->phonework)
-            ->setPhonemobil($row->phonemobil)
-            ->setSex($row->sex)
-//            ->setType($row->type)
-            ->setCreated($roe->created)  
-    	;    
-	}
-
-    public function fetchAll() {
-    	$resultSet = $this->getDbTable()->fetchAll('state = 1');
-        return $resultSet;
+	/**
+	 * (non-PHPdoc)
+	 * @see Model_TemporalMapper::findByCriteria()
+	 */   
+	public function findByCriteria($filters = array(), $limit = NULL, $offset = NULL, $sortColumn = NULL, $sortDirection = NULL) {
+		
+		$where = $this->getFilterQuery($filters);
+					
+		// Order
+		$order = '';
+		switch ($sortColumn) {
+			case 1:
+				$order = 'name';
+				break;
+				
+			default: $order = 'name';
+		}
+		
+		$sortOrder = sprintf("%s %s", $order, $sortDirection);
+		
+		$whereState = sprintf("%s = 1", self::STATE_FIELDNAME);
+        $resultSet = $this->getDbTable()->fetchAll("$whereState $where", $sortOrder, $limit, $offset);
+        $entries = array();
+        
+        
+        return $entries;
+    }
+     
+    /**
+     * (non-PHPdoc)
+     * @see Model_TemporalMapper::getTotalCount()
+     */
+    public function getTotalCount($filters = array()) {
+		$where = $this->getFilterQuery($filters);
+		
+		$whereState = sprintf("%s = 1", self::STATE_FIELDNAME);
+		$resultSet = $this->getDbTable()->fetchAll("$whereState $where");
+		
+		return count($resultSet);
     }
 }

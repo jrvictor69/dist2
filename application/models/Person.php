@@ -4,63 +4,54 @@ class Model_Person extends Model_Entity {
 	
 	/**
 	 * 
-	 * Name of the Person
 	 * @var string
 	 */
 	protected $_name;
 	
 	/**
 	 * 
-	 * Enter description here ...
 	 * @var string
 	 */
 	protected $_firstName;
 	
 	/**
 	 * 
-	 * Enter description here ...
 	 * @var string
 	 */
 	protected $_lastName;
 	
 	/**
 	 * 
-	 * Enter description here ...
 	 * @var date
 	 */
 	protected $_dateOfBirth;
 	
 	/**
 	 * 
-	 * Enter description here ...
 	 * @var string
 	 */
 	protected $_phone;
 	
 	/**
 	 * 
-	 * Enter description here ...
 	 * @var string
 	 */
 	protected $_phonework;
 	
 	/**
 	 * 
-	 * Enter description here ...
 	 * @var int
 	 */
 	protected $_phonemobil;
 	
 	/**
 	 * 
-	 * Enter description here ...
 	 * @var byte
 	 */
 	protected $_sex;
 	
 	/**
 	 * 
-	 * Enter description here ...
 	 * @var int
 	 */
 	protected $_type;
