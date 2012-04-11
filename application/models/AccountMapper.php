@@ -113,7 +113,7 @@ class Model_AccountMapper extends Model_TemporalMapper {
 	public function find($id) {
         $result = $this->getDbTable()->find($id);
     	if (0 == count($result)) {
-            return FALSE;
+            return NULL;
         }
         
         $row = $result->current();
@@ -125,7 +125,7 @@ class Model_AccountMapper extends Model_TemporalMapper {
         		->setRole($row->role)
         		->setCreated($row->created)
         		->setChanged($row->changed)
-        		->setId($row->$id);
+        		->setId($row->id);
         		
         return $account;
     }
