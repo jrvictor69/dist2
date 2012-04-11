@@ -75,6 +75,8 @@ class Model_ManagerialMapper extends Model_TemporalMapper {
      * @param Model_Managerial $managerial
      */
 	public function save(Model_Managerial $managerial) {
+		$dateCreated = date('Y-m-d H:i:s');
+		
         $data = array(
       		'name'   	  => $managerial->getName(),
             'firstName'   => $managerial->getFirstName(),
@@ -85,7 +87,7 @@ class Model_ManagerialMapper extends Model_TemporalMapper {
         	'phonemobil'  => $managerial->getPhonemobil(),
         	'sex'         => $managerial->getSex(),
         	'type'        => 1,
-        	'created'     => date('Y-m-d H:i:s'),
+        	'created'     => $dateCreated,
         	self::STATE_FIELDNAME  => TRUE
         );
         
@@ -98,8 +100,10 @@ class Model_ManagerialMapper extends Model_TemporalMapper {
         $data = array(
       		'personId' => $personId,
         	'provinceId' => $managerial->getProvince()->getId(),
-//        	'userGroupId' => $managerial->getUse,
-        	'created'  => date('Y-m-d H:i:s'),
+        	'accountId' => $managerial->getAccount()->getId(),
+        	'userGroupId' => $managerial->getUserGroup()->getId(),
+        	'visible' => TRUE,
+        	'created' => $dateCreated,
         	self::STATE_FIELDNAME => TRUE
         );
         // Saves a managerial
@@ -119,6 +123,8 @@ class Model_ManagerialMapper extends Model_TemporalMapper {
             return;
         }
         
+        $dateChanged = date('Y-m-d H:i:s');
+        
     	$data = array(
       		'name'   	  => $managerial->getName(),
             'firstName'   => $managerial->getFirstName(),
@@ -128,17 +134,20 @@ class Model_ManagerialMapper extends Model_TemporalMapper {
         	'phonework'   => $managerial->getPhonework(),
         	'phonemobil'  => $managerial->getPhonemobil(),
         	'sex'         => $managerial->getSex(),
-        	'changed'     => date('Y-m-d H:i:s')
+        	'changed'     => $dateChanged
         );
         
         $row = $result->current();
         $this->getDbTablePerson()->update($data, array('id = ?' => (int)$row->personId));
         
-        $person = $this->getDbTablePerson()->fetchRow("name = '".$managerial->getName()."'");
+//        $person = $this->getDbTablePerson()->fetchRow("name = '".$managerial->getName()."'");
         $data = array(
-      		'personId' => (int)$person->id,
-        	'visible'  => TRUE,
-        	'changed'  => date('Y-m-d H:i:s'),
+      		'personId' => $row->personId,
+        	'provinceId' => $managerial->getProvince()->getId(),
+        	'accountId' => $managerial->getAccount()->getId(),
+        	'userGroupId' => $managerial->getUserGroup()->getId(),
+        	'visible' => TRUE,
+        	'changed' => $dateChanged,
         );
         
         $this->getDbTable()->update($data, array('id = ?' => $id));
@@ -157,16 +166,11 @@ class Model_ManagerialMapper extends Model_TemporalMapper {
         
         $data = array(
             'changed' => date('Y-m-d H:i:s'),
-        	'state' => FALSE,
+        	self::STATE_FIELDNAME => FALSE
         );
         
         $row = $result->current();
         $this->getDbTablePerson()->update($data, array('id = ?' => (int)$row->personId));
-        
-        $data = array(
-        	'changed' => date('Y-m-d H:i:s'),
-        	'state'   => FALSE
-        );
         
         $this->getDbTable()->update($data, array('id = ?' => $id));
     }
@@ -177,14 +181,54 @@ class Model_ManagerialMapper extends Model_TemporalMapper {
      * @return Model_Managerial
      */
 	public function find($id) {
-        $result = $this->getDbTable()->find($id);
+		// Finds abstract Managerial
+      	$result = $this->getDbTable()->find($id);
     	if (0 == count($result)) {
             return NULL;
         }
-        
         $row = $result->current();
         
+        $accountMapper = new Model_AccountMapper();
+        $account = $accountMapper->find($row->accountId);
+
+        $provinceMapper = new Model_ProvinceMapper();
+        $province = $provinceMapper->find($row->provinceId);
+
+        $userGroupMapper = new Model_UserGroupMapper();
+        $userGroup = $userGroupMapper->find($row->userGroupId);
+        
         $managerial = new Model_Managerial();
+        if ($account != NULL) {
+        	$managerial->setAccount($account);
+        }
+        
+		if ($province != NULL) {
+        	$managerial->setProvince($province);
+        }
+        
+		if ($userGroup != NULL) {
+        	$managerial->setUserGroup($userGroup);
+        }
+        
+        // Finds abstract Person 
+		$resultPerson = $this->getDbTablePerson()->find((int)$row->personId);
+        $rowPerson = $resultPerson->current();
+        
+        $managerial
+        		->setVisible($row->visible)
+        		->setCreated($row->created)
+        		->setChanged($row->changed)
+        		->setName($rowPerson->name)
+        		->setFirstName($rowPerson->firstName)
+        		->setLastName($rowPerson->lastName)
+        		->setDateOfBirth($rowPerson->dateOfBirth)
+        		->setType($rowPerson->type)
+        		->setSex($rowPerson->sex)
+        		->setPhone($rowPerson->phone)
+        		->setPhonework($rowPerson->phonework)
+        		->setPhonemobil($rowPerson->phonemobil)
+        		->setId($row->id)
+        		;
         
    		return $managerial;
     }
@@ -198,7 +242,51 @@ class Model_ManagerialMapper extends Model_TemporalMapper {
         $resultSet = $this->getDbTable()->fetchAll($whereState);
         
         $entries = array();
-         
+    	foreach ($resultSet as $row) {
+	        $accountMapper = new Model_AccountMapper();
+	        $account = $accountMapper->find($row->accountId);
+	        	
+	        $provinceMapper = new Model_ProvinceMapper();
+	        $province = $provinceMapper->find($row->provinceId);
+	        
+	        $userGroupMapper = new Model_UserGroupMapper();
+	        $userGroup = $userGroupMapper->find($row->userGroupId);
+	        
+	        $managerial = new Model_Managerial();
+	        if ($account != NULL) {
+	        	$managerial->setAccount($account);
+	        }
+	        
+			if ($province != NULL) {
+	        	$managerial->setProvince($province);
+	        }
+	        
+			if ($userGroup != NULL) {
+	        	$managerial->setUserGroup($userGroup);
+	        }
+	        
+	        // Finds abstract Person 
+			$resultPerson = $this->getDbTablePerson()->find((int)$row->personId);
+	        $rowPerson = $resultPerson->current();
+	        
+	        $managerial
+	        		->setVisible($row->visible)
+	        		->setCreated($row->created)
+	        		->setChanged($row->changed)
+	        		->setName($rowPerson->name)
+	        		->setFirstName($rowPerson->firstName)
+	        		->setLastName($rowPerson->lastName)
+	        		->setDateOfBirth($rowPerson->dateOfBirth)
+	        		->setType($rowPerson->type)
+	        		->setSex($rowPerson->sex)
+	        		->setPhone($rowPerson->phone)
+	        		->setPhonework($rowPerson->phonework)
+	        		->setPhonemobil($rowPerson->phonemobil)
+	        		->setId($row->id)
+	        		;
+            $entries[] = $managerial;
+        }
+        
         return $entries;
     }
         
@@ -214,10 +302,10 @@ class Model_ManagerialMapper extends Model_TemporalMapper {
 		$order = '';
 		switch ($sortColumn) {
 			case 1:
-				$order = 'name';
+				$order = 'personId';
 				break;
 				
-			default: $order = 'name';
+			default: $order = 'personId';
 		}
 		
 		$sortOrder = sprintf("%s %s", $order, $sortDirection);
@@ -225,7 +313,50 @@ class Model_ManagerialMapper extends Model_TemporalMapper {
 		$whereState = sprintf("%s = 1", self::STATE_FIELDNAME);
         $resultSet = $this->getDbTable()->fetchAll("$whereState $where", $sortOrder, $limit, $offset);
         $entries = array();
-        
+		foreach ($resultSet as $row) {
+	        $accountMapper = new Model_AccountMapper();
+	        $account = $accountMapper->find($row->accountId);
+	        	
+	        $provinceMapper = new Model_ProvinceMapper();
+	        $province = $provinceMapper->find($row->provinceId);
+	        
+	        $userGroupMapper = new Model_UserGroupMapper();
+	        $userGroup = $userGroupMapper->find($row->userGroupId);
+	        
+	        $managerial = new Model_Managerial();
+	        if ($account != NULL) {
+	        	$managerial->setAccount($account);
+	        }
+	        
+			if ($province != NULL) {
+	        	$managerial->setProvince($province);
+	        }
+	        
+			if ($userGroup != NULL) {
+	        	$managerial->setUserGroup($userGroup);
+	        }
+	        
+	        // Finds abstract Person 
+			$resultPerson = $this->getDbTablePerson()->find((int)$row->personId);
+	        $rowPerson = $resultPerson->current();
+	        
+	        $managerial
+	        		->setVisible($row->visible)
+	        		->setCreated($row->created)
+	        		->setChanged($row->changed)
+	        		->setName($rowPerson->name)
+	        		->setFirstName($rowPerson->firstName)
+	        		->setLastName($rowPerson->lastName)
+	        		->setDateOfBirth($rowPerson->dateOfBirth)
+	        		->setType($rowPerson->type)
+	        		->setSex($rowPerson->sex)
+	        		->setPhone($rowPerson->phone)
+	        		->setPhonework($rowPerson->phonework)
+	        		->setPhonemobil($rowPerson->phonemobil)
+	        		->setId($row->id)
+	        		;
+            $entries[] = $managerial;
+        }
         
         return $entries;
     }
