@@ -1,2 +1,47 @@
-<h3>Under Development by administrator this moment</h3>
-<?php
+<?php $this->headScript()->appendFile($this->baseUrl() . "/js/modules/admin/Managerial.js","text/javascript");?>
+<div style="margin:20px;">
+	<?php echo $this->tableHeader('filterHeader', _("Filter Managerial"));?>
+	<div id="containerFormFilter">
+		<?php echo $this->formFilter; ?>
+	</div>
+	<br>
+	<?php echo $this->tableHeader('managerialHeader', _("Managerials"));?>
+	<?php echo $this->tableList("tblManagerial");?>	
+	<div class="buttons right">
+		<?php echo $this->buttonRemove("delete-managerial", $this->translate('Remove'), $this->url(array('action'=>'delete')));?>
+		<?php echo $this->buttonAdd("create-managerial", $this->translate('Add'), $this->url(array('action'=>'create')));?>
+	</div>
+		
+	<div id="dialog"><!-- Loads ajax dialog form --></div>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+	var managerial = new com.em.Managerial();
+			
+	// network
+	managerial.setUrl({
+		toTable : '<?php echo $this->url(array('action'=>'read-items'));?>',
+		toBase : '<?php echo $this->baseUrl(); ?>',
+		toUpdate : '<?php echo $this->url(array('action'=>'update')); ?>'
+	});
+	
+	var headers = new Object();
+	headers.headerArray = new Array(
+		'<?php echo $this->translate('Name'); ?>',
+		'<?php echo $this->translate('Description'); ?>',
+		'<?php echo $this->translate('Module'); ?>',
+		'<?php echo $this->translate('Controller'); ?>',
+		'<?php echo $this->translate('Action'); ?>',
+		'<?php echo $this->translate('Created'); ?>',
+		'<?php echo $this->translate('Changed'); ?>');
+	managerial.setHeaders(headers);
+	// configuration of widgets
+	managerial.configureTable('#tblManagerial', true);
+	
+	// CRUD
+	managerial.clickToAdd('#create-managerial');
+	managerial.clickToUpdate('#tblManagerial a[id^=update-managerial-]');
+	managerial.clickToDelete('#delete-managerial');
+});
+</script>
