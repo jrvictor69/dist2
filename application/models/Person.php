@@ -1,4 +1,13 @@
 <?php
+/**
+ * Model for Dist 2.
+ *
+ * @category Dist
+ * @package Models
+ * @author Victor Villca <victor.villca@swissbytes.ch>
+ * @copyright Copyright (c) 2012 Gisof A/S
+ * @license Proprietary
+ */
 
 class Model_Person extends Model_Entity {
 	

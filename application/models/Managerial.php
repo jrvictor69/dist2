@@ -1,4 +1,13 @@
 <?php
+/**
+ * Model for Dist 2.
+ *
+ * @category Dist
+ * @package Models
+ * @author Victor Villca <victor.villca@swissbytes.ch>
+ * @copyright Copyright (c) 2012 Gisof A/S
+ * @license Proprietary
+ */
 
 class Model_Managerial extends Model_Person {
 	
@@ -44,6 +53,20 @@ class Model_Managerial extends Model_Person {
 	 */
 	protected $province;
 	
+	/**
+	 * 
+	 * Id of the User Group this model is associated with.
+	 * @var int
+	 */
+	protected $_userGroupId;
+	
+	/**
+	 * 
+	 * User group this model is associated with.
+	 * @var Model_UserGroup
+	 */
+	protected $userGroup;
+	
 	public function __construct(array $options = null) {
         if (is_array($options)) {
             $this->setOptions($options);
@@ -71,8 +94,7 @@ class Model_Managerial extends Model_Person {
 	 */
 	public function getAccount() {
 		$accountMapper = new Model_AccountMapper();
-		$accountMapper->find($this->_accountId, $this->account);
-		return $this->account;
+		return $accountMapper->find($this->_accountId);
 	}
 	
 	/**
@@ -90,8 +112,7 @@ class Model_Managerial extends Model_Person {
 	 */
 	public function getProvince() {
 		$provinceMapper = new Model_ProvinceMapper();
-		$provinceMapper->find($this->_provinceId, $this->province);
-		return $this->province;
+		return $provinceMapper->find($this->_provinceId);
 	}
 
 	/**
@@ -101,6 +122,24 @@ class Model_Managerial extends Model_Person {
 	public function setProvince(Model_Province $province) {
 		$this->province = $province;
 		$this->_provinceId = $province->getId();
+		return $this;
+	}
+	
+	/**
+	 * @return Model_UserGroup;
+	 */
+	public function getUserGroup() {
+		$userGroupMapper = new Model_UserGroupMapper();
+		return $userGroupMapper->find($this->_userGroupId);
+	}
+
+	/**
+	 * @param Model_UserGroup $userGroup
+	 * @return Model_Managerial
+	 */
+	public function setUserGroup(Model_UserGroup $userGroup) {
+		$this->userGroup = $userGroup;
+		$this->_userGroupId = $userGroup->getId();
 		return $this;
 	}
 }
