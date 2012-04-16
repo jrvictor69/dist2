@@ -35,6 +35,7 @@ class Admin_NewsController extends App_Controller_Action {
 		$form->setAction('/admin/news/create/type/information');
 		$form->getElement('categoryId')->setMultiOptions($this->getCategories());
 		
+		
 		if ($this->_request->isPost()) {
             $formData = $this->getRequest()->getPost();
             var_dump($formData); exit;
@@ -165,122 +166,107 @@ class Admin_NewsController extends App_Controller_Action {
         $this->view->form = $form;
 	}
 	
+	/**
+	 * 
+	 * Enter description here ...
+	 */
 	public function addAction() {
 		$form = new Admin_Form_News();
-//		$form->setAction('/admin/news/edit/type/information');
 		$form->getElement('categoryId')->setMultiOptions($this->getCategories());
-		
-		if ($this->_request->isPost()) {
-            $formData = $this->getRequest()->getPost();
-            if ($form->isValid($formData)) { 
-            	$imageName = $_FILES['imageFile']['name'];            	
-            	$imageFile = $form->getElement('imageFile');
-            	
-            	try {
-			 		$imageFile->receive();
-				} catch (Zend_File_Transfer_Exception $e) {
-					$e->getMessage();
-				}
-				
-				// Managerial
+		$form->removeElement('load');
+		$this->view->form = $form;
+	}
+	
+	/**
+	 * 
+	 * Creates a new Privilege
+	 * @access public
+	 */
+	public function createSaveAction() {
+        $this->_helper->viewRenderer->setNoRender(TRUE);
+        
+        $form = new Admin_Form_News();
+        $form->getElement('categoryId')->setMultiOptions($this->getCategories());
+        
+        $formData = $this->_request->getPost();
+        if ($form->isValid($formData)) {          	
+        	try {
+        		// Managerial
 				$managerialId = Zend_Auth::getInstance()->getIdentity()->id;
 				$managerial = new Model_Managerial();
 				$managerial->setId($managerialId);
-//				$managerialMapper = new Model_ManagerialMapper();
-//				$managerialMapper->find($managerialId, $managerial);
-
+				
 				// Category
 				$categoryMapper = new Model_CategoryMapper();
 				$category = $categoryMapper->find($formData['categoryId']);
 				
-				$news = new Model_News($form->getValues());				
-				$news->setCategory($category)
+				$news = new Model_News();				
+				$news
+					->setSummary($formData['summary'])
+					->setContain($formData['contain'])
+					->setFount($formData['fount'])
+					->setCategory($category)
 					->setManagerial($managerial)
 					->setTitle($formData['title'])
-					->setImagename($imageName);
+					->setImagename("image name");
 				
 				$newsMapper = new Model_NewsMapper();
 				$newsMapper->save($news);
 				
-            	$this->_helper->redirector('index', 'news', 'admin', array('type'=>'information'));
-            } else {
-                $form->populate($formData);
-            }
-        }
-        
-		$this->view->form = $form;
+          	} catch (Exception $e) {
+            	$this->exception($this->view, $e);
+           	}
+     	} else {
+			$this->view->success = FALSE;
+			$this->_messenger->addError(implode("<br/>", $form->getMessages('privilege')));
+			$this->view->message = $this->view->seeMessages();
+       	}
+       	
+        $this->_helper->json($this->view);
 	}
-	
 	
 	public function editAction() {
 		$form = new Admin_Form_News();
         $form->getElement('categoryId')->setMultiOptions($this->getCategories());
         
-        if ($this->_request->isPost()) {
-        	$formData = $this->getRequest()->getPost();
-        	if ($form->isValid($formData)) {
-        		$newsId = $formData['newsId'];
-        		$newsMapper = new Model_NewsMapper();
-        		$news = $newsMapper->find($newsId);
-        		if ($news != NULL) {
-        			$imageName = $_FILES['imageFile']['name'];            	
-	            	$imageFile = $form->getElement('imageFile');
-	            	
-	            	try {
-				 		$imageFile->receive();
-					} catch (Zend_File_Transfer_Exception $e) {
-						$e->getMessage();
-					}
-					
-					// Managerial
-					$managerialId = Zend_Auth::getInstance()->getIdentity()->id;
-					$managerial = new Model_Managerial();
-					$managerial->setId($managerialId);
-	//				$managerialMapper = new Model_ManagerialMapper();
-	//				$managerialMapper->find($managerialId, $managerial);
-	
-					// Category
-					$categoryMapper = new Model_CategoryMapper();
-					$category = $categoryMapper->find($formData['categoryId']);
-					
-					$news->setCategory($category)
-						->setManagerial($managerial)
-						->setSummary($formData['summary'])
-						->setFount($formData['fount'])
-						->setTitle($formData['title'])
-						->setContain($formData['contain'])
-						->setImagename($imageName)
-						->setManagerial($managerial);
-						;
-					
-					$newsMapper->update($newsId, $news);
-        		} else {
-        			// Don't exits the news
-        			
-        		}
-            	$this->_helper->redirector('index', 'news', 'admin', array('type'=>'information'));
-            } else {
-                $form->populate($formData);
-            }
+        $id = $this->_getParam('id', 0);
+        $newsMapper = new Model_NewsMapper();
+		$news = $newsMapper->find($id);
+            
+     	if ($news != NULL) {//security
+        	$form->getElement('newsId')->setValue($id);
+			$form->getElement('title')->setValue($news->getTitle());
+			$form->getElement('summary')->setValue($news->getSummary());
+			$form->getElement('contain')->setValue($news->getContain());
+			$form->getElement('fount')->setValue($news->getFount());
+			$form->getElement('categoryId')->setValue($news->getCategory()->getId());
         } else {
-           	$id = $this->_getParam('id', 0);
-           	
+                	
+       	}
+       	
+        $this->view->form = $form;
+	}
+	
+	/**
+	 * This action return data to load left and right form in 
+	 * update help text view
+	 */
+	public function loadAction() {
+		try {
+			$id = $this->_getParam('id', 0);
             $newsMapper = new Model_NewsMapper();
             $news = $newsMapper->find($id);
-          	if ($news != NULL) {//security
-            	$form->getElement('newsId')->setValue($id);
-				$form->getElement('title')->setValue($news->getTitle());
-				$form->getElement('summary')->setValue($news->getSummary());
-				$form->getElement('contain')->setValue($news->getContain());
-				$form->getElement('fount')->setValue($news->getFount());
-				$form->getElement('categoryId')->setValue($news->getCategory()->getId());
+          	if ($news != NULL) {//security	
+				$this->view->htmlContent = $news->getContain();
         	} else {
                 	
        		}
-        }
-        
-        $this->view->form = $form;
+		} catch (Exception $e) {
+			$this->exception($this->view, $e);
+		}
+		$this->_helper->json($this->view);
 	}
+	
 	/**
 	 * 
 	 * Deletes news
@@ -412,6 +398,25 @@ class Admin_NewsController extends App_Controller_Action {
 		}
 				
 		return $filters;
+	}
+	
+	/**
+	 * 
+	 * Verifies if it exist some error with the application
+	 * @param Zend_View $view
+	 * @param Exception $e
+	 */
+	private function exception(Zend_View $view, Exception $e) {
+		$this->_logger->err($e->getMessage());
+        // response to client
+      	$view->success = FALSE;
+        if ($e->getCode() == Model_EnumErrorType::APPLICATION)
+        	$this->_messenger->addError($e->getMessage());
+   		elseif ($e->getCode() == Model_EnumErrorType::DUP_NAME)
+        	$this->_messenger->addError('name_warning');
+    	else
+        	$this->_messenger->addError(_("An error occurred while processing the data. <br/> Please Try again."));
+       	$view->message = $view->seeMessages();
 	}
 	
 	/**
