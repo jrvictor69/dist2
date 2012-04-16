@@ -12,8 +12,8 @@ class Admin_Form_News extends Zend_Form {
 	
 	public function init() {
 		$this->setAttrib('id', 'formId')
-			->setMethod('post')
-       		->setAttrib('enctype', 'multipart/form-data')
+//			->setMethod('post')
+//       		->setAttrib('enctype', 'multipart/form-data')
        		;
        	
        	$hidden = new Zend_Form_Element_Hidden('newsId');
@@ -55,12 +55,12 @@ class Admin_Form_News extends Zend_Form {
             ->addFilter('StringTrim')
             ;
               
-        $file = new Zend_Form_Element_File('imageFile');
-		$file->setLabel(_('Upload Image'))
-			->setDestination(APPLICATION_PATH.'/../data/upload')
-			->addValidator('Count', false, 1)//ensure only 1 file
-			->addValidator('Extension', false, 'jpg, png, gif')            
-            ;
+//        $file = new Zend_Form_Element_File('imageFile');
+//		$file->setLabel(_('Upload Image'))
+//			->setDestination(APPLICATION_PATH.'/../data/upload')
+//			->addValidator('Count', false, 1)//ensure only 1 file
+//			->addValidator('Extension', false, 'jpg, png, gif')            
+//            ;
         	
         $category = new Zend_Form_Element_Select('categoryId');
 		$category
@@ -68,10 +68,18 @@ class Admin_Form_News extends Zend_Form {
 			->setRequired(TRUE)
 			;
 			
-        $submit = new Zend_Form_Element_Submit('submit');
-        $submit->setLabel(_('Save'))
-        	->setAttrib('class', 'green buttonNg');
-
-        $this->addElements(array($hidden, $title, $summary, $contain, $fount, $file, $category, $submit));
+		$loadButton = new Zend_Form_Element_Button('load');
+        $loadButton->setLabel(_('Load'))
+        	->setAttrib('class', 'green buttonNg')
+        	->setAttrib('onclick', 'loadContent();return false;')
+        	;
+        	
+        $saveButton = new Zend_Form_Element_Button('update');
+        $saveButton->setLabel(_('Save'))
+        	->setAttrib('class', 'green buttonNg')
+        	->setAttrib('onclick', 'saveContent();return false;')
+        	;
+        	
+        $this->addElements(array($hidden, $title, $summary, $contain, $fount, $category, $loadButton, $saveButton));
 	}
 }
