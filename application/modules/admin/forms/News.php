@@ -12,8 +12,8 @@ class Admin_Form_News extends Zend_Form {
 	
 	public function init() {
 		$this->setAttrib('id', 'formId')
-//			->setMethod('post')
-//       		->setAttrib('enctype', 'multipart/form-data')
+			->setMethod('post')
+       		->setAttrib('enctype', 'multipart/form-data')
        		;
        	
        	$hidden = new Zend_Form_Element_Hidden('newsId');
@@ -42,7 +42,7 @@ class Admin_Form_News extends Zend_Form {
         	->setAttrib('cols', 80)
         	->setAttrib('rows', 15)
         	->setAttrib('class', 'contain')
-        	->setRequired(TRUE)
+//        	->setRequired(TRUE)
            	->addFilter('StripTags')
             ->addFilter('StringTrim')
             ;
@@ -55,12 +55,13 @@ class Admin_Form_News extends Zend_Form {
             ->addFilter('StringTrim')
             ;
               
-//        $file = new Zend_Form_Element_File('imageFile');
-//		$file->setLabel(_('Upload Image'))
-//			->setDestination(APPLICATION_PATH.'/../data/upload')
-//			->addValidator('Count', false, 1)//ensure only 1 file
-//			->addValidator('Extension', false, 'jpg, png, gif')            
-//            ;
+        $file = new Zend_Form_Element_File('imageFile');
+		$file->setLabel(_('Upload Image'))
+			->setMultiFile(5)
+			->setDestination(APPLICATION_PATH.'/../data/upload')
+			->addValidator('Count', false, 2)//ensure only 1 file
+			->addValidator('Extension', false, 'jpg, png, gif')            
+            ;
         	
         $category = new Zend_Form_Element_Select('categoryId');
 		$category
@@ -71,15 +72,15 @@ class Admin_Form_News extends Zend_Form {
 		$loadButton = new Zend_Form_Element_Button('load');
         $loadButton->setLabel(_('Load'))
         	->setAttrib('class', 'green buttonNg')
-        	->setAttrib('onclick', 'loadContent();return false;')
+//        	->setAttrib('onclick', 'loadContent();return false;')
         	;
         	
-        $saveButton = new Zend_Form_Element_Button('update');
-        $saveButton->setLabel(_('Save'))
+        $saveButton = new Zend_Form_Element_Submit('update');
+        $saveButton->setLabel(_('Save 2'))
         	->setAttrib('class', 'green buttonNg')
-        	->setAttrib('onclick', 'saveContent();return false;')
+//        	->setAttrib('onclick', 'saveContent();return false;')
         	;
         	
-        $this->addElements(array($hidden, $title, $summary, $contain, $fount, $category, $loadButton, $saveButton));
+        $this->addElements(array($hidden, $title, $summary, $contain, $fount, $file, $category, $loadButton, $saveButton));
 	}
 }
