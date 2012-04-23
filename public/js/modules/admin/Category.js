@@ -387,14 +387,9 @@ com.em.Category.prototype = {
 	setValidatorForm : function(selector) {
 		validator = $(selector).validate({
 	        rules:{
-//	        	"name":{
-////					required: true,
-////					minlength: 3,
-//					maxlength: 100
-//				},
-				"description":{
+	        	'name':{
 					required: true,
-					minlength: 3
+					maxlength: 100
 				}
 	        }
 	    });

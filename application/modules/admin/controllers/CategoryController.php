@@ -67,7 +67,7 @@ class Admin_CategoryController extends App_Controller_Action {
                     	$this->view->message = $this->view->seeMessages();	
                 	} else {
 						$this->view->success = FALSE;
-                    	$this->_messenger->addError(_("The Category add already exists"));
+                    	$this->_messenger->addError(_("The Category already exists"));
                     	$this->view->message = $this->view->seeMessages();                			
                 	}
                 } catch (Exception $e) {
