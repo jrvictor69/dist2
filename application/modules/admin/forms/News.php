@@ -72,13 +72,11 @@ class Admin_Form_News extends Zend_Form {
 		$loadButton = new Zend_Form_Element_Button('load');
         $loadButton->setLabel(_('Load'))
         	->setAttrib('class', 'green buttonNg')
-//        	->setAttrib('onclick', 'loadContent();return false;')
         	;
         	
         $saveButton = new Zend_Form_Element_Submit('update');
-        $saveButton->setLabel(_('Save 2'))
+        $saveButton->setLabel(_('Save'))
         	->setAttrib('class', 'green buttonNg')
-//        	->setAttrib('onclick', 'saveContent();return false;')
         	;
         	
         $this->addElements(array($hidden, $title, $summary, $contain, $fount, $file, $category, $loadButton, $saveButton));

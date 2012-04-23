@@ -4,14 +4,18 @@
 
 <script type="text/javascript">
 //	$("#privilege").multiselect();
-	$("#privilege").multiselect().multiselectfilter();
+	$("#privilege").multiselect(/*{
+		noneSelectedText: 'Select Something (required)',
+        selectedList: 3,
+        classes: 'my-select'
+		}*/).multiselectfilter();
 
-	$("#name").bind('keyup', function(e) {
-		var nameVal = $('#name').val();
-		if (nameVal != '') {
-			$("#name").parent().find('.error').remove();
-		}
-	});
+//	$("#name").bind('keyup', function(e) {
+//		var nameVal = $('#name').val();
+//		if (nameVal != '') {
+//			$("#name").parent().find('.error').remove();
+//		}
+//	});
 	
 	com.em.UserGroup.prototype.dialogButtons = {
 			'<?php echo $this->translate('Save'); ?>': function() {

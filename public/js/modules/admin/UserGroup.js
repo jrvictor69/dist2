@@ -369,6 +369,9 @@ com.em.UserGroup.prototype = {
 	        	'name':{
 					required: true,
 					maxlength: 100
+				},
+				'privilege[]':{
+					required: true
 				}
 	        }
 	    });
