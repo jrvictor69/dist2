@@ -245,6 +245,7 @@ class Model_PrivilegeMapper extends Model_TemporalMapper {
     /**
      * 
      * Verifies if the name privilege already exist it.
+     * @param string $name
      * @return boolean
      */
     public function verifyExistName($name) {
@@ -257,6 +258,23 @@ class Model_PrivilegeMapper extends Model_TemporalMapper {
     	}
     }
     
+    /**
+     * 
+     * Verifies if the id and name of the privilege already exist.
+     * @param int $id
+     * @param string $name
+     * @return boolean
+     */
+    public function verifyExistIdAndName($id, $name) {
+    	$whereState = sprintf("%s = 1", self::STATE_FIELDNAME);
+    	$resultSet = $this->getDbTable()->fetchRow("$whereState AND id = $id AND  name = '$name'");
+    	if ($resultSet != NULL) {
+    		return TRUE;
+    	} else {
+    		return FALSE;
+    	}
+    }
+        
     /**
      * 
      * Finds the names of the models
