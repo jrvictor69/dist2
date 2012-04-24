@@ -77,6 +77,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
 		$this->view->headLink()->appendStylesheet($this->view->baseUrl() . "/css/form2.0.css");
 		$this->view->headLink()->appendStylesheet($this->view->baseUrl() . "/css/siteapp.css");
 		
+		$this->view->headLink()->appendStylesheet($this->view->baseUrl() . "/css/flashnotification.css");
+		
 		// jquery core
 		$this->view->headScript()->appendFile($this->view->baseUrl().'/js/lib/jquery/jquery.min.js','text/javascript');
 		

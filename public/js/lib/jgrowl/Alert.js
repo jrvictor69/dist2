@@ -35,7 +35,7 @@ com.em.Alert = function (){
 	com.em.Alert.SUCCESS = "Success";
 	com.em.Alert.FAILURE = "Failure";
 	
-	// options by message
+	// options by message default
 	this.options = {
 		position : "bottom-left",
 		header : com.em.Alert.SUCCESS,
@@ -56,5 +56,44 @@ com.em.Alert.prototype = {
 		var settings = options || {};
 		$.extend(this.options, settings);
 		$.jGrowl(message, this.options);
+	},
+
+	/**
+	 * 
+	 * Shows flash message on screen at mode info
+	 * @param message string
+	 * @param options array
+	 */
+	flashInfo : function(message, options) {
+		var settings = options || {};
+		var optionsInfo = {position : "bottom-left", theme: 'info'};
+		$.extend(optionsInfo, settings);
+		$.jGrowl(message, optionsInfo);
+	},
+	
+	/**
+	 * 
+	 * Shows flash message on screen at mode warning
+	 * @param message string
+	 * @param options array
+	 */
+	flashWarning: function(message, options) {
+		var settings = options || {};
+		var optionsWarning = {position : "bottom-left", theme: 'warning'};
+		$.extend(optionsWarning, settings);
+		$.jGrowl(message, optionsWarning);
+	},
+	
+	/**
+	 * 
+	 * Shows flash message on screen at mode error
+	 * @param message string
+	 * @param options array
+	 */
+	flashError: function(message, options) {
+		var settings = options || {};
+		var optionsError = {position : "bottom-left", theme: 'error'};
+		$.extend(optionsError, settings);
+		$.jGrowl(message, optionsError);
 	}
 };

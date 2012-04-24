@@ -76,6 +76,7 @@ class Admin_PrivilegeController extends App_Controller_Action {
                     $this->view->message = $this->view->seeMessages();
                 } else {
 					$this->view->success = FALSE;
+					$this->view->name_duplicate = TRUE;
                     $this->_messenger->addError(_("The Privilege already exists"));
                     $this->view->message = $this->view->seeMessages();                			
                 }
@@ -84,7 +85,8 @@ class Admin_PrivilegeController extends App_Controller_Action {
            	}
      	} else {
 			$this->view->success = FALSE;
-			$this->_messenger->addError(implode("<br/>", $form->getMessages('name')));
+			$this->view->messageArray = $form->getMessages();
+			$this->_messenger->addError(_("The form contains error and is not saved"));
 			$this->view->message = $this->view->seeMessages();
        	}
         // send response to client
@@ -137,7 +139,7 @@ class Admin_PrivilegeController extends App_Controller_Action {
 	public function updateSaveAction() {
 		$this->_helper->viewRenderer->setNoRender(TRUE);
 		
-		$form = new Admin_Form_Category();
+		$form = new Admin_Form_Privilege();
 		
 		$formData = $this->_request->getPost();
         if ($form->isValid($formData)) {
@@ -147,26 +149,38 @@ class Admin_PrivilegeController extends App_Controller_Action {
                 $privilegeMapper = new Model_PrivilegeMapper();
                 $privilege = $privilegeMapper->find($id);
                 if ($privilege != NULL) {
-               		$privilege->setName($formData['name'])
-                			->setDescription($formData['description'])
-                			->setModule($formData['module'])
-                			->setController($formData['controller'])
-                			->setAction($formData['action'])
-                			->setChangedBy(Zend_Auth::getInstance()->getIdentity()->id);
-                			
-                	$privilegeMapper->update($id, $privilege);
-                		
-                	$this->view->success = TRUE;
-                	$this->_messenger->clearMessages();
-                    $this->_messenger->addSuccess(_("Privilege updated"));
-                    $this->view->message = $this->view->seeMessages();
+                	if (!$privilegeMapper->verifyExistName($formData['name']) || $privilegeMapper->verifyExistIdAndName($id, $formData['name'])) {
+	               		$privilege->setName($formData['name'])
+	                			->setDescription($formData['description'])
+	                			->setModule($formData['module'])
+	                			->setController($formData['controller'])
+	                			->setAction($formData['action'])
+	                			->setChangedBy(Zend_Auth::getInstance()->getIdentity()->id);
+	                			
+	                	$privilegeMapper->update($id, $privilege);
+	                	
+	                	$this->view->success = TRUE;
+                		$this->_messenger->clearMessages();
+                    	$this->_messenger->addSuccess(_("Privilege updated"));
+                    	$this->view->message = $this->view->seeMessages();
+                	} else {
+                		$this->view->success = FALSE;
+                		$this->view->name_duplicate = TRUE;
+                    	$this->_messenger->addError(_("The Privilege already exists"));
+                    	$this->view->message = $this->view->seeMessages();	
+                	}
+                } else {
+					$this->view->success = FALSE;
+                    $this->_messenger->addError(_("The Privilege does not exists"));
+                    $this->view->message = $this->view->seeMessages();                	                	
                 }
         	} catch (Exception $e) {
                 $this->exception($this->view, $e);
          	}
 		} else {
             $this->view->success = FALSE;
-			$this->_messenger->addError(implode("<br/>", $form->getMessages('name')));
+			$this->view->messageArray = $form->getMessages();
+			$this->_messenger->addError(_("The form contains error and is not updated"));
 			$this->view->message = $this->view->seeMessages();
     	}
         // send response to client

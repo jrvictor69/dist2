@@ -25,36 +25,38 @@
 						if (data.success) {
 							dialogForm.dialog('close');
 							table.fnDraw();
-							com.em.Privilege.prototype.showAlert(data.message, {header: com.em.Alert.SUCCESS});
+							com.em.Privilege.prototype.flashInfo(data.message, {header: com.em.Alert.SUCCESS});
 						} else {
-							if (data.message == 'name_warning') {
-							
-							} else {
-								
-//								if (messages.name = undefined) {
-//									$('#name').parent().find('.error').remove();
-//									$('#name').parent().append('<label class="error" for="name" generated="true">'+data.message+'</label>');
-//								}
-//								
-//								if (messages.module = undefined) {
-//									$('#module').parent().find('.error').remove();
-//									$('#module').parent().append('<label class="error" for="name" generated="true">'+data.message+'</label>');
-//								}
-//
-//								if (messages.controller = undefined) {
-//									$('#controller').parent().find('.error').remove();
-//									$('#controller').parent().append('<label class="error" for="name" generated="true">'+data.message+'</label>');
-//								}
-//								
-//								if (messages.action = undefined) {
-//									$('#action').parent().find('.error').remove();
-//									$('#action').parent().append('<label class="error" for="name" generated="true">'+data.message+'</label>');	
-//								}
-
+							if (data.name_duplicate) {
 								$("#name").parent().find('.error').remove();
-								$("#name").parent().append('<label class="error" for="name" generated="true">'+data.message+'</label>');						
-								com.em.Privilege.prototype.showAlert(data.message, {header: com.em.Alert.ERROR});
+								$("#name").parent().append('<label class="error" for="name" generated="true">'+data.message+'</label>');
+							} else {
+								var name = data.messageArray.name;
+								var module = data.messageArray.module;
+								var controller = data.messageArray.controller;
+								var action = data.messageArray.action;
+								
+								if (name != undefined) {
+									$('#name').parent().find('.error').remove();
+									$('#name').parent().append('<label class="error" for="name" generated="true">'+name.isEmpty+'</label>');
+								}
+
+								if (module != undefined) {
+									$('#module').parent().find('.error').remove();
+									$('#module').parent().append('<label class="error" for="module" generated="true">'+module.isEmpty+'</label>');
+								}
+
+								if (controller != undefined) {
+									$('#controller').parent().find('.error').remove();
+									$('#controller').parent().append('<label class="error" for="controller" generated="true">'+controller.isEmpty+'</label>');
+								}
+
+								if (action != undefined) {
+									$('#action').parent().find('.error').remove();
+									$('#action').parent().append('<label class="error" for="action" generated="true">'+action.isEmpty+'</label>');
+								}
 							}
+							com.em.Privilege.prototype.flashError(data.message, {header: com.em.Alert.ERROR});
 						}
 					}
 				},
@@ -66,7 +68,7 @@
 				
 				error: function(jqXHR, textStatus, errorThrown) {
 					dialogFormEducationLevel.dialog('close');
-					com.em.Privilege.prototype.showAlert(errorThrown,{header : com.em.Alert.ERROR});
+					com.em.Privilege.prototype.flashError(errorThrown,{header: com.em.Alert.ERROR});
 				}
 			});
 		},
