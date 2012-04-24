@@ -222,21 +222,72 @@ class Admin_NewsController extends App_Controller_Action {
 	public function editAction() {
 		$form = new Admin_Form_News();
         $form->getElement('categoryId')->setMultiOptions($this->getCategories());
+        $form->getElement('update')->setLabel(_('Update'));
         
-        $id = $this->_getParam('id', 0);
-        $newsMapper = new Model_NewsMapper();
-		$news = $newsMapper->find($id);
-            
-     	if ($news != NULL) {//security
-        	$form->getElement('newsId')->setValue($id);
-			$form->getElement('title')->setValue($news->getTitle());
-			$form->getElement('summary')->setValue($news->getSummary());
-			$form->getElement('contain')->setValue($news->getContain());
-			$form->getElement('fount')->setValue($news->getFount());
-			$form->getElement('categoryId')->setValue($news->getCategory()->getId());
+        if ($this->_request->isPost()) {
+        	$formData = $this->_request->getPost();
+	        if ($form->isValid($formData)) {
+                $id = $this->_getParam('id', 0);
+        		$newsMapper = new Model_NewsMapper();
+				$news = $newsMapper->find($id);
+	            	
+            	if ($news != NULL) {//security
+//            		if (!$newsMapper->verifyExistTitle($formData['title']) || ($news->getId() == $formData['newsId'])) {
+            			
+            			// Managerial
+						$managerialId = Zend_Auth::getInstance()->getIdentity()->id;
+						$managerial = new Model_Managerial();
+						$managerial->setId($managerialId);
+						
+						// Category
+						$categoryMapper = new Model_CategoryMapper();
+						$category = $categoryMapper->find($formData['categoryId']);
+						
+						$news->setCategory($category)
+							->setManagerial($managerial)
+							->setSummary($formData['summary'])
+							->setFount($formData['fount'])
+							->setTitle($formData['title'])
+							->setContain($formData['contain'])
+							->setImagename("image test")
+							->setChangedBy($managerialId)
+							;
+						
+						$newsMapper->update($id, $news);
+
+						$this->_helper->redirector('index', 'news', 'admin', array('type'=>'information'));
+//            		} else {
+//            			$this->view->success = FALSE;
+//        				$this->view->duplicate_title = TRUE;
+//	                	$this->_messenger->addSuccess(_("The news already exists"));
+//	                	$this->view->message = $this->view->seeMessages();
+//            		}
+                } else {
+	               	$this->view->success = FALSE;
+	                $this->_messenger->addSuccess(_("The requested record was not found."));
+	                $this->view->message = $this->view->seeMessages();
+                }
+			} else {
+	            $this->view->success = FALSE;
+				$this->_messenger->addError(implode("<br/>", $form->getMessages('name')));
+				$this->view->message = $this->view->seeMessages();
+	    	}
         } else {
-                	
-       	}
+        	$id = $this->_getParam('id', 0);
+	        $newsMapper = new Model_NewsMapper();
+			$news = $newsMapper->find($id);
+	            
+	     	if ($news != NULL) {//security
+	        	$form->getElement('newsId')->setValue($id);
+				$form->getElement('title')->setValue($news->getTitle());
+				$form->getElement('summary')->setValue($news->getSummary());
+				$form->getElement('contain')->setValue($news->getContain());
+				$form->getElement('fount')->setValue($news->getFount());
+				$form->getElement('categoryId')->setValue($news->getCategory()->getId());
+	        } else {
+	                	
+	       	}
+        }
        	
         $this->view->form = $form;
 	}
@@ -351,7 +402,7 @@ class Admin_NewsController extends App_Controller_Action {
             	$news = $newsMapper->find($id);
             	
             	if ($news != NULL) {//security
-            		if (!$newsMapper->verifyExistTitle($formData['title']) || ($news->getId() == $formData['newsId'])) {
+//            		if (!$newsMapper->verifyExistTitle($formData['title']) || ($news->getId() == $formData['newsId'])) {
             			
             			// Managerial
 						$managerialId = Zend_Auth::getInstance()->getIdentity()->id;
@@ -378,12 +429,12 @@ class Admin_NewsController extends App_Controller_Action {
 	                	$this->_messenger->clearMessages();
 	                    $this->_messenger->addSuccess(_("News updated"));
 	                    $this->view->message = $this->view->seeMessages();
-            		} else {
-            			$this->view->success = FALSE;
-        				$this->view->duplicate_title = TRUE;
-	                	$this->_messenger->addSuccess(_("The news already exists"));
-	                	$this->view->message = $this->view->seeMessages();
-            		}
+//            		} else {
+//            			$this->view->success = FALSE;
+//        				$this->view->duplicate_title = TRUE;
+//	                	$this->_messenger->addSuccess(_("The news already exists"));
+//	                	$this->view->message = $this->view->seeMessages();
+//            		}
                 } else {
 	               	$this->view->success = FALSE;
 	                $this->_messenger->addSuccess(_("The requested record was not found."));
