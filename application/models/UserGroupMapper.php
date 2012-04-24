@@ -339,11 +339,29 @@ class Model_UserGroupMapper extends Model_TemporalMapper {
     /**
      * 
      * Verifies if the name user group already exist it.
+     * @param string $name
      * @return boolean
      */
     public function verifyExistName($name) {
     	$whereState = sprintf("%s = 1", self::STATE_FIELDNAME);
     	$resultSet = $this->getDbTable()->fetchRow("$whereState AND name = '$name'");
+    	if ($resultSet != NULL) {
+    		return TRUE;
+    	} else {
+    		return FALSE;
+    	}
+    }
+    
+	/**
+     * 
+     * Verifies if the id and name of the user group already exist.
+     * @param int $id
+     * @param string $name
+     * @return boolean
+     */
+    public function verifyExistIdAndName($id, $name) {
+    	$whereState = sprintf("%s = 1", self::STATE_FIELDNAME);
+    	$resultSet = $this->getDbTable()->fetchRow("$whereState AND id = $id AND  name = '$name'");
     	if ($resultSet != NULL) {
     		return TRUE;
     	} else {
