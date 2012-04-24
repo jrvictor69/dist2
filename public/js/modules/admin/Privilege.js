@@ -20,7 +20,7 @@ com.em = com.em ||{};
 		this.url = {};
 		this.validator;
 		
-		this.initAlert();
+		this.initFlashMessage();
 		this.initEvents();
 		
 		this.dtHeaders = undefined;
@@ -30,9 +30,9 @@ com.em.Privilege.prototype = {
 	
 	/**
 	 * 
-	 * Initializes JQuery alert component
+	 * Initializes JQuery flash message component
 	 */	
-	initAlert: function() {
+	initFlashMessage: function() {
 		this.alert = new com.em.Alert();
 	},
 	
@@ -250,7 +250,7 @@ com.em.Privilege.prototype = {
 				
 				error: function(jqXHR, textStatus, errorThrown) {
 					dialogForm.dialog('close');
-					alert.show(errorThrown,{header : com.em.Alert.ERROR});
+					alert.flashError(errorThrown,{header : com.em.Alert.ERROR});
 				}
 			});
 		});
@@ -298,9 +298,9 @@ com.em.Privilege.prototype = {
 					processingDisplay(false);
 				},
 				
-				error : function(jqXHR, textStatus, errorThrown) {
+				error: function(jqXHR, textStatus, errorThrown) {
 					dialogForm.dialog('close');
-					alert.show(errorThrown,{header : com.em.Alert.ERROR});
+					alert.flashError(errorThrown,{header : com.em.Alert.ERROR});
 				}
 			});
 		});
@@ -318,7 +318,7 @@ com.em.Privilege.prototype = {
 			var items = $('#tblPrivilege :checked');
 			var itemsChecked = items.serialize();
 			if (itemsChecked == '') {
-				alert.show('There is no item selected', {header:com.em.Alert.SUCCESS});
+				alert.flashInfo('There is no item selected', {header:com.em.Alert.SUCCESS});
 				return;
 			}
 			var action = $(this).attr('href');
@@ -335,23 +335,23 @@ com.em.Privilege.prototype = {
 							processingDisplay(true);
 						},
 						
-						success : function(data, textStatus, XMLHttpRequest) {
+						success: function(data, textStatus, XMLHttpRequest) {
 							if (textStatus == 'success') {
 								if (data.success) {
 									table.fnDraw();
-									alert.show(data.message);
+									alert.flashInfo(data.message, {header: com.em.Alert.SUCCESS});
 								} else {
-									alert.show(data.message, {header : com.em.Alert.SUCCESS});
+									alert.flashError(data.message, {header: com.em.Alert.ERROR});
 								}
 							}
 						},
 						
-						complete : function(jqXHR, textStatus) {
+						complete: function(jqXHR, textStatus) {
 							processingDisplay(false);
 						},
 						
-						error : function(jqXHR, textStatus, errorThrown) {
-							alert.show(errorThrown,{header : com.em.Alert.ERROR});
+						error: function(jqXHR, textStatus, errorThrown) {
+							alert.flashError(errorThrown,{header : com.em.Alert.ERROR});
 						}
 					});
 				} else {
@@ -431,5 +431,31 @@ com.em.Privilege.prototype = {
 			this.alert = new com.em.Alert();
 		}
 		alert.show(message, header);
+	}},
+	
+	/**
+	 * 
+	 * Shows flash message info if it exists, if not creates a new instance of flash message info and shows it.
+	 * @param message string
+	 * @param header string
+	 */
+	flashInfo: function(message, header) {with (this) {
+		if (this.alert == undefined) {
+			this.alert = new com.em.Alert();
+		}
+		alert.flashInfo(message, header);
+	}},
+	
+	/**
+	 * 
+	 * Shows flash message error if it exists, if not creates a new instance of flash message error and shows it.
+	 * @param message string
+	 * @param header string
+	 */
+	flashError: function(message, header) {with (this) {
+		if (this.alert == undefined) {
+			this.alert = new com.em.Alert();
+		}
+		alert.flashError(message, header);
 	}}
 };
