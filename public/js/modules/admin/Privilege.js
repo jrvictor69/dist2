@@ -318,7 +318,7 @@ com.em.Privilege.prototype = {
 			var items = $('#tblPrivilege :checked');
 			var itemsChecked = items.serialize();
 			if (itemsChecked == '') {
-				alert.flashInfo('There is no item selected', {header:com.em.Alert.SUCCESS});
+				alert.flashInfo('There is no item selected', {header:com.em.Alert.NOTICE});
 				return;
 			}
 			var action = $(this).attr('href');
@@ -339,7 +339,7 @@ com.em.Privilege.prototype = {
 							if (textStatus == 'success') {
 								if (data.success) {
 									table.fnDraw();
-									alert.flashInfo(data.message, {header: com.em.Alert.SUCCESS});
+									alert.flashSuccess(data.message, {header: com.em.Alert.SUCCESS});
 								} else {
 									alert.flashError(data.message, {header: com.em.Alert.ERROR});
 								}
@@ -435,15 +435,15 @@ com.em.Privilege.prototype = {
 	
 	/**
 	 * 
-	 * Shows flash message info if it exists, if not creates a new instance of flash message info and shows it.
+	 * Shows flash message success if it exists, if not creates a new instance of flash message success and shows it.
 	 * @param message string
 	 * @param header string
 	 */
-	flashInfo: function(message, header) {with (this) {
+	flashSuccess: function(message, header) {with (this) {
 		if (this.alert == undefined) {
 			this.alert = new com.em.Alert();
 		}
-		alert.flashInfo(message, header);
+		alert.flashSuccess(message, header);
 	}},
 	
 	/**
