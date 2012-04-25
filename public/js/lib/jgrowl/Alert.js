@@ -36,7 +36,7 @@ com.em.Alert = function (){
 	com.em.Alert.FAILURE = "Failure";
 	
 	// options by message default
-	this.options = {
+	this.optionsDefault = {
 		position : "bottom-left",
 		header : com.em.Alert.SUCCESS,
 	    animateOpen: {
@@ -52,23 +52,36 @@ com.em.Alert.prototype = {
 	 * @param message txt for user
 	 * @param options
 	 */
-	show : function(message, options) {
+	show: function(message, options) {
 		var settings = options || {};
-		$.extend(this.options, settings);
-		$.jGrowl(message, this.options);
+		$.extend(this.optionsDefault, settings);
+		$.jGrowl(message, this.optionsDefault);
 	},
 
+	/**
+	 * 
+	 * Shows flash message on screen at mode success
+	 * @param message string
+	 * @param options array
+	 */
+	flashSuccess: function(message, options) {
+		var settings = options || {};
+		var options = {position: "bottom-left", theme: 'success'};
+		$.extend(options, settings);
+		$.jGrowl(message, options);
+	},
+	
 	/**
 	 * 
 	 * Shows flash message on screen at mode info
 	 * @param message string
 	 * @param options array
 	 */
-	flashInfo : function(message, options) {
+	flashInfo: function(message, options) {
 		var settings = options || {};
-		var optionsInfo = {position : "bottom-left", theme: 'info'};
-		$.extend(optionsInfo, settings);
-		$.jGrowl(message, optionsInfo);
+		var options = {position: "bottom-left", theme: 'info'};
+		$.extend(options, settings);
+		$.jGrowl(message, options);
 	},
 	
 	/**
@@ -79,9 +92,9 @@ com.em.Alert.prototype = {
 	 */
 	flashWarning: function(message, options) {
 		var settings = options || {};
-		var optionsWarning = {position : "bottom-left", theme: 'warning'};
-		$.extend(optionsWarning, settings);
-		$.jGrowl(message, optionsWarning);
+		var options = {position: "bottom-left", theme: 'warning'};
+		$.extend(options, settings);
+		$.jGrowl(message, options);
 	},
 	
 	/**
@@ -92,8 +105,8 @@ com.em.Alert.prototype = {
 	 */
 	flashError: function(message, options) {
 		var settings = options || {};
-		var optionsError = {position : "bottom-left", theme: 'error'};
-		$.extend(optionsError, settings);
-		$.jGrowl(message, optionsError);
+		var options = {position: "bottom-left", theme: 'error'};
+		$.extend(options, settings);
+		$.jGrowl(message, options);
 	}
 };
