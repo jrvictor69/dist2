@@ -13,6 +13,7 @@
 				beforeSend: function(XMLHttpRequest) {
 					validator.form();
 					if (!validator.valid()) {
+						com.em.Privilege.prototype.flashError('<?php echo _("The form contains error and is not updated");?>', {header: com.em.Alert.ERROR});
 						return false;
 					}
 
