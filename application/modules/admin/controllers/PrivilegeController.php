@@ -33,7 +33,7 @@ class Admin_PrivilegeController extends App_Controller_Action {
 	 * @access public
 	 */
 	public function readAction() {
-		$formFilter = new Admin_Form_CategoryFilter();
+		$formFilter = new Admin_Form_SearchFilter();
 		$formFilter->getElement('nameFilter')->setLabel(_('Name Privilege'));
 		$this->view->formFilter = $formFilter;
 	}
