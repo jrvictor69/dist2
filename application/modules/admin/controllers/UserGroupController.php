@@ -33,7 +33,7 @@ class Admin_UserGroupController extends App_Controller_Action {
 	 * @access public
 	 */
 	public function readAction() {
-		$formFilter = new Admin_Form_CategoryFilter();
+		$formFilter = new Admin_Form_SearchFilter();
 		$formFilter->getElement('nameFilter')->setLabel(_('Name User Group'));
 		$this->view->formFilter = $formFilter;
 	}
@@ -48,7 +48,6 @@ class Admin_UserGroupController extends App_Controller_Action {
 		
 		$form = new Admin_Form_UserGroup();
 		$form->getElement('privilege')->setMultiOptions($this->getPrivileges());
-			
         $this->view->form = $form;
 	}
 	
@@ -95,6 +94,7 @@ class Admin_UserGroupController extends App_Controller_Action {
                     $this->view->message = $this->view->seeMessages();
                 } else {
 					$this->view->success = FALSE;
+					$this->view->name_duplicate = TRUE;
                     $this->_messenger->addError(_("The User group already exists"));
                     $this->view->message = $this->view->seeMessages();                			
                 }
@@ -103,7 +103,8 @@ class Admin_UserGroupController extends App_Controller_Action {
            	}
      	} else {
 			$this->view->success = FALSE;
-			$this->_messenger->addError(implode("<br/>", $form->getMessages('name')));
+			$this->view->messageArray = $form->getMessages();
+			$this->_messenger->addError(_("The form contains error and is not saved"));
 			$this->view->message = $this->view->seeMessages();
        	}
         // send response to client
@@ -173,40 +174,50 @@ class Admin_UserGroupController extends App_Controller_Action {
                 $userGroupMapper = new Model_UserGroupMapper();
                 $userGroup = $userGroupMapper->find($id);
                 if ($userGroup != NULL) {
-                	$privilegeIds = $formData['privilege'];
-               		if (!empty($privilegeIds)) {
-               			$privilegeMapper = new Model_PrivilegeMapper();
-               			$privileges = array();
-               			foreach ($privilegeIds as $privilegeId) {
-               				$privilege = $privilegeMapper->find($privilegeId);
-               				if ($privilege != NULL) {
-               					$privileges[] = $privilege;
-               				} else {
-               					//id not is valid
-               				}
-               			}
-               		}
-               		
-               		$userGroup->setName($formData['name'])
-                			->setDescription($formData['description'])
-                			->setChangedBy(Zend_Auth::getInstance()->getIdentity()->id)
-                			->setPrivileges($privileges);
-                			
-                	$userGroupMapper->update($id, $userGroup);
-                		
-                	$this->view->success = TRUE;
-                	$this->_messenger->clearMessages();
-                    $this->_messenger->addSuccess(_("User group updated"));
-                    $this->view->message = $this->view->seeMessages();
+                	if (!$userGroupMapper->verifyExistName($formData['name']) || $userGroupMapper->verifyExistIdAndName($id, $formData['name'])) {
+	                	$privilegeIds = $formData['privilege'];
+	               		if (!empty($privilegeIds)) {
+	               			$privilegeMapper = new Model_PrivilegeMapper();
+	               			$privileges = array();
+	               			foreach ($privilegeIds as $privilegeId) {
+	               				$privilege = $privilegeMapper->find($privilegeId);
+	               				if ($privilege != NULL) {
+	               					$privileges[] = $privilege;
+	               				} else {
+	               					//id not is valid
+	               				}
+	               			}
+	               		}
+	               		
+	               		$userGroup->setName($formData['name'])
+	                			->setDescription($formData['description'])
+	                			->setChangedBy(Zend_Auth::getInstance()->getIdentity()->id)
+	                			->setPrivileges($privileges);
+	                			
+	                	$userGroupMapper->update($id, $userGroup);
+	                		
+	                	$this->view->success = TRUE;
+	                	$this->_messenger->clearMessages();
+	                    $this->_messenger->addSuccess(_("User group updated"));
+	                    $this->view->message = $this->view->seeMessages();
+                	} else {
+                		$this->view->success = FALSE;
+                		$this->view->name_duplicate = TRUE;
+                    	$this->_messenger->addError(_("The User group already exists"));
+                    	$this->view->message = $this->view->seeMessages();
+                	}
                 } else {
-                	//Id is not valid
+                	$this->view->success = FALSE;
+                    $this->_messenger->addError(_("The User group does not exists"));
+                    $this->view->message = $this->view->seeMessages();
                 }
         	} catch (Exception $e) {
                 $this->exception($this->view, $e);
          	}
 		} else {
             $this->view->success = FALSE;
-			$this->_messenger->addError(implode("<br/>", $form->getMessages('name')));
+			$this->view->messageArray = $form->getMessages();
+			$this->_messenger->addError(_("The form contains error and is not updated"));
 			$this->view->message = $this->view->seeMessages();
     	}
         // send response to client
@@ -277,12 +288,20 @@ class Admin_UserGroupController extends App_Controller_Action {
 		$posRecord = $start+1;
 		$data = array();
 		foreach ($userGroups as $userGroup) {
+			$created = new Zend_Date($userGroup->getCreated());
+			
+			$changed = $userGroup->getChanged();
+			if ($changed != NULL) {
+				$changed = new Zend_Date($userGroup->getChanged());
+				$changed = $changed->toString("dd.MM.YYYY");
+			}
+			
 			$row = array();			
 			$row[] = $userGroup->getId();
 			$row[] = $userGroup->getName();
 			$row[] = $userGroup->getDescription();
-			$row[] = $userGroup->getCreated();
-			$row[] = $userGroup->getChanged();
+			$row[] = $created->toString("dd.MM.YYYY");
+			$row[] = $changed;
 			$row[] = '[]';
 			$data[] = $row;
 			$posRecord++;
