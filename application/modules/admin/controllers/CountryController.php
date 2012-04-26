@@ -24,7 +24,8 @@ class Admin_CountryController extends App_Controller_Action {
 	 * @access public
 	 */
 	public function indexAction() {
-		$formFilter = new Admin_Form_CountryFilter();
+		$formFilter = new Admin_Form_SearchFilter();
+		$formFilter->getElement('nameFilter')->setLabel(_("Name country"));
 		$this->view->formFilter = $formFilter;
 	}
 	
@@ -50,37 +51,33 @@ class Admin_CountryController extends App_Controller_Action {
         
         $form = new Admin_Form_Country();
                 
-        if ($this->_request->isPost()) {
-        	$formData = $this->getRequest()->getPost();
-            if ($form->isValid($formData)) {
-            	try {
-                	$countryMapper = new Model_CountryMapper();
-                	if (!$countryMapper->verifyExistName($formData['name'])) {
-                		$country = new Model_Country($formData);
-                		$countryMapper->save($country);
+        $formData = $this->getRequest()->getPost();
+        if ($form->isValid($formData)) {
+        	try {
+                $countryMapper = new Model_CountryMapper();
+                if (!$countryMapper->verifyExistName($formData['name'])) {
+                	$country = new Model_Country($formData);
+                	$countryMapper->save($country);
                 	
-                		$this->view->success = TRUE;
-                		$this->_messenger->clearMessages();
-                    	$this->_messenger->addSuccess(_("Country saved"));
-                    	$this->view->message = $this->view->seeMessages();	
-                	} else {
-						$this->view->success = FALSE;
-                    	$this->_messenger->addError(_("The Country add already exists"));
-                    	$this->view->message = $this->view->seeMessages();                			
-                	}
-                } catch (Exception $e) {
-                	$this->exception($this->view, $e);
+                	$this->view->success = TRUE;
+                	$this->_messenger->clearMessages();
+                    $this->_messenger->addSuccess(_("Country saved"));
+                    $this->view->message = $this->view->seeMessages();	
+                } else {
+					$this->view->success = FALSE;
+					$this->view->name_duplicate = TRUE;
+                    $this->_messenger->addError(_("The Country already exists"));
+                    $this->view->message = $this->view->seeMessages();                			
                 }
-            } else {
-				$this->view->success = FALSE;
-				$this->_messenger->addError(implode("<br/>", $form->getMessages('name')));
-				$this->view->message = $this->view->seeMessages();
+         	} catch (Exception $e) {
+               	$this->exception($this->view, $e);
             }
-        } else {
-        	$this->view->success = FALSE;
-        	$this->_messenger->addNotice(_("Data submitted were not processed."));        	
-        	$this->view->message = $this->view->seeMessages();
-        }
+     	} else {
+			$this->view->success = FALSE;
+			$this->view->messageArray = $form->getMessages();
+			$this->_messenger->addError(_("The form contains error and is not saved"));
+			$this->view->message = $this->view->seeMessages();
+    	}
         // send response to client
         $this->_helper->json($this->view);
 	}
@@ -94,25 +91,23 @@ class Admin_CountryController extends App_Controller_Action {
 		$this->_helper->layout()->disableLayout();
 		$form = new Admin_Form_Country();
         
-        if ($this->_request->isPost()) {
-        	try {
-           		$id = $this->_getParam('id', 0);
-            	$countryMapper = new Model_CountryMapper();
-            	$country = $countryMapper->find($id);
-                if ($country) {//security
-					$form->getElement('name')->setValue($country->getName());
-					$form->getElement('description')->setValue($country->getDescription());
-                } else {
-                	// response to client
-	               	$this->view->success = FALSE;
-	                $this->_messenger->addSuccess(_("The requested record was not found."));
-	                $this->view->message = $this->view->seeMessages();
-	                $this->_helper->json($this->view);
-                }
-        	} catch (Exception $e) {
-              	$this->exception($this->view, $e);
-                $this->_helper->json($this->view);
-        	}
+        try {
+           	$id = $this->_getParam('id', 0);
+            $countryMapper = new Model_CountryMapper();
+            $country = $countryMapper->find($id);
+            if ($country != NULL) {//security
+				$form->getElement('name')->setValue($country->getName());
+				$form->getElement('description')->setValue($country->getDescription());
+         	} else {
+                // response to client
+	       		$this->view->success = FALSE;
+	            $this->_messenger->addError(_("The requested record was not found."));
+	            $this->view->message = $this->view->seeMessages();
+	            $this->_helper->json($this->view);
+           	}
+        } catch (Exception $e) {
+        	$this->exception($this->view, $e);
+            $this->_helper->json($this->view);
         }
         
         $this->view->form = $form;
@@ -132,38 +127,44 @@ class Admin_CountryController extends App_Controller_Action {
 		
 		$form = new Admin_Form_Country();
 		
-        if ($this->_request->isPost()) {
-            $formData = $this->getRequest()->getPost();
-            if ($form->isValid($formData)) {
-                try {
-                	$id = $this->_getParam('id', 0);
+     	$formData = $this->getRequest()->getPost();
+       	if ($form->isValid($formData)) {
+        	try {
+                $id = $this->_getParam('id', 0);
                 	
-                	$countryMapper = new Model_CountryMapper();
-                	$country = $countryMapper->find($id);
-                	if ($country) {
-                		$country->setName($formData['name'])
-                				->setDescription($formData['description']);
-                			
-                		$countryMapper->update($id, $country);
-                		
-                		$this->view->success = TRUE;
-                		$this->_messenger->clearMessages();
-                    	$this->_messenger->addSuccess(_("Country updated"));
+                $countryMapper = new Model_CountryMapper();
+                $country = $countryMapper->find($id);
+                if ($country != NULL) {
+                	if (!$countryMapper->verifyExistName($formData['name']) || $countryMapper->verifyExistIdAndName($id, $formData['name'])) {
+	                	$country->setName($formData['name'])
+	                			->setDescription($formData['description']);
+	                			
+	                	$countryMapper->update($id, $country);
+	                		
+	                	$this->view->success = TRUE;
+	                	$this->_messenger->clearMessages();
+	                   	$this->_messenger->addSuccess(_("Country updated"));
+	                   	$this->view->message = $this->view->seeMessages();
+                	} else {
+                		$this->view->success = FALSE;
+                		$this->view->name_duplicate = TRUE;
+                    	$this->_messenger->addError(_("The Country already exists"));
                     	$this->view->message = $this->view->seeMessages();
                 	}
-                } catch (Exception $e) {
-                	$this->exception($this->view, $e);
+                } else {
+                	$this->view->success = FALSE;
+                    $this->_messenger->addError(_("The Country does not exists"));
+                    $this->view->message = $this->view->seeMessages();
                 }
-            } else {
-            	$this->view->success = FALSE;
-				$this->_messenger->addError(implode("<br/>", $form->getMessages('name')));
-				$this->view->message = $this->view->seeMessages();
+            } catch (Exception $e) {
+               	$this->exception($this->view, $e);
             }
-        } else {
-        	$this->view->success = FALSE;
-        	$this->_messenger->addNotice(_("Data submitted were not processed."));        	
-        	$this->view->message = $this->view->seeMessages();
-        }
+    	} else {
+            $this->view->success = FALSE;
+			$this->view->messageArray = $form->getMessages();
+			$this->_messenger->addError(_("The form contains error and is not updated"));
+			$this->view->message = $this->view->seeMessages();
+     	}
         // send response to client
         $this->_helper->json($this->view);
 	}
@@ -180,34 +181,28 @@ class Admin_CountryController extends App_Controller_Action {
 	public function deleteAction() {
 		$this->_helper->viewRenderer->setNoRender(TRUE);
 		
-        if ($this->_request->isPost()) {
-        	$itemIds = $this->_getParam('itemIds', array());
-            if (!empty($itemIds) ) {
-            	try {
-            		$removeCount = 0;
-                	foreach ($itemIds as $id) {
-                		$countryMapper = new Model_CountryMapper();
-	                	$countryMapper->delete($id);
-	                	$removeCount++;
-                	}
-                	$message = sprintf(ngettext('%d country removed.', '%d countries removed.', $removeCount), $removeCount);
-                	
-                	$this->view->success = TRUE;
-                    $this->_messenger->addSuccess(_($message));
-                    $this->view->message = $this->view->seeMessages();
-                } catch (Exception $e) {
-                	$this->exception($this->view, $e);
+        $itemIds = $this->_getParam('itemIds', array());
+      	if (!empty($itemIds) ) {
+        	try {
+           		$removeCount = 0;
+                foreach ($itemIds as $id) {
+                	$countryMapper = new Model_CountryMapper();
+	                $countryMapper->delete($id);
+	                $removeCount++;
                 }
-            } else {
-                $this->view->success = FALSE;
-            	$this->_messenger->addNotice(_("Data submitted is empty."));
+                $message = sprintf(ngettext('%d country removed.', '%d countries removed.', $removeCount), $removeCount);
+                	
+                $this->view->success = TRUE;
+                $this->_messenger->addSuccess(_($message));
                 $this->view->message = $this->view->seeMessages();
+          	} catch (Exception $e) {
+               	$this->exception($this->view, $e);
             }
-        } else {
+     	} else {
         	$this->view->success = FALSE;
-        	$this->_messenger->addNotice(_("Data submitted were not processed."));
-        	$this->view->message = $this->view->seeMessages();
-        }
+            $this->_messenger->addNotice(_("Data submitted is empty."));
+            $this->view->message = $this->view->seeMessages();
+      	}
         // send response to client
         $this->_helper->json($this->view);
 	}
