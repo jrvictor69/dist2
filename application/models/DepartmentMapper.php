@@ -231,11 +231,13 @@ class Model_DepartmentMapper extends Model_TemporalMapper {
      * 
      * Verifies if the name country already exist it.
      * @param string $name
+     * @param Model_Country $country
      * @return boolean
      */
-	public function verifyExistName($name) {
+	public function verifyExistNameByCountry($name, Model_Country $country) {
     	$whereState = sprintf("%s = 1", self::STATE_FIELDNAME);
-    	$resultSet = $this->getDbTable()->fetchRow("$whereState AND name = '$name'");
+    	$countryId = $country->getId();
+    	$resultSet = $this->getDbTable()->fetchRow("$whereState AND name = '$name' AND countryId = $countryId");
     	if ($resultSet != NULL) {
     		return TRUE;
     	} else {
@@ -248,11 +250,13 @@ class Model_DepartmentMapper extends Model_TemporalMapper {
      * Verifies if the id and name of the department already exist.
      * @param int $id
      * @param string $name
+     * @param Model_Country $country
      * @return boolean
      */
-    public function verifyExistIdAndName($id, $name) {
+    public function verifyExistIdAndNameByCountry($id, $name, Model_Country $country) {
     	$whereState = sprintf("%s = 1", self::STATE_FIELDNAME);
-    	$resultSet = $this->getDbTable()->fetchRow("$whereState AND id = $id AND  name = '$name'");
+    	$countryId = $country->getId();
+    	$resultSet = $this->getDbTable()->fetchRow("$whereState AND id = $id AND  name = '$name' AND countryId = $countryId");
     	if ($resultSet != NULL) {
     		return TRUE;
     	} else {
