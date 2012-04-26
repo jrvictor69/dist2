@@ -55,46 +55,39 @@ class Admin_DepartmentController extends App_Controller_Action {
         $form = new Admin_Form_Department();
        	$form->getElement('country')->setMultiOptions($this->getCountries());
        	            
-        if ($this->_request->isPost()) {
-        	$formData = $this->getRequest()->getPost();
-            if ($form->isValid($formData)) {
-            	try {
-                	$departmentMapper = new Model_DepartmentMapper();
-                	if (!$departmentMapper->verifyExistName($formData['name'])) {
-                		$countryMapper = new Model_CountryMapper();
-                		$countryId = (int)$formData['country'];
-                		$country = $countryMapper->find($countryId);
-                		
-                		$department = new Model_Department();
-                		$department->setName($formData['name'])
-                					->setDescription($formData['description'])
-      								->setCountry($country);
+        $formData = $this->getRequest()->getPost();
+        if ($form->isValid($formData)) {
+            try {
+               	$departmentMapper = new Model_DepartmentMapper();
+               	
+               	$countryMapper = new Model_CountryMapper();
+               	$country = $countryMapper->find((int)$formData['country']);
+               	if (!$departmentMapper->verifyExistNameByCountry($formData['name'], $country)) {
+               		$department = new Model_Department();
+               		$department->setName($formData['name'])
+               					->setDescription($formData['description'])
+      							->setCountry($country);
       								
-                		$departmentMapper->save($department);
+               		$departmentMapper->save($department);
                 	
-                		$this->view->success = TRUE;
-                		$this->_messenger->clearMessages();
-                    	$this->_messenger->addSuccess(_("Department saved"));
-                    	$this->view->message = $this->view->seeMessages();	
-                	} else {
-						$this->view->success = FALSE;
-                    	$this->_messenger->addError(_("The Department already exists"));
-                    	$this->view->message = $this->view->seeMessages();                			
-                	}
-                } catch (Exception $e) {
-                	$this->exception($this->view, $e);
-                }
-            } else {
-				$this->view->success = FALSE;
-				$this->_messenger->addError(implode("<br/>", $form->getMessages('name')));
-				$this->view->message = $this->view->seeMessages();
-            }
-        } else {
-        	$this->view->success = FALSE;
-        	$this->_messenger->addNotice(_("Data submitted were not processed."));        	
-        	$this->view->message = $this->view->seeMessages();
-        }
-        // send response to client
+               		$this->view->success = TRUE;
+               		$this->_messenger->clearMessages();
+                   	$this->_messenger->addSuccess(_("Department saved"));	
+               	} else {
+					$this->view->success = FALSE;
+					$this->view->name_duplicate = TRUE;
+                   	$this->_messenger->addError(_("The Department already exists"));                			
+               	}
+          	} catch (Exception $e) {
+                $this->exception($this->view, $e);
+          	}
+     	} else {
+			$this->view->success = FALSE;
+			$this->view->messageArray = $form->getMessages();
+			$this->_messenger->addError(_("The form contains error and is not saved"));
+       	}
+       	$this->view->message = $this->view->seeMessages();
+        // sends response to client
         $this->_helper->json($this->view);
 	}
 	
@@ -109,26 +102,24 @@ class Admin_DepartmentController extends App_Controller_Action {
 		$form = new Admin_Form_Department();
         $form->getElement('country')->setMultiOptions($this->getCountries());
         
-        if ($this->_request->isPost()) {
-        	try {
-           		$id = $this->_getParam('id', 0);
-            	$departmentMapper = new Model_DepartmentMapper();
-            	$department = $departmentMapper->find($id);
-                if ($department != NULL) {//security
-					$form->getElement('name')->setValue($department->getName());
-					$form->getElement('description')->setValue($department->getDescription());
-					$form->getElement('country')->setValue($department->getCountry()->getId());
-                } else {
-                	// response to client
-	               	$this->view->success = FALSE;
-	                $this->_messenger->addSuccess(_("The requested record was not found."));
-	                $this->view->message = $this->view->seeMessages();
-	                $this->_helper->json($this->view);
-                }
-        	} catch (Exception $e) {
-              	$this->exception($this->view, $e);
-                $this->_helper->json($this->view);
-        	}
+        try {
+           	$id = $this->_getParam('id', 0);
+            $departmentMapper = new Model_DepartmentMapper();
+            $department = $departmentMapper->find($id);
+            if ($department != NULL) {//security
+				$form->getElement('name')->setValue($department->getName());
+				$form->getElement('description')->setValue($department->getDescription());
+				$form->getElement('country')->setValue($department->getCountry()->getId());
+            } else {
+            	// response to client
+	       		$this->view->success = FALSE;
+	            $this->_messenger->addSuccess(_("The requested record was not found."));
+	            $this->view->message = $this->view->seeMessages();
+	            $this->_helper->json($this->view);
+          	}
+        } catch (Exception $e) {
+        	$this->exception($this->view, $e);
+            $this->_helper->json($this->view);
         }
         
         $this->view->form = $form;
@@ -149,44 +140,82 @@ class Admin_DepartmentController extends App_Controller_Action {
 		$form = new Admin_Form_Department();
 		$form->getElement('country')->setMultiOptions($this->getCountries());
 		
-        if ($this->_request->isPost()) {
-            $formData = $this->getRequest()->getPost();
-            if ($form->isValid($formData)) {
-                try {
-                	$id = $this->_getParam('id', 0);
+        $formData = $this->getRequest()->getPost();
+        if ($form->isValid($formData)) {
+        	try {
+               	$id = $this->_getParam('id', 0);
                 	
-                	$departmentMapper = new Model_DepartmentMapper();
-                	$department = $departmentMapper->find($id);
-                	if ($department != NULL) {// security
-                		$countryMapper = new Model_CountryMapper();
-                		$countryId = (int)$formData['country'];
-                		$country = $countryMapper->find($countryId);
-                		
-                		$department->setName($formData['name'])
-                				->setDescription($formData['description'])
-                				->setCountry($country);
-                			
-                		$departmentMapper->update($id, $department);
-                		
-                		$this->view->success = TRUE;
-                		$this->_messenger->clearMessages();
-                    	$this->_messenger->addSuccess(_("Department updated"));
-                    	$this->view->message = $this->view->seeMessages();
-                	}
-                } catch (Exception $e) {
-                	$this->exception($this->view, $e);
-                }
-            } else {
-            	$this->view->success = FALSE;
-				$this->_messenger->addError(implode("<br/>", $form->getMessages('name')));
-				$this->view->message = $this->view->seeMessages();
-            }
-        } else {
+               	$departmentMapper = new Model_DepartmentMapper();
+               	$department = $departmentMapper->find($id);
+               	if ($department != NULL) {// security
+               		$countryMapper = new Model_CountryMapper();
+	               	$country = $countryMapper->find((int)$formData['country']);
+               		if (!$departmentMapper->verifyExistNameByCountry($formData['name'], $country) || $departmentMapper->verifyExistIdAndNameByCountry($id, $formData['name'], $country)) {		
+	               		$department->setName($formData['name'])
+	               				->setDescription($formData['description'])
+	               				->setCountry($country);
+	                			
+	               		$departmentMapper->update($id, $department);
+	                		
+	               		$this->view->success = TRUE;
+	               		$this->_messenger->clearMessages();
+	                   	$this->_messenger->addSuccess(_("Department updated"));
+	              	} else {
+                   		$this->view->success = FALSE;
+                		$this->view->name_duplicate = TRUE;
+                    	$this->_messenger->addError(_("The Department already exists"));
+                   	}
+               	} else {
+               		$this->view->success = FALSE;
+                    $this->_messenger->addError(_("The Department does not exists"));
+               	}
+         	} catch (Exception $e) {
+            	$this->exception($this->view, $e);
+           	}
+   		} else {
         	$this->view->success = FALSE;
-        	$this->_messenger->addNotice(_("Data submitted were not processed."));        	
-        	$this->view->message = $this->view->seeMessages();
-        }
-        // send response to client
+			$this->view->messageArray = $form->getMessages();
+			$this->_messenger->addError(_("The form contains error and is not updated"));
+      	}
+      	$this->view->message = $this->view->seeMessages();
+        // sends response to client
+        $this->_helper->json($this->view);
+	}
+	
+	/**
+	 * 
+	 * Deletes depatments
+	 * @access public
+	 * @internal
+	 * 1) Gets the model department
+	 * 2) Validates the existance of dependencies
+	 * 3) Changes the state field or records to delete 
+	 */
+	public function deleteAction() {
+		$this->_helper->viewRenderer->setNoRender(TRUE);
+		
+        $itemIds = $this->_getParam('itemIds', array());
+      	if (!empty($itemIds) ) {
+        	try {
+           		$removeCount = 0;
+                foreach ($itemIds as $id) {
+                	$departmentMapper = new Model_DepartmentMapper();
+	                $departmentMapper->delete($id);
+	                $removeCount++;
+                }
+                $message = sprintf(ngettext('%d department removed.', '%d departments removed.', $removeCount), $removeCount);
+                	
+                $this->view->success = TRUE;
+                $this->_messenger->addSuccess(_($message));
+          	} catch (Exception $e) {
+               	$this->exception($this->view, $e);
+            }
+     	} else {
+        	$this->view->success = FALSE;
+            $this->_messenger->addNotice(_("Data submitted is empty."));
+      	}
+      	$this->view->message = $this->view->seeMessages();
+        // sends response to client
         $this->_helper->json($this->view);
 	}
 	

@@ -20,7 +20,7 @@ com.em = com.em ||{};
 		this.url = {};
 		this.validator;
 		
-		this.initAlert();
+		this.initFlashMessage();
 		this.initEvents();
 		
 		this.dtHeaders = undefined;
@@ -30,9 +30,9 @@ com.em.Department.prototype = {
 	
 	/**
 	 * 
-	 * Initializes JQuery alert component
+	 * Initializes JQuery flash message component
 	 */	
-	initAlert: function() {
+	initFlashMessage: function() {
 		this.alert = new com.em.Alert();
 	},
 	
@@ -65,9 +65,12 @@ com.em.Department.prototype = {
 		});
 		
 		$("#countryFilter").change(function() {
-			var oSettings = table.fnSettings();
-	   		oSettings._iDisplayStart = 0;
-	   		table.oApi._fnAjaxUpdate(oSettings);
+			var value = $("#countryFilter").val();
+//			if (value == -1) {
+//				$('#nameFilter').attr('value', '');
+//			}
+			initDisplayStart();
+	   		table.oApi._fnAjaxUpdate(table.fnSettings());
 		});
 	}},
 	
@@ -257,7 +260,7 @@ com.em.Department.prototype = {
 			// Sends request by ajax
 			$.ajax({
 				url: action ,
-				type: "POST",
+				type: "GET",
 				beforeSend : function(XMLHttpRequest) {
 					processingDisplay(true);
 				},
@@ -266,7 +269,7 @@ com.em.Department.prototype = {
 					if (textStatus == 'success') {
 						var contentType = XMLHttpRequest.getResponseHeader('Content-Type');
 						if (contentType == 'application/json') {
-							alert.show(data.message, {header : com.em.Alert.FAILURE});
+							alert.show(data.message, {header: com.em.Alert.FAILURE});
 						} else {
 							// Getting html dialog
 							$('#dialog').html(data);
@@ -288,7 +291,7 @@ com.em.Department.prototype = {
 				
 				error: function(jqXHR, textStatus, errorThrown) {
 					dialogForm.dialog('close');
-					alert.show(errorThrown,{header : com.em.Alert.ERROR});
+					alert.flashError(errorThrown,{header: com.em.Alert.ERROR});
 				}
 			});
 		});
@@ -307,7 +310,7 @@ com.em.Department.prototype = {
 			// Sends request by ajax
 			$.ajax({
 				url: action,
-				type: "POST",
+				type: "GET",
 				beforeSend: function(XMLHttpRequest) {
 					processingDisplay(true);
 				},
@@ -316,7 +319,7 @@ com.em.Department.prototype = {
 					if (textStatus == 'success') {
 						var contentType = XMLHttpRequest.getResponseHeader('Content-Type');
 						if (contentType == 'application/json') {
-							alert.show(data.message, {header : com.em.Alert.FAILURE});
+							alert.show(data.message, {header: com.em.Alert.FAILURE});
 						} else {
 							// Getting html dialog
 							$('#dialog').html(data);
@@ -336,9 +339,9 @@ com.em.Department.prototype = {
 					processingDisplay(false);
 				},
 				
-				error : function(jqXHR, textStatus, errorThrown) {
+				error: function(jqXHR, textStatus, errorThrown) {
 					dialogForm.dialog('close');
-					alert.show(errorThrown,{header : com.em.Alert.ERROR});
+					alert.flashError(errorThrown,{header: com.em.Alert.ERROR});
 				}
 			});
 		});
@@ -356,7 +359,7 @@ com.em.Department.prototype = {
 			var items = $('#tblDepartment :checked');
 			var itemsChecked = items.serialize();
 			if (itemsChecked == '') {
-				alert.show('There is no item selected', {header:com.em.Alert.SUCCESS});
+				alert.flashInfo('There is no item selected', {header: com.em.Alert.NOTICE});
 				return;
 			}
 			var action = $(this).attr('href');
@@ -373,23 +376,23 @@ com.em.Department.prototype = {
 							processingDisplay(true);
 						},
 						
-						success : function(data, textStatus, XMLHttpRequest) {
+						success: function(data, textStatus, XMLHttpRequest) {
 							if (textStatus == 'success') {
 								if (data.success) {
 									table.fnDraw();
-									alert.show(data.message);
+									alert.flashSuccess(data.message, {header: com.em.Alert.SUCCESS});
 								} else {
-									alert.show(data.message, {header : com.em.Alert.SUCCESS});
+									alert.flashInfo(data.message, {header: com.em.Alert.NOTICE});
 								}
 							}
 						},
 						
-						complete : function(jqXHR, textStatus) {
+						complete: function(jqXHR, textStatus) {
 							processingDisplay(false);
 						},
 						
-						error : function(jqXHR, textStatus, errorThrown) {
-							alert.show(errorThrown,{header : com.em.Alert.ERROR});
+						error: function(jqXHR, textStatus, errorThrown) {
+							alert.flashError(errorThrown,{header: com.em.Alert.ERROR});
 						}
 					});
 				} else {
@@ -451,5 +454,31 @@ com.em.Department.prototype = {
 			this.alert = new com.em.Alert();
 		}
 		alert.show(message, header);
+	}},
+	
+	/**
+	 * 
+	 * Shows flash message success if it exists, if not creates a new instance of flash message success and shows it.
+	 * @param message string
+	 * @param header string
+	 */
+	flashSuccess: function(message, header) {with (this) {
+		if (this.alert == undefined) {
+			this.alert = new com.em.Alert();
+		}
+		alert.flashSuccess(message, header);
+	}},
+	
+	/**
+	 * 
+	 * Shows flash message error if it exists, if not creates a new instance of flash message error and shows it.
+	 * @param message string
+	 * @param header string
+	 */
+	flashError: function(message, header) {with (this) {
+		if (this.alert == undefined) {
+			this.alert = new com.em.Alert();
+		}
+		alert.flashError(message, header);
 	}}
 };
