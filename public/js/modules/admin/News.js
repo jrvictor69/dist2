@@ -20,7 +20,7 @@ com.em = com.em ||{};
 		this.url = {};
 		this.validator;
 		
-		this.initAlert();
+		this.initFlashMessage();
 		this.initEvents();
 		
 		this.dtHeaders = undefined;
@@ -30,9 +30,9 @@ com.em.News.prototype = {
 	
 	/**
 	 * 
-	 * Initializes JQuery alert component
+	 * Initializes JQuery flash message component
 	 */	
-	initAlert: function() {
+	initFlashMessage: function() {
 		this.alert = new com.em.Alert();
 	},
 	
@@ -359,7 +359,7 @@ com.em.News.prototype = {
 			var items = $('#tblNews :checked');
 			var itemsChecked = items.serialize();
 			if (itemsChecked == '') {
-				alert.show('There is no item selected', {header:com.em.Alert.SUCCESS});
+				alert.flashInfo('There is no item selected', {header:com.em.Alert.NOTICE});
 				return;
 			}
 			var action = $(this).attr('href');
@@ -372,27 +372,27 @@ com.em.News.prototype = {
 						url: action,
 						// Gets element checkbox checked
 						data: itemsChecked,
-						beforeSend : function(XMLHttpRequest) {
+						beforeSend: function(XMLHttpRequest) {
 							processingDisplay(true);
 						},
 						
-						success : function(data, textStatus, XMLHttpRequest) {
+						success: function(data, textStatus, XMLHttpRequest) {
 							if (textStatus == 'success') {
 								if (data.success) {
 									table.fnDraw();
-									alert.show(data.message);
+									alert.flashSuccess(data.message, {header: com.em.Alert.SUCCESS});
 								} else {
-									alert.show(data.message, {header : com.em.Alert.SUCCESS});
+									alert.flashInfo(data.message, {header: com.em.Alert.NOTICE});
 								}
 							}
 						},
 						
-						complete : function(jqXHR, textStatus) {
+						complete: function(jqXHR, textStatus) {
 							processingDisplay(false);
 						},
 						
-						error : function(jqXHR, textStatus, errorThrown) {
-							alert.show(errorThrown,{header : com.em.Alert.ERROR});
+						error: function(jqXHR, textStatus, errorThrown) {
+							alert.flashError(errorThrown, {header: com.em.Alert.ERROR});
 						}
 					});
 				} else {
@@ -410,19 +410,19 @@ com.em.News.prototype = {
 	setValidatorForm : function(selector) {
 		validator = $(selector).validate({
 	        rules:{
-	        	'title':{
-					required: true,
-					maxlength: 255
-				},
-				'summary':{
-					required: true
-				},
-				'fount':{
-					required: true
-				},
-				'imageFile':{
-					accept: "git|jpg|png"
-				}
+//	        	'title':{
+//					required: true,
+//					maxlength: 255
+//				},
+//				'summary':{
+//					required: true
+//				},
+//				'fount':{
+//					required: true
+//				},
+//				'imageFile':{
+//					accept: "git|jpg|png"
+//				}
 	        }
 	    });
 	},
