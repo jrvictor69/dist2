@@ -24,6 +24,22 @@
 		<div id="content">
 			<?php echo $this->layout()->content; ?>
 		</div>
-      <?php echo $this->navigation()->breadcrumbs(); ?>
+      	<?php echo $this->navigation()->breadcrumbs(); ?>
+		<script type="text/javascript">
+      	<?php
+      		$messagesArray = $this->messages;
+			foreach ($messagesArray as $messages) {
+				foreach ($messages as $key => $message) {
+					if ($key == 'error') {?>
+						this.alert = new com.em.Alert();
+						alert.flashError('<?php echo $message; ?>', {header: com.em.Alert.ERROR});
+					<?php }
+					if ($key == 'success') {?>
+						this.alert = new com.em.Alert();
+						alert.flashSuccess('<?php echo $message; ?>', {header: com.em.Alert.SUCCESS});
+					<?php }
+				} 							
+			} ?>
+      	</script>
 	</body>
 </html>

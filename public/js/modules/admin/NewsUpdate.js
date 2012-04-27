@@ -320,25 +320,25 @@ com.em.NewsUpdate.prototype = {
 	 */
 	setValidatorForm : function(selector) {
 		validator = $(selector).validate({
-	        rules:{
-	        	'title':{
-					required: true,
-					maxlength: 255
-				},
-				'summary':{
-					required: true
-				},
-				'fount':{
-					required: true,
-					maxlength: 255
-				}
-	        },
-	        messages:{
-				'title':{
-					required: "No puede ser vacio inserte un valor",
-					maxlength: "El limite es de 255"
-				}
-			}
+//	        rules:{
+//	        	'title':{
+//					required: true,
+//					maxlength: 255
+//				},
+//				'summary':{
+//					required: true
+//				},
+//				'fount':{
+//					required: true,
+//					maxlength: 255
+//				}
+//	        },
+//	        messages:{
+//				'title':{
+//					required: "No puede ser vacio inserte un valor",
+//					maxlength: "El limite es de 255"
+//				}
+//			}
 	    });
 	}
 };

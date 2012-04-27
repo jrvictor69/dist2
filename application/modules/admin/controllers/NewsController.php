@@ -24,13 +24,13 @@ class Admin_NewsController extends App_Controller_Action {
 	 * @access public
 	 */
 	public function indexAction() {
-		$countriesNames = $this->getCategoriesFilter();
-
 		$formFilter = new Admin_Form_DepartmentFilter();
-		$formFilter->getElement('nameFilter')->setLabel(_('Title news'));
-		$formFilter->getElement('countryFilter')->setLabel(_('Category'));
-		$formFilter->getElement('countryFilter')->setMultiOptions($countriesNames);
+		$formFilter->getElement('nameFilter')->setLabel(_("Title news"));
+		$formFilter->getElement('countryFilter')->setLabel(_("Category"));
+		$formFilter->getElement('countryFilter')->setMultiOptions($this->getCategoriesFilter());
 		$this->view->formFilter = $formFilter;
+		
+		$this->view->messages = $this->_helper->flashMessenger->getMessages();
 	}
 	
 	/**
@@ -45,59 +45,51 @@ class Admin_NewsController extends App_Controller_Action {
 		
 		if ($this->_request->isPost()) {
 			$formData = $this->_request->getPost();
-	        if ($form->isValid($formData)) {         	
-	        	try {
-	        		$newsMapper = new Model_NewsMapper();
-	        		if (!$newsMapper->verifyExistTitle($formData['title'])) {						
-	        			// Managerial
-	        			$imageFile = $form->getElement('imageFile');
-	        			try {
-			 				$imageFile->receive();
-						} catch (Zend_File_Transfer_Exception $e) {
-							$e->getMessage();
-						}
-						
-						$managerialId = Zend_Auth::getInstance()->getIdentity()->id;
-						$managerial = new Model_Managerial();
-						$managerial->setId($managerialId);
-						
-						// Category
-						$categoryMapper = new Model_CategoryMapper();
-						$category = $categoryMapper->find($formData['categoryId']);
-						
-						$news = new Model_News();				
-						$news
-							->setSummary($formData['summary'])
-							->setContain($formData['contain'])
-							->setFount($formData['fount'])
-							->setCategory($category)
-							->setManagerial($managerial)
-							->setTitle($formData['title'])
-							->setImagename("image name")
-							->setCreatedBy($managerialId)
-							;
-						
-						$newsMapper->save($news);
-						
-						$this->view->success = TRUE;
-		                $this->_messenger->clearMessages();
-		                $this->_messenger->addSuccess(_("News saved"));
-		                $this->view->message = $this->view->seeMessages();
-		                
-		                $this->_helper->redirector('index', 'news', 'admin', array('type'=>'information'));
-	        		} else {
-	        			echo "error";
-	        		}
-	          	} catch (Exception $e) {
-	            	$this->exception($this->view, $e);
-	           	}
+	        if ($form->isValid($formData)) {
+        		$newsMapper = new Model_NewsMapper();
+        		if (!$newsMapper->verifyExistTitle($formData['title'])) {				
+        			// Managerial
+        			$imageFile = $form->getElement('imageFile');
+        			try {
+		 				$imageFile->receive();
+					} catch (Zend_File_Transfer_Exception $e) {
+						$e->getMessage();
+					}
+					
+					$managerialId = Zend_Auth::getInstance()->getIdentity()->id;
+					$managerial = new Model_Managerial();
+					$managerial->setId($managerialId);
+					
+					// Category
+					$categoryMapper = new Model_CategoryMapper();
+					$category = $categoryMapper->find($formData['categoryId']);
+					
+					$news = new Model_News();				
+					$news
+						->setSummary($formData['summary'])
+						->setContain($formData['contain'])
+						->setFount($formData['fount'])
+						->setCategory($category)
+						->setManagerial($managerial)
+						->setTitle($formData['title'])
+						->setImagename("image name")
+						->setCreatedBy($managerialId)
+						;
+					
+					$newsMapper->save($news);
+			
+					$this->_helper->flashMessenger->addMessage(array('success' => _("News saved")));
+	                $this->_helper->redirector('index', 'news', 'admin', array('type'=>'information'));
+        		} else {
+        			$this->_helper->flashMessenger->addMessage(array('error' => _("The News already exists")));
+     				$this->view->messages = $this->_helper->flashMessenger->getCurrentMessages();
+        		}
 	     	} else {
-	     		$form->populate($formData);
-//				$this->view->success = FALSE;
-//				$this->_messenger->addError(implode("<br/>", $form->getMessages('title')));
-//				$this->view->message = $this->view->seeMessages();
+	     		$this->_helper->flashMessenger->addMessage(array('error' => _("The form contains error and is not saved")));
+	     		$this->view->messages = $this->_helper->flashMessenger->getCurrentMessages();
 	       	}
 		}
+		
 		$this->view->form = $form;
 	}
 	
