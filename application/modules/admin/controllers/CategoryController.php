@@ -24,7 +24,8 @@ class Admin_CategoryController extends App_Controller_Action {
 	 * @access public
 	 */
 	public function indexAction() {
-		$formFilter = new Admin_Form_CategoryFilter();
+		$formFilter = new Admin_Form_SearchFilter();
+		$formFilter->getElement('nameFilter')->setLabel(_("Name category"));
 		$this->view->formFilter = $formFilter;
 	}
 	
@@ -49,41 +50,36 @@ class Admin_CategoryController extends App_Controller_Action {
         $this->_helper->viewRenderer->setNoRender(TRUE);
         
         $form = new Admin_Form_Category();
-                
-        if ($this->_request->isPost()) {
-        	$formData = $this->getRequest()->getPost();
-            if ($form->isValid($formData)) {            	
-                try {
-                	$categoryMapper = new Model_CategoryMapper();
-                	if (!$categoryMapper->verifyExistName($formData['name'])) {
-                		$category = new Model_Category($formData);
-                		$category->setCreatedBy(Zend_Auth::getInstance()->getIdentity()->id);
+        
+        $formData = $this->getRequest()->getPost();
+      	if ($form->isValid($formData)) {            	
+        	try {
+                $categoryMapper = new Model_CategoryMapper();
+                if (!$categoryMapper->verifyExistName($formData['name'])) {
+                	$category = new Model_Category($formData);
+                	$category->setCreatedBy(Zend_Auth::getInstance()->getIdentity()->id);
                 		
-                		$categoryMapper->save($category);
+                	$categoryMapper->save($category);
                 	
-                		$this->view->success = TRUE;
-                		$this->_messenger->clearMessages();
-                    	$this->_messenger->addSuccess(_("Category saved"));
-                    	$this->view->message = $this->view->seeMessages();	
-                	} else {
-						$this->view->success = FALSE;
-                    	$this->_messenger->addError(_("The Category already exists"));
-                    	$this->view->message = $this->view->seeMessages();                			
-                	}
-                } catch (Exception $e) {
-                	$this->exception($this->view, $e);
+                	$this->view->success = TRUE;
+                	$this->_messenger->clearMessages();
+                   	$this->_messenger->addSuccess(_("Category saved"));	
+                } else {
+					$this->view->success = FALSE;
+					$this->view->name_duplicate = TRUE;
+                   	$this->_messenger->addError(_("The Category already exists"));                			
                 }
-            } else {
-				$this->view->success = FALSE;
-				$this->_messenger->addError(implode("<br/>", $form->getMessages('name')));
-				$this->view->message = $this->view->seeMessages();
-            }
-        } else {
-        	$this->view->success = FALSE;
-        	$this->_messenger->addNotice(_("Data submitted were not processed."));        	
-        	$this->view->message = $this->view->seeMessages();
-        }
-        // send response to client
+          	} catch (Exception $e) {
+                $this->exception($this->view, $e);
+          	}
+    	} else {
+			$this->view->success = FALSE;
+			$this->view->messageArray = $form->getMessages();
+			$this->_messenger->addError(_("The form contains error and is not saved"));
+			
+     	}
+     	$this->view->message = $this->view->seeMessages();
+        // sends response to client
         $this->_helper->json($this->view);
 	}
 	
@@ -96,26 +92,24 @@ class Admin_CategoryController extends App_Controller_Action {
 		$this->_helper->layout()->disableLayout();
 		$form = new Admin_Form_Category();
         
-        if ($this->_request->isPost()) {
-        	try {
-           		$id = $this->_getParam('id', 0);
-            	$categoryMapper = new Model_CategoryMapper();
-            	$category = $categoryMapper->find($id);
-                if ($category) {//security
-					$form->getElement('name')->setValue($category->getName());
-					$form->getElement('description')->setValue($category->getDescription());
-                } else {
-                	// response to client
-	               	$this->view->success = FALSE;
-	                $this->_messenger->addSuccess(_("The requested record was not found."));
-	                $this->view->message = $this->view->seeMessages();
-	                $this->_helper->json($this->view);
-                }
-        	} catch (Exception $e) {
-              	$this->exception($this->view, $e);
-                $this->_helper->json($this->view);
-        	}
-        }
+        try {
+           	$id = $this->_getParam('id', 0);
+            $categoryMapper = new Model_CategoryMapper();
+            $category = $categoryMapper->find($id);
+            if ($category != NULL) {//security
+				$form->getElement('name')->setValue($category->getName());
+				$form->getElement('description')->setValue($category->getDescription());
+          	} else {
+            	// response to client
+	          	$this->view->success = FALSE;
+	          	$this->_messenger->addSuccess(_("The requested record was not found."));
+	     		$this->view->message = $this->view->seeMessages();
+	            $this->_helper->json($this->view);
+          	}
+        } catch (Exception $e) {
+        	$this->exception($this->view, $e);
+           	$this->_helper->json($this->view);
+       	}
         
         $this->view->form = $form;
 	}
@@ -134,40 +128,43 @@ class Admin_CategoryController extends App_Controller_Action {
 		
 		$form = new Admin_Form_Category();
 		
-        if ($this->_request->isPost()) {
-            $formData = $this->getRequest()->getPost();
-            if ($form->isValid($formData)) {
-                try {
-                	$id = $this->_getParam('id', 0);
+  		$formData = $this->getRequest()->getPost();
+     	if ($form->isValid($formData)) {
+        	try {
+                $id = $this->_getParam('id', 0);
                 	
-                	$categoryMapper = new Model_CategoryMapper();
-                	$category = $categoryMapper->find($id);
-                	if ($category) {
-                		$category->setName($formData['name'])
-                				->setDescription($formData['description'])
-                				->setChangedBy(Zend_Auth::getInstance()->getIdentity()->id);
-                			
-                		$categoryMapper->update($id, $category);
-                		
-                		$this->view->success = TRUE;
-                		$this->_messenger->clearMessages();
-                    	$this->_messenger->addSuccess(_("Category updated"));
-                    	$this->view->message = $this->view->seeMessages();
+                $categoryMapper = new Model_CategoryMapper();
+                $category = $categoryMapper->find($id);
+                if ($category != NULL) {
+                	if (!$categoryMapper->verifyExistName($formData['name']) || $categoryMapper->verifyExistIdAndName($id, $formData['name'])) {
+	                	$category->setName($formData['name'])
+	                			->setDescription($formData['description'])
+	                			->setChangedBy(Zend_Auth::getInstance()->getIdentity()->id);
+	                			
+	                	$categoryMapper->update($id, $category);
+	                		
+	                	$this->view->success = TRUE;
+	                	$this->_messenger->clearMessages();
+	                    $this->_messenger->addSuccess(_("Category updated"));
+                	} else {
+                		$this->view->success = FALSE;
+                		$this->view->name_duplicate = TRUE;
+                    	$this->_messenger->addError(_("The Category already exists"));
                 	}
-                } catch (Exception $e) {
-                	$this->exception($this->view, $e);
+                } else {
+                	$this->view->success = FALSE;
+                    $this->_messenger->addError(_("The Category does not exists"));
                 }
-            } else {
-            	$this->view->success = FALSE;
-				$this->_messenger->addError(implode("<br/>", $form->getMessages('name')));
-				$this->view->message = $this->view->seeMessages();
-            }
-        } else {
-        	$this->view->success = FALSE;
-        	$this->_messenger->addNotice(_("Data submitted were not processed."));        	
-        	$this->view->message = $this->view->seeMessages();
-        }
-        // send response to client
+         	} catch (Exception $e) {
+                $this->exception($this->view, $e);
+          	}
+      	} else {
+            $this->view->success = FALSE;
+            $this->view->messageArray = $form->getMessages();
+			$this->_messenger->addError(_("The form contains error and is not saved"));
+      	}
+    	$this->view->message = $this->view->seeMessages();
+        // sends response to client
         $this->_helper->json($this->view);
 	}
 	
@@ -183,35 +180,28 @@ class Admin_CategoryController extends App_Controller_Action {
 	public function deleteAction() {
 		$this->_helper->viewRenderer->setNoRender(TRUE);
 		
-        if ($this->_request->isPost()) {
-        	$itemIds = $this->_getParam('itemIds', array());
-            if (!empty($itemIds) ) {
-            	try {
-            		$removeCount = 0;
-                	foreach ($itemIds as $id) {
-                		$categoryMapper = new Model_CategoryMapper();
-	                	$categoryMapper->delete($id);
-	                	$removeCount++;
-                	}
-                	$message = sprintf(ngettext('%d category removed.', '%d categories removed.', $removeCount), $removeCount);
-                	
-                	$this->view->success = TRUE;
-                    $this->_messenger->addSuccess(_($message));
-                    $this->view->message = $this->view->seeMessages();
-                } catch (Exception $e) {
-                	$this->exception($this->view, $e);
+        $itemIds = $this->_getParam('itemIds', array());
+        if (!empty($itemIds) ) {
+            try {
+            	$removeCount = 0;
+                foreach ($itemIds as $id) {
+                	$categoryMapper = new Model_CategoryMapper();
+	               	$categoryMapper->delete($id);
+	               	$removeCount++;
                 }
-            } else {
-                $this->view->success = FALSE;
-            	$this->_messenger->addNotice(_("Data submitted is empty."));
-                $this->view->message = $this->view->seeMessages();
-            }
-        } else {
+                $message = sprintf(ngettext('%d category removed.', '%d categories removed.', $removeCount), $removeCount);
+                	
+                $this->view->success = TRUE;
+              	$this->_messenger->addSuccess(_($message));
+        	} catch (Exception $e) {
+            	$this->exception($this->view, $e);
+         	}
+   		} else {
         	$this->view->success = FALSE;
-        	$this->_messenger->addNotice(_("Data submitted were not processed."));
-        	$this->view->message = $this->view->seeMessages();
-        }
-        // send response to client
+            $this->_messenger->addNotice(_("Data submitted is empty."));
+      	}
+      	$this->view->message = $this->view->seeMessages();
+        // sends response to client
         $this->_helper->json($this->view);
 	}
 	
@@ -237,9 +227,7 @@ class Admin_CategoryController extends App_Controller_Action {
 		$categoryMapper = new Model_CategoryMapper();
 		$categories = $categoryMapper->findByCriteria($filters, $limit, $start, $sortCol, $sortDirection);
 		$total = $categoryMapper->getTotalCount($filters);
-				
-//		$this->view->sEcho = intval($_GET['sEcho']);
-
+		
 		$posRecord = $start+1;
 		$data = array();
 		foreach ($categories as $category) {

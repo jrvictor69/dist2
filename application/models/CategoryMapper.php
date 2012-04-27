@@ -111,7 +111,7 @@ class Model_CategoryMapper extends Model_TemporalMapper {
 	public function find($id) {
         $result = $this->getDbTable()->find($id);
     	if (0 == count($result)) {
-            return FALSE;
+            return NULL;
         }
         
         $row = $result->current();
