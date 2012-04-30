@@ -1,0 +1,1 @@
+ALTER TABLE `dbch`.`tblperson` ADD COLUMN `identityCard` INT NOT NULL  AFTER `id` ;

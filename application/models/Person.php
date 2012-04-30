@@ -13,9 +13,17 @@ class Model_Person extends Model_Entity {
 	
 	/**
 	 * 
-	 * @var string
+	 * Constants for the type sex
+	 * @var int
 	 */
-	protected $_name;
+	const SEX_MALE = 1;
+	const SEX_FEMALE = 2;
+	
+	/**
+	 * 
+	 * @var int
+	 */
+	protected $_identityCard;
 	
 	/**
 	 * 
@@ -72,18 +80,18 @@ class Model_Person extends Model_Entity {
     }
  	
 	/**
-	 * @return string
+	 * @return int
 	 */
-	public function getName() {
-		return $this->_name;
+	public function getIdentityCard() {
+		return $this->_identityCard;
 	}
 
 	/**
-	 * @param string $name
+	 * @param int $identityCard
 	 * @return Model_Person
 	 */
-	public function setName($name) {
-		$this->_name = $name;
+	public function setIdentityCard($identityCard) {
+		$this->_identityCard = $identityCard;
 		return $this;
 	}
 
@@ -213,5 +221,12 @@ class Model_Person extends Model_Entity {
 	public function setType($type) {
 		$this->_type = $type;
 		return $this;
+	}
+	
+	/** 
+	 * @return string
+	 */
+	public function getFullName() {
+		return trim($this->_firstName . ' ' . $this->_lastName);
 	}
 }

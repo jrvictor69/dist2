@@ -1,0 +1,63 @@
+<form id="<?php echo $this->element->getAttrib('id') ?>">
+	<table>
+		<tbody>
+			<tr class="odd">
+				<td><?php echo $this->element->getElement('firstName')->renderLabel(); ?></td>
+				<td><?php echo $this->element->getElement('firstName')->renderViewHelper(); ?></td>
+			</tr>
+			<tr class="even">
+				<td><?php echo $this->element->getElement('lastName')->renderLabel(); ?></td>
+				<td><?php echo $this->element->getElement('lastName')->renderViewHelper(); ?></td>
+			</tr>
+			<tr class="odd">
+				<td><?php echo $this->element->getElement('initial')->renderLabel(); ?></td>
+				<td><?php echo $this->element->getElement('initial')->renderViewHelper(); ?></td>
+			</tr>
+			<tr class="even">
+				<td><?php echo $this->element->getElement('identityCard')->renderLabel(); ?></td>
+				<td><?php echo $this->element->getElement('identityCard')->renderViewHelper(); ?></td>
+			</tr>
+			<tr class="even">
+				<td><?php echo $this->element->getElement('sex')->renderLabel(); ?></td>
+				<td><?php echo $this->element->getElement('sex')->renderViewHelper(); ?></td>
+			</tr>
+			<tr class="odd">
+				<td><?php echo $this->element->getElement('username')->renderLabel(); ?></td>
+				<td><?php echo $this->element->getElement('username')->renderViewHelper(); ?></td>
+			</tr>
+			<tr class="even">
+				<td><?php echo $this->element->getElement('password')->renderLabel(); ?></td>
+				<td><?php echo $this->element->getElement('password')->renderViewHelper(); ?></td>
+			</tr>
+			<tr class="odd">
+				<td><?php echo $this->element->getElement('passwordConfirm')->renderLabel(); ?></td>
+				<td><?php echo $this->element->getElement('passwordConfirm')->renderViewHelper(); ?></td>
+			</tr>
+			<tr class="even">
+				<td><?php echo $this->element->getElement('email')->renderLabel(); ?></td>
+				<td><?php echo $this->element->getElement('email')->renderViewHelper(); ?></td>
+			</tr>
+			<tr class="odd">
+				<td><?php echo $this->element->getElement('address')->renderLabel(); ?></td>
+				<td><?php echo $this->element->getElement('address')->renderViewHelper(); ?></td>
+			</tr>
+			<tr class="even">
+				<td><?php echo $this->element->getElement('phone')->renderLabel(); ?></td>
+				<td><?php echo $this->element->getElement('phone')->renderViewHelper(); ?></td>
+			</tr>
+			<tr class="odd">
+				<td><?php echo $this->element->getElement('phonemobil')->renderLabel(); ?></td>
+				<td><?php echo $this->element->getElement('phonemobil')->renderViewHelper(); ?></td>
+			</tr>
+			<tr class="even">
+				<td><?php echo $this->element->getElement('phonework')->renderLabel(); ?></td>
+				<td><?php echo $this->element->getElement('phonework')->renderViewHelper(); ?></td>
+			</tr>
+			<tr class="even">
+				<td><?php echo $this->element->getElement('userGroupId')->renderLabel(); ?></td>
+				<td><?php echo $this->element->getElement('userGroupId')->renderViewHelper(); ?></td>
+			</tr>
+		</tbody>
+	</table>
+	<input type="hidden" value="0" id="duplicateName" name="duplicateName"/>
+</form>

@@ -31,6 +31,95 @@ class Admin_ManagerialController extends App_Controller_Action {
 	
 	/**
 	 * 
+	 * This action shows a form in create mode
+	 * @access public
+	 */
+	public function createAction() {
+		$this->_helper->layout()->disableLayout();
+		
+		$form = new Admin_Form_Managerial();
+		$form->getElement('userGroupId')->setMultiOptions($this->getUserGroups());
+		$form->getElement('sex')->setMultiOptions(array(Model_Person::SEX_MALE => _("Male"), Model_Person::SEX_FEMALE => _("Female")));
+		$form->getElement('sex')->setOptions(array('separator' => '')); 
+		
+        $this->view->form = $form;
+	}
+	
+	/**
+	 * 
+	 * Creates a new Managerial
+	 * @access public
+	 */
+	public function createSaveAction() {
+        $this->_helper->viewRenderer->setNoRender(TRUE);
+        
+        $form = new Admin_Form_Managerial();
+        $form->getElement('userGroupId')->setMultiOptions($this->getUserGroups());
+        $form->getElement('sex')->setMultiOptions(array(Model_Person::SEX_MALE => _("Male"), Model_Person::SEX_FEMALE => _("Female")));
+        
+        $formData = $this->_request->getPost();
+        if ($form->isValid($formData)) {          	
+        	try {
+           		$managerialMapper = new Model_ManagerialMapper();
+               	if (!$managerialMapper->verifyExistIdentityCard($formData['identityCard'])) {
+               		$account = new Model_Account();
+               		$account->setUsername($formData['username'])
+               				->setPassword($formData['password'])
+               				->setEmail($formData['email'])
+               				->setRole("Managerial")
+               				->setAccountType(Model_Account::ACCOUNT_TYPE_MANAGERIAL)
+               				;
+               				
+               		$accountMapper = new Model_AccountMapper();
+               		$accountMapper->save($account); 
+               		
+               		$account = $accountMapper->findLast();
+               		
+               		$userGroupMapper = new Model_UserGroupMapper();
+               		$userGroup = $userGroupMapper->find((int)$formData['userGroupId']);
+               		
+               		$managerial = new Model_Managerial();
+               		$managerial
+               				->setUserGroup($userGroup)
+               				->setAccount($account)
+               				->setFirstName($formData['firstName'])
+               				->setLastName($formData['lastName'])
+               				->setDateOfBirth(date('Y-m-d H:i:s'))
+               				->setPhone($formData['phone'])
+               				->setPhonework($formData['phonework'])
+               				->setPhonemobil((int)$formData['phonemobil'])
+               				->setIdentityCard((int)$formData['identityCard'])
+               				->setSex((int)$formData['sex'])
+               				->setType(2)               				
+               				;
+                		
+                	$managerialMapper->save($managerial);
+                	
+                	$this->view->success = TRUE;
+                	$this->_messenger->clearMessages();
+                    $this->_messenger->addSuccess(_("Managerial saved"));
+                    $this->view->message = $this->view->seeMessages();
+                } else {
+					$this->view->success = FALSE;
+					$this->view->identityCard_duplicate = TRUE;
+                    $this->_messenger->addError(_("The Managerial already exists"));
+                    $this->view->message = $this->view->seeMessages();                			
+                }
+          	} catch (Exception $e) {
+            	$this->exception($this->view, $e);
+           	}
+     	} else {
+			$this->view->success = FALSE;
+			$this->view->messageArray = $form->getMessages();
+			$this->_messenger->addError(_("The form contains error and is not saved"));
+			$this->view->message = $this->view->seeMessages();
+       	}
+        // send response to client
+        $this->_helper->json($this->view);
+	}
+	
+	/**
+	 * 
 	 * Outputs an XHR response containing all entries in managerials.
 	 * This action serves as a datasource for the read/index view
 	 * @xhrParam int filter_name
@@ -65,8 +154,8 @@ class Admin_ManagerialController extends App_Controller_Action {
 			
 			$row = array();			
 			$row[] = $managerial->getId();
-			$row[] = $managerial->getName();
-			$row[] = $managerial->getFirstName();
+			$row[] = $managerial->getFullName();
+			$row[] = $managerial->getPhone();
 			$row[] = $managerial->getLastName();
 			$row[] = $managerial->getDateOfBirth();
 			$row[] = $managerial->getPhone();
@@ -104,5 +193,15 @@ class Admin_ManagerialController extends App_Controller_Action {
 		}
 				
 		return $filters;
+	}
+	
+	/**
+	 * 
+	 * Returns the ids and names of user groups
+	 * @return array
+	 */
+	private function getUserGroups() {
+		$userGroupMapper = new Model_UserGroupMapper();
+		return $userGroupMapper->findAllName();
 	}
 }

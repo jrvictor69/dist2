@@ -1,0 +1,1 @@
+ALTER TABLE `dbch`.`tblperson` DROP COLUMN `name` ;

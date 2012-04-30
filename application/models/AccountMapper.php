@@ -231,4 +231,9 @@ class Model_AccountMapper extends Model_TemporalMapper {
     		return FALSE;
     	}    			    	
     }
+    
+    public function findLast() {
+    	$accountId = (int)$this->getDbTable()->getAdapter()->lastInsertId();
+    	return $this->find($accountId);
+    }
 }
