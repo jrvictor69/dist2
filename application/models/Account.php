@@ -11,6 +11,13 @@
 
 class Model_Account extends Model_Entity {
 
+	const ACCOUNT_TYPE_NONE			  = 100;
+	const ACCOUNT_TYPE_ADMIN		  = 1000;
+	const ACCOUNT_TYPE_MANAGERIAL	  = 2000;
+	const ACCOUNT_TYPE_MEMBER		  = 3000;
+	const ACCOUNT_TYPE_GUEST		  = 4000;
+	const ACCOUNT_TYPE_CHURCH_CONTACT = 5000;
+	
 	/**
 	 * 
 	 * @var string

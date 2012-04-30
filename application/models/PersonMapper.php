@@ -22,7 +22,6 @@ class Model_PersonMapper {
 	
 	public function save(Model_Person $person) {
         $data = array(
-      		'name'   	  => $person->getName(),
             'firstName'   => $person->getFirstName(),
             'lastName'    => $person->getLastName(),
         	'dateOfBirth' => $person->getDateOfBirth(),

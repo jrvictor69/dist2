@@ -194,7 +194,7 @@ com.em.Managerial.prototype = {
 	configureDialogForm: function(selector) {with (this) {
 		dialogForm = $(selector).dialog({
 			autoOpen: false,
-			height: 220,
+			height: 350,
 			width: 350,
 			modal: true,
 			close: function(event, ui) {
@@ -369,27 +369,43 @@ com.em.Managerial.prototype = {
 	setValidatorForm : function(selector) {
 		validator = $(selector).validate({
 	        rules:{
-	        	'name':{
-					required: true,
-					maxlength: 125
-				},
-				'module':{
+	        	'firstName':{
 					required: true,
 					maxlength: 45
 				},
-				'controller':{
+				'lastName':{
 					required: true,
 					maxlength: 45
 				},
-				'action':{
+				'ci':{
+					required: true,
+					maxlength: 10
+				},
+				'username':{
+					required: true,
+					minlength: 5,
+					maxlength: 45
+				},
+				'password':{
+					required: true,
+					minlength: 5,
+					maxlength: 45
+				},
+				'passwordConfirm':{
+					required: true,
+					equalTo: '#password',
+					minlength: 5,
+					maxlength: 45
+				},
+				'phonemobil':{
 					required: true,
 					maxlength: 45
 				}
 	        },
 	        messages:{
-				'name':{
+				'firstName':{
 					required: "No puede ser vacio inserte un valor",
-					maxlength: "El limite es de 125"
+					maxlength: "El limite es de 45"
 				}
 			}
 	    });
