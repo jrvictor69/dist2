@@ -108,5 +108,20 @@ com.em.Alert.prototype = {
 		var options = {position: "bottom-left", theme: 'error'};
 		$.extend(options, settings);
 		$.jGrowl(message, options);
+	},
+	
+	/**
+	 * 
+	 * Shows flash message on screen by type of message
+	 * @param message string
+	 * @param options array
+	 * @param type string
+	 */
+	flashMessage: function(message, options, type) {
+		var settings = options || {};
+		var options = {position: "bottom-left", theme: type};
+		$.extend(options, settings);
+		$.jGrowl(message, options);
 	}
+	
 };
