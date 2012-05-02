@@ -120,6 +120,177 @@ class Admin_ManagerialController extends App_Controller_Action {
 	
 	/**
 	 * 
+	 * This action shows the form in update mode for Managerial.
+	 * @access public
+	 */
+	public function updateAction() {
+		$this->_helper->layout()->disableLayout();
+		$form = new Admin_Form_Managerial();
+        $form->getElement('userGroupId')->setMultiOptions($this->getUserGroups());
+		$form->getElement('sex')->setMultiOptions(array(Model_Person::SEX_MALE => _("Male"), Model_Person::SEX_FEMALE => _("Female")));
+		$form->getElement('sex')->setOptions(array('separator' => ''));
+		
+        try {
+           	$id = $this->_getParam('id', 0);
+            $managerialMapper = new Model_ManagerialMapper();
+            $managerial = $managerialMapper->find($id);
+            if ($managerial != NULL) {//security
+            	$account = $managerial->getAccount();
+				$form->getElement('firstName')->setValue($managerial->getFirstName());
+				$form->getElement('lastName')->setValue($managerial->getLastName());
+				$form->getElement('identityCard')->setValue($managerial->getIdentityCard());
+				$form->getElement('sex')->setValue($managerial->getSex());
+				
+				$form->getElement('username')->setValue($account->getUsername());
+				$form->getElement('email')->setValue($account->getEmail());
+				
+				$form->getElement('phone')->setValue($managerial->getPhone());
+				$form->getElement('phonework')->setValue($managerial->getPhonework());
+				$form->getElement('phonemobil')->setValue($managerial->getPhonemobil());
+				$form->getElement('userGroupId')->setValue($managerial->getUserGroup()->getId());
+         	} else {
+                // response to client
+	       		$this->view->success = FALSE;
+	            $this->_messenger->addError(_("The requested record was not found."));
+	            $this->view->message = $this->view->seeMessages();
+	            $this->_helper->json($this->view);
+           	}
+        } catch (Exception $e) {
+        	$this->exception($this->view, $e);
+            $this->_helper->json($this->view);
+        }
+        
+        $this->view->form = $form;
+	}
+	
+	/**
+	 * 
+	 * Updates a managerial
+	 * @access public
+	 * 1) Get the record to edit
+	 * 2) Validate the record was no deleted
+	 * 3) Validate the existance of another Managerial with the same identity card.
+	 * 4) Saves the changes.
+	 */
+	public function updateSaveAction() {
+		$this->_helper->viewRenderer->setNoRender(TRUE);
+		
+		$form = new Admin_Form_Managerial();
+		$form->getElement('userGroupId')->setMultiOptions($this->getUserGroups());
+        $form->getElement('sex')->setMultiOptions(array(Model_Person::SEX_MALE => _("Male"), Model_Person::SEX_FEMALE => _("Female")));
+		
+     	$formData = $this->getRequest()->getPost();
+       	if ($form->isValid($formData)) {
+        	try {
+                $id = $this->_getParam('id', 0);
+                	
+                $managerialMapper = new Model_ManagerialMapper();                
+                $managerial = $managerialMapper->find($id);
+                if ($managerial != NULL) {
+//                	if (!$managerialMapper->verifyExistIdentityCard($formData['identityCard']) || $managerialMapper->verifyExistIdAndIdentityCard($id, $formData['identityCard'])) {
+                				
+	                	$account = $managerial->getAccount();
+               			$account->setUsername($formData['username'])
+               				->setPassword($formData['password'])
+               				->setEmail($formData['email'])
+               				->setRole("Managerial")
+               				->setAccountType(Model_Account::ACCOUNT_TYPE_MANAGERIAL)
+               				;
+               				
+	               		$accountMapper = new Model_AccountMapper();
+	               		$accountMapper->update($account->getId(), $account);
+	               		
+	               		$userGroupMapper = new Model_UserGroupMapper();
+               			$userGroup = $userGroupMapper->find((int)$formData['userGroupId']);
+               		
+	               		$managerial
+	               				->setUserGroup($userGroup)
+	               				->setAccount($account)
+	               				->setFirstName($formData['firstName'])
+	               				->setLastName($formData['lastName'])
+	               				->setDateOfBirth(date('Y-m-d H:i:s'))
+	               				->setPhone($formData['phone'])
+	               				->setPhonework($formData['phonework'])
+	               				->setPhonemobil((int)$formData['phonemobil'])
+	               				->setIdentityCard((int)$formData['identityCard'])
+	               				->setSex((int)$formData['sex'])
+	               				->setType(2)               				
+	               				;
+	                		
+	                	$managerialMapper->update($id, $managerial);
+                		
+	                	$this->view->success = TRUE;
+	                	$this->_messenger->clearMessages();
+	                   	$this->_messenger->addSuccess(_("Managerial updated"));
+	                   	$this->view->message = $this->view->seeMessages();
+                	} else {
+                		$this->view->success = FALSE;
+                		$this->view->identityCard_duplicate = TRUE;
+                    	$this->_messenger->addError(_("The Managerial already exists"));
+                    	$this->view->message = $this->view->seeMessages();
+                	}
+//                } else {
+//                	$this->view->success = FALSE;
+//                    $this->_messenger->addError(_("The Managerial does not exists"));
+//                    $this->view->message = $this->view->seeMessages();
+//                }
+            } catch (Exception $e) {
+               	$this->exception($this->view, $e);
+            }
+    	} else {
+            $this->view->success = FALSE;
+			$this->view->messageArray = $form->getMessages();
+			$this->_messenger->addError(_("The form contains error and is not updated"));
+			$this->view->message = $this->view->seeMessages();
+     	}
+        // send response to client
+        $this->_helper->json($this->view);
+	}
+	
+	/**
+	 * 
+	 * Deletes managerials
+	 * @access public
+	 * @internal
+	 * 1) Get the model country
+	 * 2) Validate the existance of dependencies
+	 * 3) Change the state field or records to delete 
+	 */
+	public function deleteAction() {
+		$this->_helper->viewRenderer->setNoRender(TRUE);
+		
+        $itemIds = $this->_getParam('itemIds', array());
+      	if (!empty($itemIds) ) {
+        	try {
+           		$removeCount = 0;
+                foreach ($itemIds as $id) {
+                	$managerialMapper = new Model_ManagerialMapper();
+	                $managerialMapper->delete($id);
+	                
+	                $accountMapper = new Model_AccountMapper();
+	                $managerial = $managerialMapper->find($id);
+	                $accountMapper->delete($managerial->getAccount()->getId());
+	                $removeCount++;
+                }
+                $message = sprintf(ngettext('%d managerial removed.', '%d managerials removed.', $removeCount), $removeCount);
+                	
+                $this->view->success = TRUE;
+                $this->_messenger->addSuccess(_($message));
+                $this->view->message = $this->view->seeMessages();
+          	} catch (Exception $e) {
+               	$this->exception($this->view, $e);
+            }
+     	} else {
+        	$this->view->success = FALSE;
+            $this->_messenger->addNotice(_("Data submitted is empty."));
+            $this->view->message = $this->view->seeMessages();
+      	}
+        // send response to client
+        $this->_helper->json($this->view);
+	}
+	
+	/**
+	 * 
 	 * Outputs an XHR response containing all entries in managerials.
 	 * This action serves as a datasource for the read/index view
 	 * @xhrParam int filter_name

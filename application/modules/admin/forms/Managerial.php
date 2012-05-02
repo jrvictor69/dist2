@@ -30,13 +30,6 @@ class Admin_Form_Managerial extends Zend_Form {
 				)
 			))
 			
-			->addElement('Text', 'initial', array(
-				'label' => _('Initial'),
-				'filters' => array(
-					array('StringTrim')
-				)
-			))
-			
 			->addElement('Text', 'identityCard', array(
 				'label' => _('Cedula identidad'),
 				'required' => TRUE,
@@ -91,7 +84,6 @@ class Admin_Form_Managerial extends Zend_Form {
 			
 			->addElement('Text', 'address', array(
 				'label' => _('Address'),
-				'required' => TRUE,
 				'filters' => array(
 					array('StringTrim')
 				)
@@ -109,6 +101,9 @@ class Admin_Form_Managerial extends Zend_Form {
 				'required' => TRUE,
 				'filters' => array(
 					array('StringTrim')
+				),
+				'validators' => array(
+					array('Digits', false)
 				)
 			))
 			

@@ -232,6 +232,11 @@ class Model_AccountMapper extends Model_TemporalMapper {
     	}    			    	
     }
     
+    /**
+     * 
+     * Finds the last model created
+     * @return Model_Account
+     */
     public function findLast() {
     	$accountId = (int)$this->getDbTable()->getAdapter()->lastInsertId();
     	return $this->find($accountId);
