@@ -288,14 +288,14 @@ class Model_NewsMapper extends Model_TemporalMapper {
     
 	/**
      * 
-     * Verifies if the id and title of the category already exist.
+     * Verifies if the id and title of the news already exist.
      * @param int $id
      * @param string $title
      * @return boolean
      */
     public function verifyExistIdAndTitle($id, $title) {
     	$whereState = sprintf("%s = 1", self::STATE_FIELDNAME);
-    	$resultSet = $this->getDbTable()->fetchRow("$whereState AND id = $id AND  name = '$title'");
+    	$resultSet = $this->getDbTable()->fetchRow("$whereState AND id = $id AND  title = '$title'");
     	if ($resultSet != NULL) {
     		return TRUE;
     	} else {
