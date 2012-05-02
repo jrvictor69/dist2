@@ -141,7 +141,7 @@ class Model_ManagerialMapper extends Model_TemporalMapper {
         );
         
         $row = $result->current();
-        $this->getDbTablePerson()->update($data, array('id = ?' => (int)$row->personId));
+        $this->getDbTablePerson()->update($data, array('id = ?' => $row->personId));
         
         $data = array(
       		'personId' => $row->personId,
@@ -173,7 +173,7 @@ class Model_ManagerialMapper extends Model_TemporalMapper {
         );
         
         $row = $result->current();
-        $this->getDbTablePerson()->update($data, array('id = ?' => (int)$row->personId));
+        $this->getDbTablePerson()->update($data, array('id = ?' => $row->personId));
         
         $this->getDbTable()->update($data, array('id = ?' => $id));
     }
@@ -218,6 +218,7 @@ class Model_ManagerialMapper extends Model_TemporalMapper {
         $rowPerson = $resultPerson->current();
         
         $managerial
+        		->setIdentityCard($rowPerson->identityCard)
         		->setVisible($row->visible)
         		->setCreated($row->created)
         		->setChanged($row->changed)
@@ -382,6 +383,23 @@ class Model_ManagerialMapper extends Model_TemporalMapper {
 	public function verifyExistIdentityCard($identityCard) {
     	$whereState = sprintf("%s = 1", self::STATE_FIELDNAME);
     	$resultSet = $this->getDbTablePerson()->fetchRow("$whereState AND identityCard = $identityCard");
+    	if ($resultSet != NULL) {
+    		return TRUE;
+    	} else {
+    		return FALSE;
+    	}
+    }
+    
+	/**
+     * 
+     * Verifies if the id and identity card of the managerial already exist.
+     * @param int $id
+     * @param int $identityCard
+     * @return boolean
+     */
+    public function verifyExistIdAndIdentityCard($id, $identityCard) {
+    	$whereState = sprintf("%s = 1", self::STATE_FIELDNAME);
+    	$resultSet = $this->getDbTable()->fetchRow("$whereState AND id = $id AND  identityCard = $identityCard");
     	if ($resultSet != NULL) {
     		return TRUE;
     	} else {

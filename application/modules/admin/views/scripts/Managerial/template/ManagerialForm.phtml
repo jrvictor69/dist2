@@ -10,10 +10,6 @@
 				<td><?php echo $this->element->getElement('lastName')->renderViewHelper(); ?></td>
 			</tr>
 			<tr class="odd">
-				<td><?php echo $this->element->getElement('initial')->renderLabel(); ?></td>
-				<td><?php echo $this->element->getElement('initial')->renderViewHelper(); ?></td>
-			</tr>
-			<tr class="even">
 				<td><?php echo $this->element->getElement('identityCard')->renderLabel(); ?></td>
 				<td><?php echo $this->element->getElement('identityCard')->renderViewHelper(); ?></td>
 			</tr>
@@ -53,11 +49,10 @@
 				<td><?php echo $this->element->getElement('phonework')->renderLabel(); ?></td>
 				<td><?php echo $this->element->getElement('phonework')->renderViewHelper(); ?></td>
 			</tr>
-			<tr class="even">
+			<tr class="odd">
 				<td><?php echo $this->element->getElement('userGroupId')->renderLabel(); ?></td>
 				<td><?php echo $this->element->getElement('userGroupId')->renderViewHelper(); ?></td>
 			</tr>
 		</tbody>
 	</table>
-	<input type="hidden" value="0" id="duplicateName" name="duplicateName"/>
 </form>

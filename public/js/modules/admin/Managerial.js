@@ -20,7 +20,7 @@ com.em = com.em ||{};
 		this.url = {};
 		this.validator;
 		
-		this.initAlert();
+		this.initFlashMessage();
 		this.initEvents();
 		
 		this.dtHeaders = undefined;
@@ -30,9 +30,9 @@ com.em.Managerial.prototype = {
 	
 	/**
 	 * 
-	 * Initializes JQuery alert component
+	 * Initializes JQuery flash message component
 	 */	
-	initAlert: function() {
+	initFlashMessage: function() {
 		this.alert = new com.em.Alert();
 	},
 	
@@ -228,7 +228,7 @@ com.em.Managerial.prototype = {
 					if (textStatus == 'success') {
 						var contentType = XMLHttpRequest.getResponseHeader('Content-Type');
 						if (contentType == 'application/json') {
-							alert.show(data.message, {header : com.em.Alert.FAILURE});
+							alert.show(data.message, {header: com.em.Alert.FAILURE});
 						} else {
 							// Getting html dialog
 							$('#dialog').html(data);
@@ -239,7 +239,7 @@ com.em.Managerial.prototype = {
 							// Opens dialog
 							dialogForm.dialog('open');
 							// Loads buttons for dialog. dialogButtons is defined by ajax
-							dialogForm.dialog( "option" , 'buttons', dialogButtons);
+							dialogForm.dialog("option", 'buttons', dialogButtons);
 						}
 					} 
 				},
@@ -250,7 +250,7 @@ com.em.Managerial.prototype = {
 				
 				error: function(jqXHR, textStatus, errorThrown) {
 					dialogForm.dialog('close');
-					alert.show(errorThrown,{header : com.em.Alert.ERROR});
+					alert.flashError(errorThrown,{header: com.em.Alert.ERROR});
 				}
 			});
 		});
@@ -278,7 +278,7 @@ com.em.Managerial.prototype = {
 					if (textStatus == 'success') {
 						var contentType = XMLHttpRequest.getResponseHeader('Content-Type');
 						if (contentType == 'application/json') {
-							alert.show(data.message, {header : com.em.Alert.FAILURE});
+							alert.show(data.message, {header: com.em.Alert.FAILURE});
 						} else {
 							// Getting html dialog
 							$('#dialog').html(data);
@@ -289,7 +289,7 @@ com.em.Managerial.prototype = {
 							// open dialog
 							dialogForm.dialog('open');
 							// Loads buttons for dialog. dialogButtons is defined by ajax
-							dialogForm.dialog( "option" , 'buttons' , dialogButtons);
+							dialogForm.dialog( "option", 'buttons', dialogButtons);
 						}
 					} 
 				},
@@ -298,9 +298,9 @@ com.em.Managerial.prototype = {
 					processingDisplay(false);
 				},
 				
-				error : function(jqXHR, textStatus, errorThrown) {
+				error: function(jqXHR, textStatus, errorThrown) {
 					dialogForm.dialog('close');
-					alert.show(errorThrown,{header : com.em.Alert.ERROR});
+					alert.flashError(errorThrown,{header: com.em.Alert.ERROR});
 				}
 			});
 		});
@@ -315,10 +315,10 @@ com.em.Managerial.prototype = {
 		$(selector).bind('click',function(event) {
 			event.preventDefault();
 			// Serializes items checked
-			var items = $('#tblManagerial:checked');
+			var items = $('#tblManagerial :checked');
 			var itemsChecked = items.serialize();
 			if (itemsChecked == '') {
-				alert.show('There is no item selected', {header:com.em.Alert.SUCCESS});
+				alert.flashInfo('There is no item selected', {header:com.em.Alert.NOTICE});
 				return;
 			}
 			var action = $(this).attr('href');
@@ -331,27 +331,27 @@ com.em.Managerial.prototype = {
 						url: action,
 						// Gets element checkbox checked
 						data: itemsChecked,
-						beforeSend : function(XMLHttpRequest) {
+						beforeSend: function(XMLHttpRequest) {
 							processingDisplay(true);
 						},
 						
-						success : function(data, textStatus, XMLHttpRequest) {
+						success: function(data, textStatus, XMLHttpRequest) {
 							if (textStatus == 'success') {
 								if (data.success) {
 									table.fnDraw();
-									alert.show(data.message);
+									alert.flashSuccess(data.message, {header: com.em.Alert.SUCCESS});
 								} else {
-									alert.show(data.message, {header : com.em.Alert.SUCCESS});
+									alert.flashInfo(data.message, {header: com.em.Alert.NOTICE});
 								}
 							}
 						},
 						
-						complete : function(jqXHR, textStatus) {
+						complete: function(jqXHR, textStatus) {
 							processingDisplay(false);
 						},
 						
-						error : function(jqXHR, textStatus, errorThrown) {
-							alert.show(errorThrown,{header : com.em.Alert.ERROR});
+						error: function(jqXHR, textStatus, errorThrown) {
+							alert.flashError(errorThrown,{header : com.em.Alert.ERROR});
 						}
 					});
 				} else {
@@ -368,46 +368,46 @@ com.em.Managerial.prototype = {
 	 */
 	setValidatorForm : function(selector) {
 		validator = $(selector).validate({
-	        rules:{
-	        	'firstName':{
-					required: true,
-					maxlength: 45
-				},
-				'lastName':{
-					required: true,
-					maxlength: 45
-				},
-				'ci':{
-					required: true,
-					maxlength: 10
-				},
-				'username':{
-					required: true,
-					minlength: 5,
-					maxlength: 45
-				},
-				'password':{
-					required: true,
-					minlength: 5,
-					maxlength: 45
-				},
-				'passwordConfirm':{
-					required: true,
-					equalTo: '#password',
-					minlength: 5,
-					maxlength: 45
-				},
-				'phonemobil':{
-					required: true,
-					maxlength: 45
-				}
-	        },
-	        messages:{
-				'firstName':{
-					required: "No puede ser vacio inserte un valor",
-					maxlength: "El limite es de 45"
-				}
-			}
+//	        rules:{
+//	        	'firstName':{
+//					required: true,
+//					maxlength: 45
+//				},
+//				'lastName':{
+//					required: true,
+//					maxlength: 45
+//				},
+//				'ci':{
+//					required: true,
+//					maxlength: 10
+//				},
+//				'username':{
+//					required: true,
+//					minlength: 5,
+//					maxlength: 45
+//				},
+//				'password':{
+//					required: true,
+//					minlength: 5,
+//					maxlength: 45
+//				},
+//				'passwordConfirm':{
+//					required: true,
+//					equalTo: '#password',
+//					minlength: 5,
+//					maxlength: 45
+//				},
+//				'phonemobil':{
+//					required: true,
+//					maxlength: 45
+//				}
+//	        },
+//	        messages:{
+//				'firstName':{
+//					required: "No puede ser vacio inserte un valor",
+//					maxlength: "El limite es de 45"
+//				}
+//			}
 	    });
 	},
 	
@@ -447,5 +447,31 @@ com.em.Managerial.prototype = {
 			this.alert = new com.em.Alert();
 		}
 		alert.show(message, header);
+	}},
+	
+	/**
+	 * 
+	 * Shows flash message success if it exists, if not creates a new instance of flash message success and shows it.
+	 * @param message string
+	 * @param header string
+	 */
+	flashSuccess: function(message, header) {with (this) {
+		if (this.alert == undefined) {
+			this.alert = new com.em.Alert();
+		}
+		alert.flashSuccess(message, header);
+	}},
+	
+	/**
+	 * 
+	 * Shows flash message error if it exists, if not creates a new instance of flash message error and shows it.
+	 * @param message string
+	 * @param header string
+	 */
+	flashError: function(message, header) {with (this) {
+		if (this.alert == undefined) {
+			this.alert = new com.em.Alert();
+		}
+		alert.flashError(message, header);
 	}}
 };
