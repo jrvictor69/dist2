@@ -24,8 +24,7 @@ class Admin_ManagerialController extends App_Controller_Action {
 	 * @access public
 	 */
 	public function indexAction() {
-		$formFilter = new Admin_Form_CategoryFilter();
-		$formFilter->getElement('nameFilter')->setLabel(_('Name Managerial'));
+		$formFilter = new Admin_Form_ManagerialFilter();
 		$this->view->formFilter = $formFilter;
 	}
 	
@@ -301,7 +300,7 @@ class Admin_ManagerialController extends App_Controller_Action {
 		$sortCol = $this->_getParam('iSortCol_0', 1);
 		$sortDirection = $this->_getParam('sSortDir_0', 'asc');
 
-		$filterParams['name'] = $this->_getParam('filter_name', NULL);
+		$filterParams['firstname'] = $this->_getParam('filter_firstname', NULL);
 		$filters = $this->getFilters($filterParams);
 		
 		$start = $this->_getParam('iDisplayStart', 0);
@@ -325,11 +324,13 @@ class Admin_ManagerialController extends App_Controller_Action {
 			
 			$row = array();			
 			$row[] = $managerial->getId();
-			$row[] = $managerial->getFullName();
-			$row[] = $managerial->getPhone();
+			$row[] = $managerial->getFirstName();
 			$row[] = $managerial->getLastName();
-			$row[] = $managerial->getDateOfBirth();
+			$row[] = $managerial->getPhonemobil();
 			$row[] = $managerial->getPhone();
+			$row[] = $managerial->getAccount()->getEmail();
+			$row[] = '';
+			$row[] = $managerial->getUserGroup()->getName();
 			$row[] = $created->toString("dd.MM.YYYY");
 			$row[] = $changed;
 			$row[] = '[]';
@@ -359,8 +360,8 @@ class Admin_ManagerialController extends App_Controller_Action {
 		
 		$filters = array ();
 		
-		if (!empty($filterParams['name'])) {
-			$filters[] = array('field' => 'name', 'filter' => '%'.$filterParams['name'].'%', 'operator' => 'LIKE');
+		if (!empty($filterParams['firstname'])) {
+			$filters[] = array('field' => 'firstName', 'filter' => '%'.$filterParams['firstname'].'%', 'operator' => 'LIKE');
 		}
 				
 		return $filters;
