@@ -70,25 +70,23 @@ class Admin_DepartmentController extends App_Controller_Action {
       								
                		$departmentMapper->save($department);
                 	
-               		$this->view->success = TRUE;
-               		$this->_messenger->clearMessages();
-                   	$this->_messenger->addSuccess(_("Department saved"));	
+               		$this->stdResponse->success = TRUE;
+               		$this->stdResponse->message = _("Department saved");	
                	} else {
-					$this->view->success = FALSE;
-					$this->view->name_duplicate = TRUE;
-                   	$this->_messenger->addError(_("The Department already exists"));                			
+					$this->stdResponse->success = FALSE;
+					$this->stdResponse->name_duplicate = TRUE;
+					$this->stdResponse->message = _("The Department already exists");                			
                	}
           	} catch (Exception $e) {
                 $this->exception($this->view, $e);
           	}
      	} else {
-			$this->view->success = FALSE;
-			$this->view->messageArray = $form->getMessages();
-			$this->_messenger->addError(_("The form contains error and is not saved"));
+			$this->stdResponse->success = FALSE;
+			$this->stdResponse->messageArray = $form->getMessages();
+			$this->stdResponse->message = _("The form contains error and is not saved");
        	}
-       	$this->view->message = $this->view->seeMessages();
         // sends response to client
-        $this->_helper->json($this->view);
+        $this->_helper->json($this->stdResponse);
 	}
 	
 	/**
@@ -112,14 +110,13 @@ class Admin_DepartmentController extends App_Controller_Action {
 				$form->getElement('country')->setValue($department->getCountry()->getId());
             } else {
             	// response to client
-	       		$this->view->success = FALSE;
-	            $this->_messenger->addSuccess(_("The requested record was not found."));
-	            $this->view->message = $this->view->seeMessages();
-	            $this->_helper->json($this->view);
+	       		$this->stdResponse->success = FALSE;
+	            $this->stdResponse->message = _("The requested record was not found.");
+	            $this->_helper->json($this->stdResponse);
           	}
         } catch (Exception $e) {
         	$this->exception($this->view, $e);
-            $this->_helper->json($this->view);
+            $this->_helper->json($this->stdResponse);
         }
         
         $this->view->form = $form;
@@ -157,29 +154,27 @@ class Admin_DepartmentController extends App_Controller_Action {
 	                			
 	               		$departmentMapper->update($id, $department);
 	                		
-	               		$this->view->success = TRUE;
-	               		$this->_messenger->clearMessages();
-	                   	$this->_messenger->addSuccess(_("Department updated"));
+	               		$this->stdResponse->success = TRUE;
+	                   	$this->stdResponse->message = _("Department updated");
 	              	} else {
-                   		$this->view->success = FALSE;
-                		$this->view->name_duplicate = TRUE;
-                    	$this->_messenger->addError(_("The Department already exists"));
+                   		$this->stdResponse->success = FALSE;
+                		$this->stdResponse->name_duplicate = TRUE;
+                    	$this->stdResponse->message = _("The Department already exists");
                    	}
                	} else {
-               		$this->view->success = FALSE;
-                    $this->_messenger->addError(_("The Department does not exists"));
+               		$this->stdResponse->success = FALSE;
+                    $this->stdResponse->message = _("The Department does not exists");
                	}
          	} catch (Exception $e) {
             	$this->exception($this->view, $e);
            	}
    		} else {
-        	$this->view->success = FALSE;
-			$this->view->messageArray = $form->getMessages();
-			$this->_messenger->addError(_("The form contains error and is not updated"));
+        	$this->stdResponse->success = FALSE;
+			$this->stdResponse->messageArray = $form->getMessages();
+			$this->stdResponse->message = _("The form contains error and is not updated");
       	}
-      	$this->view->message = $this->view->seeMessages();
         // sends response to client
-        $this->_helper->json($this->view);
+        $this->_helper->json($this->stdResponse);
 	}
 	
 	/**
@@ -205,18 +200,17 @@ class Admin_DepartmentController extends App_Controller_Action {
                 }
                 $message = sprintf(ngettext('%d department removed.', '%d departments removed.', $removeCount), $removeCount);
                 	
-                $this->view->success = TRUE;
-                $this->_messenger->addSuccess(_($message));
+                $this->stdResponse->success = TRUE;
+                $this->stdResponse->message = _($message);
           	} catch (Exception $e) {
                	$this->exception($this->view, $e);
             }
      	} else {
-        	$this->view->success = FALSE;
-            $this->_messenger->addNotice(_("Data submitted is empty."));
+        	$this->stdResponse->success = FALSE;
+            $this->stdResponse->message = _("Data submitted is empty.");
       	}
-      	$this->view->message = $this->view->seeMessages();
         // sends response to client
-        $this->_helper->json($this->view);
+        $this->_helper->json($this->stdResponse);
 	}
 	
 	/**
@@ -260,10 +254,10 @@ class Admin_DepartmentController extends App_Controller_Action {
 			$posRecord++;
 		}
 		// response
-		$this->view->iTotalRecords = $total;
-		$this->view->iTotalDisplayRecords = $total;
-		$this->view->aaData = $data;
-		$this->_helper->json($this->view);
+		$this->stdResponse->iTotalRecords = $total;
+		$this->stdResponse->iTotalDisplayRecords = $total;
+		$this->stdResponse->aaData = $data;
+		$this->_helper->json($this->stdResponse);
 	}
 	
 	/**
@@ -338,7 +332,7 @@ class Admin_DepartmentController extends App_Controller_Action {
 	private function getCountriesFilter() {
 		$countries = $this->getCountries();
 		$data = array();
-		$data[-1] = "All";
+		$data[-1] = _("All");
 		
 		foreach ($countries as $key => $value) {
 			$data[$key] = $value;
