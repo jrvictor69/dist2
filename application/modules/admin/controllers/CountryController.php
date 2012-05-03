@@ -59,27 +59,23 @@ class Admin_CountryController extends App_Controller_Action {
                 	$country = new Model_Country($formData);
                 	$countryMapper->save($country);
                 	
-                	$this->view->success = TRUE;
-                	$this->_messenger->clearMessages();
-                    $this->_messenger->addSuccess(_("Country saved"));
-                    $this->view->message = $this->view->seeMessages();	
+                	$this->stdResponse->success = TRUE;
+                    $this->stdResponse->message = _("Country saved");
                 } else {
-					$this->view->success = FALSE;
-					$this->view->name_duplicate = TRUE;
-                    $this->_messenger->addError(_("The Country already exists"));
-                    $this->view->message = $this->view->seeMessages();                			
+					$this->stdResponse->success = FALSE;
+					$this->stdResponse->name_duplicate = TRUE;
+                    $this->stdResponse->message = _("The Country already exists");                			
                 }
          	} catch (Exception $e) {
                	$this->exception($this->view, $e);
             }
      	} else {
-			$this->view->success = FALSE;
-			$this->view->messageArray = $form->getMessages();
-			$this->_messenger->addError(_("The form contains error and is not saved"));
-			$this->view->message = $this->view->seeMessages();
+			$this->stdResponse->success = FALSE;
+			$this->stdResponse->messageArray = $form->getMessages();
+			$this->stdResponse->message = _("The form contains error and is not saved");
     	}
-        // send response to client
-        $this->_helper->json($this->view);
+        // sends response to client
+        $this->_helper->json($this->stdResponse);
 	}
 	
 	/**
@@ -100,10 +96,9 @@ class Admin_CountryController extends App_Controller_Action {
 				$form->getElement('description')->setValue($country->getDescription());
          	} else {
                 // response to client
-	       		$this->view->success = FALSE;
-	            $this->_messenger->addError(_("The requested record was not found."));
-	            $this->view->message = $this->view->seeMessages();
-	            $this->_helper->json($this->view);
+	       		$this->stdResponse->success = FALSE;
+	            $this->stdResponse->message = _("The requested record was not found.");
+	            $this->_helper->json($this->stdResponse);
            	}
         } catch (Exception $e) {
         	$this->exception($this->view, $e);
@@ -141,32 +136,27 @@ class Admin_CountryController extends App_Controller_Action {
 	                			
 	                	$countryMapper->update($id, $country);
 	                		
-	                	$this->view->success = TRUE;
-	                	$this->_messenger->clearMessages();
-	                   	$this->_messenger->addSuccess(_("Country updated"));
-	                   	$this->view->message = $this->view->seeMessages();
+	                	$this->stdResponse->success = TRUE;
+	                   	$this->stdResponse->message = _("Country updated");
                 	} else {
-                		$this->view->success = FALSE;
-                		$this->view->name_duplicate = TRUE;
-                    	$this->_messenger->addError(_("The Country already exists"));
-                    	$this->view->message = $this->view->seeMessages();
+                		$this->stdResponse->success = FALSE;
+                		$this->stdResponse->name_duplicate = TRUE;
+                    	$this->stdResponse->message = _("The Country already exists");
                 	}
                 } else {
-                	$this->view->success = FALSE;
-                    $this->_messenger->addError(_("The Country does not exists"));
-                    $this->view->message = $this->view->seeMessages();
+                	$this->stdResponse->success = FALSE;
+                    $this->stdResponse->message = _("The Country does not exists");
                 }
             } catch (Exception $e) {
                	$this->exception($this->view, $e);
             }
     	} else {
-            $this->view->success = FALSE;
-			$this->view->messageArray = $form->getMessages();
-			$this->_messenger->addError(_("The form contains error and is not updated"));
-			$this->view->message = $this->view->seeMessages();
+            $this->stdResponse->success = FALSE;
+			$this->stdResponse->messageArray = $form->getMessages();
+			$this->stdResponse->message = _("The form contains error and is not updated");
      	}
-        // send response to client
-        $this->_helper->json($this->view);
+        // sends response to client
+        $this->_helper->json($this->stdResponse);
 	}
 	
 	/**
@@ -192,19 +182,17 @@ class Admin_CountryController extends App_Controller_Action {
                 }
                 $message = sprintf(ngettext('%d country removed.', '%d countries removed.', $removeCount), $removeCount);
                 	
-                $this->view->success = TRUE;
-                $this->_messenger->addSuccess(_($message));
-                $this->view->message = $this->view->seeMessages();
+                $this->stdResponse->success = TRUE;
+                $this->stdResponse->message = _($message);
           	} catch (Exception $e) {
                	$this->exception($this->view, $e);
             }
      	} else {
-        	$this->view->success = FALSE;
-            $this->_messenger->addNotice(_("Data submitted is empty."));
-            $this->view->message = $this->view->seeMessages();
+        	$this->stdResponse->success = FALSE;
+            $this->stdResponse->message = _("Data submitted is empty.");
       	}
         // send response to client
-        $this->_helper->json($this->view);
+        $this->_helper->json($this->stdResponse);
 	}
 	
 	/**
@@ -244,10 +232,10 @@ class Admin_CountryController extends App_Controller_Action {
 			$posRecord++;
 		}
 		// response
-		$this->view->iTotalRecords = $total;
-		$this->view->iTotalDisplayRecords = $total;
-		$this->view->aaData = $data;
-		$this->_helper->json($this->view);
+		$this->stdResponse->iTotalRecords = $total;
+		$this->stdResponse->iTotalDisplayRecords = $total;
+		$this->stdResponse->aaData = $data;
+		$this->_helper->json($this->stdResponse);
 	}
 	
 	/**
