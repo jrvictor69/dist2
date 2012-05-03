@@ -70,27 +70,23 @@ class Admin_PrivilegeController extends App_Controller_Action {
                 		
                 	$privilegeMapper->save($privilege);
                 	
-                	$this->view->success = TRUE;
-                	$this->_messenger->clearMessages();
-                    $this->_messenger->addSuccess(_("Privilege saved"));
-                    $this->view->message = $this->view->seeMessages();
+                	$this->stdResponse->success = TRUE;
+                    $this->stdResponse->message = _("Privilege saved");
                 } else {
-					$this->view->success = FALSE;
-					$this->view->name_duplicate = TRUE;
-                    $this->_messenger->addError(_("The Privilege already exists"));
-                    $this->view->message = $this->view->seeMessages();                			
+					$this->stdResponse->success = FALSE;
+					$this->stdResponse->name_duplicate = TRUE;
+                    $this->stdResponse->message = _("The Privilege already exists");                			
                 }
           	} catch (Exception $e) {
             	$this->exception($this->view, $e);
            	}
      	} else {
-			$this->view->success = FALSE;
-			$this->view->messageArray = $form->getMessages();
-			$this->_messenger->addError(_("The form contains error and is not saved"));
-			$this->view->message = $this->view->seeMessages();
+			$this->stdResponse->success = FALSE;
+			$this->stdResponse->messageArray = $form->getMessages();
+			$this->stdResponse->message = _("The form contains error and is not saved");
        	}
-        // send response to client
-        $this->_helper->json($this->view);
+        // sends response to client
+        $this->_helper->json($this->stdResponse);
 	}
 	
 	/**
@@ -114,14 +110,13 @@ class Admin_PrivilegeController extends App_Controller_Action {
 				$form->getElement('action')->setValue($privilege->getAction());
           	} else {
             	// response to client
-	            $this->view->success = FALSE;
-	            $this->_messenger->addSuccess(_("The requested record was not found."));
-	          	$this->view->message = $this->view->seeMessages();
-	            $this->_helper->json($this->view);
+	            $this->stdResponse->success = FALSE;
+	          	$this->stdResponse->message = _("The requested record was not found.");
+	            $this->_helper->json($this->stdResponse);
           	}
         } catch (Exception $e) {
         	$this->exception($this->view, $e);
-            $this->_helper->json($this->view);
+            $this->_helper->json($this->stdResponse);
         }
         
         $this->view->form = $form;
@@ -159,32 +154,27 @@ class Admin_PrivilegeController extends App_Controller_Action {
 	                			
 	                	$privilegeMapper->update($id, $privilege);
 	                	
-	                	$this->view->success = TRUE;
-                		$this->_messenger->clearMessages();
-                    	$this->_messenger->addSuccess(_("Privilege updated"));
-                    	$this->view->message = $this->view->seeMessages();
+	                	$this->stdResponse->success = TRUE;
+                    	$this->stdResponse->message = _("Privilege updated");
                 	} else {
-                		$this->view->success = FALSE;
-                		$this->view->name_duplicate = TRUE;
-                    	$this->_messenger->addError(_("The Privilege already exists"));
-                    	$this->view->message = $this->view->seeMessages();	
+                		$this->stdResponse->success = FALSE;
+                		$this->stdResponse->name_duplicate = TRUE;
+                    	$this->stdResponse->message = _("The Privilege already exists");	
                 	}
                 } else {
-					$this->view->success = FALSE;
-                    $this->_messenger->addError(_("The Privilege does not exists"));
-                    $this->view->message = $this->view->seeMessages();                	                	
+					$this->stdResponse->success = FALSE;
+                    $this->stdResponse->message = _("The Privilege does not exists");                	                	
                 }
         	} catch (Exception $e) {
                 $this->exception($this->view, $e);
          	}
 		} else {
-            $this->view->success = FALSE;
-			$this->view->messageArray = $form->getMessages();
-			$this->_messenger->addError(_("The form contains error and is not updated"));
-			$this->view->message = $this->view->seeMessages();
+            $this->stdResponse->success = FALSE;
+			$this->stdResponse->messageArray = $form->getMessages();
+			$this->stdResponse->message = _("The form contains error and is not updated");
     	}
         // send response to client
-        $this->_helper->json($this->view);
+        $this->_helper->json($this->stdResponse);
 	}
 	
 	/**
@@ -210,19 +200,17 @@ class Admin_PrivilegeController extends App_Controller_Action {
                 }
                 $message = sprintf(ngettext('%d privilege removed.', '%d privileges removed.', $removeCount), $removeCount);
                 	
-                $this->view->success = TRUE;
-               	$this->_messenger->addSuccess(_($message));
-               	$this->view->message = $this->view->seeMessages();
+                $this->stdResponse->success = TRUE;
+               	$this->stdResponse->message = _($message);
         	} catch (Exception $e) {
             	$this->exception($this->view, $e);
            	}
       	} else {
-        	$this->view->success = FALSE;
-            $this->_messenger->addNotice(_("Data submitted is empty."));
-        	$this->view->message = $this->view->seeMessages();
+        	$this->stdResponse->success = FALSE;
+        	$this->stdResponse->message = _("Data submitted is empty.");
       	}
         // send response to client
-        $this->_helper->json($this->view);
+        $this->_helper->json($this->stdResponse);
 	}
 	
 	/**
@@ -273,10 +261,10 @@ class Admin_PrivilegeController extends App_Controller_Action {
 			$posRecord++;
 		}
 		// response
-		$this->view->iTotalRecords = $total;
-		$this->view->iTotalDisplayRecords = $total;
-		$this->view->aaData = $data;
-		$this->_helper->json($this->view);
+		$this->stdResponse->iTotalRecords = $total;
+		$this->stdResponse->iTotalDisplayRecords = $total;
+		$this->stdResponse->aaData = $data;
+		$this->_helper->json($this->stdResponse);
 	}
 	
 	/**
@@ -300,5 +288,24 @@ class Admin_PrivilegeController extends App_Controller_Action {
 		}
 				
 		return $filters;
+	}
+	
+	/**
+	 * 
+	 * Verifies if it exist some error with the application
+	 * @param Zend_View $view
+	 * @param Exception $e
+	 */
+	private function exception(Zend_View $view, Exception $e) {
+		$this->_logger->err($e->getMessage());
+        // response to client
+      	$view->success = FALSE;
+        if ($e->getCode() == Model_EnumErrorType::APPLICATION)
+        	$this->_messenger->addError($e->getMessage());
+   		elseif ($e->getCode() == Model_EnumErrorType::DUP_NAME)
+        	$this->_messenger->addError('name_warning');
+    	else
+        	$this->_messenger->addError(_("An error occurred while processing the data. <br/> Please Try again."));
+       	$view->message = $view->seeMessages();
 	}
 }
