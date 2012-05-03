@@ -88,27 +88,26 @@ class Admin_UserGroupController extends App_Controller_Action {
                 	
                 	$userGroupMapper->save($userGroup);
                 	
-                	$this->view->success = TRUE;
-                	$this->_messenger->clearMessages();
+                	$this->stdResponse->success = TRUE;
                     $this->_messenger->addSuccess(_("User group saved"));
-                    $this->view->message = $this->view->seeMessages();
+                    $this->stdResponse->message = $this->view->seeMessages();
                 } else {
-					$this->view->success = FALSE;
-					$this->view->name_duplicate = TRUE;
+					$this->stdResponse->success = FALSE;
+					$this->stdResponse->name_duplicate = TRUE;
                     $this->_messenger->addError(_("The User group already exists"));
-                    $this->view->message = $this->view->seeMessages();                			
+                    $this->stdResponse->message = $this->view->seeMessages();                			
                 }
           	} catch (Exception $e) {
             	$this->exception($this->view, $e);
            	}
      	} else {
-			$this->view->success = FALSE;
-			$this->view->messageArray = $form->getMessages();
+			$this->stdResponse->success = FALSE;
+			$this->stdResponse->messageArray = $form->getMessages();
 			$this->_messenger->addError(_("The form contains error and is not saved"));
-			$this->view->message = $this->view->seeMessages();
+			$this->stdResponse->message = $this->view->seeMessages();
        	}
         // send response to client
-        $this->_helper->json($this->view);
+        $this->_helper->json($this->stdResponse);
 	}
 	
 	/**
@@ -137,10 +136,10 @@ class Admin_UserGroupController extends App_Controller_Action {
 				$form->getElement('privilege')->setValue($privelegeIds);
           	} else {
             	// response to client
-	            $this->view->success = FALSE;
+	            $this->stdResponse->success = FALSE;
 	            $this->_messenger->addSuccess(_("The requested record was not found."));
-	          	$this->view->message = $this->view->seeMessages();
-	            $this->_helper->json($this->view);
+	          	$this->stdResponse->message = $this->view->seeMessages();
+	            $this->_helper->json($this->stdResponse);
           	}
         } catch (Exception $e) {
         	$this->exception($this->view, $e);
@@ -196,32 +195,31 @@ class Admin_UserGroupController extends App_Controller_Action {
 	                			
 	                	$userGroupMapper->update($id, $userGroup);
 	                		
-	                	$this->view->success = TRUE;
-	                	$this->_messenger->clearMessages();
+	                	$this->stdResponse->success = TRUE;
 	                    $this->_messenger->addSuccess(_("User group updated"));
-	                    $this->view->message = $this->view->seeMessages();
+	                    $this->stdResponse->message = $this->view->seeMessages();
                 	} else {
-                		$this->view->success = FALSE;
-                		$this->view->name_duplicate = TRUE;
+                		$this->stdResponse->success = FALSE;
+                		$this->stdResponse->name_duplicate = TRUE;
                     	$this->_messenger->addError(_("The User group already exists"));
-                    	$this->view->message = $this->view->seeMessages();
+                    	$this->stdResponse->message = $this->view->seeMessages();
                 	}
                 } else {
-                	$this->view->success = FALSE;
+                	$this->stdResponse->success = FALSE;
                     $this->_messenger->addError(_("The User group does not exists"));
-                    $this->view->message = $this->view->seeMessages();
+                    $this->stdResponse->message = $this->view->seeMessages();
                 }
         	} catch (Exception $e) {
                 $this->exception($this->view, $e);
          	}
 		} else {
-            $this->view->success = FALSE;
-			$this->view->messageArray = $form->getMessages();
+            $this->stdResponse->success = FALSE;
+			$this->stdResponse->messageArray = $form->getMessages();
 			$this->_messenger->addError(_("The form contains error and is not updated"));
-			$this->view->message = $this->view->seeMessages();
+			$this->stdResponse->message = $this->view->seeMessages();
     	}
         // send response to client
-        $this->_helper->json($this->view);
+        $this->_helper->json($this->stdResponse);
 	}
 	
 	/**
@@ -247,19 +245,19 @@ class Admin_UserGroupController extends App_Controller_Action {
                 }
                 $message = sprintf(ngettext('%d user group removed.', '%d user groups removed.', $removeCount), $removeCount);
                 	
-                $this->view->success = TRUE;
+                $this->stdResponse->success = TRUE;
                	$this->_messenger->addSuccess(_($message));
-               	$this->view->message = $this->view->seeMessages();
+               	$this->stdResponse->message = $this->view->seeMessages();
         	} catch (Exception $e) {
             	$this->exception($this->view, $e);
            	}
       	} else {
-        	$this->view->success = FALSE;
+        	$this->stdResponse->success = FALSE;
             $this->_messenger->addNotice(_("Data submitted is empty."));
-        	$this->view->message = $this->view->seeMessages();
+        	$this->stdResponse->message = $this->view->seeMessages();
       	}
         // send response to client
-        $this->_helper->json($this->view);
+        $this->_helper->json($this->stdResponse);
 	}
 	
 	/**
@@ -307,10 +305,10 @@ class Admin_UserGroupController extends App_Controller_Action {
 			$posRecord++;
 		}
 		// response
-		$this->view->iTotalRecords = $total;
-		$this->view->iTotalDisplayRecords = $total;
-		$this->view->aaData = $data;
-		$this->_helper->json($this->view);
+		$this->stdResponse->iTotalRecords = $total;
+		$this->stdResponse->iTotalDisplayRecords = $total;
+		$this->stdResponse->aaData = $data;
+		$this->_helper->json($this->stdResponse);
 	}
 	
 	/**
@@ -334,6 +332,25 @@ class Admin_UserGroupController extends App_Controller_Action {
 		}
 				
 		return $filters;
+	}
+	
+	/**
+	 * 
+	 * Verifies if it exist some error with the application
+	 * @param Zend_View $view
+	 * @param Exception $e
+	 */
+	private function exception(Zend_View $view, Exception $e) {
+		$this->_logger->err($e->getMessage());
+        // response to client
+      	$view->success = FALSE;
+        if ($e->getCode() == Model_EnumErrorType::APPLICATION)
+        	$this->_messenger->addError($e->getMessage());
+   		elseif ($e->getCode() == Model_EnumErrorType::DUP_NAME)
+        	$this->_messenger->addError('name_warning');
+    	else
+        	$this->_messenger->addError(_("An error occurred while processing the data. <br/> Please Try again."));
+       	$view->message = $view->seeMessages();
 	}
 	
 	/**
