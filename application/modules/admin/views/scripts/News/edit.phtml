@@ -13,10 +13,8 @@
 		// network
 		news.setUrl({
 			toLoad : '<?php echo $this->url(array('module'=>'admin', 'controller'=>'news', 'action'=>'load'));?>',
-			toUpdate : '<?php echo $this->url(array('module'=>'admin', 'controller'=>'news', 'action'=>'update-save'));?>'
 		});
 		
-		news.clickToLoad('#load');
-		news.clickToUpdate('#update');
+		news.loadContent();
 	});
 </script>

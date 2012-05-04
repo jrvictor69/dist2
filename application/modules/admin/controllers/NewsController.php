@@ -39,7 +39,6 @@ class Admin_NewsController extends App_Controller_Action {
 	public function addAction() {
 		$form = new Admin_Form_News();
 		$form->getElement('categoryId')->setMultiOptions($this->getCategories());
-		$form->removeElement('load');
 		
 		if ($this->_request->isPost()) {
 			$formData = $this->_request->getPost();

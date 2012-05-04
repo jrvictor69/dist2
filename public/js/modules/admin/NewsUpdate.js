@@ -17,7 +17,6 @@ com.em = com.em ||{};
 		this.validator;
 		
 		this.initAlert();
-		this.initEvents();
 		this.setValidatorForm('#formId');
 	};
 com.em.NewsUpdate.prototype = {
@@ -45,161 +44,28 @@ com.em.NewsUpdate.prototype = {
 	
 	/**
 	 * 
-	 * Initializes all the events for items on page
 	 */
-	initEvents: function() {with(this) {		
-//		$("#title").bind('keyup', function(e) {
-//			var titleVal = $('#title').val();
-//			if (titleVal != '') {
-//				$('#title').parent().find('.error').remove();
-//			}
-//		});
-	}},
-	
-	/**
-	 * Add an event to save changes on left or right form
-	 *   
-	 * @param string selector of save button
-	 */
-	clickToUpdate: function(selector) { with (this){
-		$(selector).bind('click',function(event) {
-//			var tinyObj = tinyMCE.get('contain');
-//	        var htmlContent = tinyObj.getContent();
-//	        
-//	        $("#contain").val(htmlContent);
-////	        console.log($("#contain").val());
-////	        console.log(htmlContent);
-//	        $('#update').click();
-
-
-	        
-//	        console.log('dsd');
-//	        $.ajax({
-//				url: url.toUpdate,
-//				type: "POST",
-//				dataType: 'json',
-//				data: $('#formId').serialize(),
-//				beforeSend: function(XMLHttpRequest) {
-//					//validate form
-//					validator.form();
-//					if (!validator.valid() ) {
-//						return false;
-//					}
-//					
-//					return true;
-//				},
-//				
-//				success: function(data, textStatus, XMLHttpRequest) {
-//					if (textStatus == 'success') {
-//						if (data.success) {
-//							alert.show(data.message, {header : com.em.Alert.SUCCESS});
-//							setTimeout(function() {
-//								window.location.href = "http://dist2/admin/news/index/type/information";
-//							}, 2000);
-//						} else {
-//							if (data.duplicate_title) {
-//								alert.show(data.message, {header : com.em.Alert.ERROR});
-//								$('#title').parent().find('.error').remove();
-//								$('#title').parent().append('<label class="error" for="name" generated="true">'+data.message+'</label>');
-//							} else {
-//								alert.show(data.message, {header : com.em.Alert.ERROR});
-//							}
-//						}
-//					}
-//				},
-//				
-//				complete: function(jqXHR, textStatus) {
-//					
-//				},
-//				
-//				error: function(jqXHR, textStatus, errorThrown) {
-//					alert.show(errorThrown, {header: com.em.Alert.ERROR});
-//				}
-//			});
-		}); 
-	}},
-	
-	/**
-	 * Add an event to save changes on left or right form
-	 *   
-	 * @param string selector of save button
-	 */
-//	clickToUpdate: function(selector) { with (this){
-//		$(selector).bind('click',function(event) {
-//			var tinyObj = tinyMCE.get('contain');
-//	        var htmlContent = tinyObj.getContent();
-//	        
-//	        $.ajax({
-//				url: url.toUpdate,
-//				type: "POST",
-//				dataType: 'json',
-//				data: $('#formId').serialize(),
-//				beforeSend: function(XMLHttpRequest) {
-//					//validate form
-//					validator.form();
-//					if (!validator.valid() ) {
-//						return false;
-//					}
-//					
-//					return true;
-//				},
-//				
-//				success: function(data, textStatus, XMLHttpRequest) {
-//					if (textStatus == 'success') {
-//						if (data.success) {
-//							alert.show(data.message, {header : com.em.Alert.SUCCESS});
-//							setTimeout(function() {
-//								window.location.href = "http://dist2/admin/news/index/type/information";
-//							}, 2000);
-//						} else {
-//							if (data.duplicate_title) {
-//								alert.show(data.message, {header : com.em.Alert.ERROR});
-//								$('#title').parent().find('.error').remove();
-//								$('#title').parent().append('<label class="error" for="name" generated="true">'+data.message+'</label>');
-//							} else {
-//								alert.show(data.message, {header : com.em.Alert.ERROR});
-//							}
-//						}
-//					}
-//				},
-//				
-//				complete: function(jqXHR, textStatus) {
-//					
-//				},
-//				
-//				error: function(jqXHR, textStatus, errorThrown) {
-//					alert.show(errorThrown, {header: com.em.Alert.ERROR});
-//				}
-//			});
-//		}); 
-//	}},
-//	
-	/**
-	 * 
-	 */
-	clickToLoad: function(selector) { with (this){
-		$(selector).bind('click',function(event) {
-			$.ajax({
-				dataType: 'json',
-				url: url.toLoad,
-				type: "GET",
-				beforeSend: function(XMLHttpRequest) {
-					
-				},
-							
-				success: function(data, textStatus, XMLHttpRequest) {
-					var tinyObj = tinyMCE.get('contain');
-					tinyObj.setContent(data.htmlContent);
-				},
-	
-				complete: function(jqXHR, textStatus) {
-					
-				},
+	loadContent: function() { with (this){
+		$.ajax({
+			dataType: 'json',
+			url: url.toLoad,
+			type: "GET",
+			beforeSend: function(XMLHttpRequest) {
 				
-				error: function (jqXHR, textStatus, errorThrown) {
-									
-				}
-			});
+			},
+						
+			success: function(data, textStatus, XMLHttpRequest) {
+				var tinyObj = tinyMCE.get('contain');
+				tinyObj.setContent(data.htmlContent);
+			},
+
+			complete: function(jqXHR, textStatus) {
+				
+			},
+			
+			error: function (jqXHR, textStatus, errorThrown) {
+								
+			}
 		});
 	}},
 	
@@ -252,69 +118,41 @@ com.em.NewsUpdate.prototype = {
 			
 			
 		$(selector).tinymce({
-		
-		relative_urls : false,
-		// Location of TinyMCE script
-		script_url : '../jscripts/tiny_mce/tiny_mce.js',
-
-		// General options
-		theme : "advanced",
-		plugins : "autolink,lists,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template,advlist,jbimages",
-//		plugins : "autolink,lists,pagebreak,style,layer,table,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template,advlist,imagemanager",
-
-		// Theme options
-		theme_advanced_buttons1 : "save,newdocument,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,styleselect,formatselect,fontselect,fontsizeselect,jbimages",
-		theme_advanced_buttons2 : "cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor,image,cleanup,help,code,|,insertdate,inserttime,preview,|,forecolor,backcolor",
-		theme_advanced_buttons3 : "tablecontrols,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,emotions,iespell,media,advhr,|,print,|,ltr,rtl,|,fullscreen",
-		theme_advanced_buttons4 : "insertlayer,moveforward,movebackward,absolute,|,styleprops,|,cite,abbr,acronym,del,ins,attribs,|,visualchars,nonbreaking,template,pagebreak",
-		theme_advanced_toolbar_location : "top",
-		theme_advanced_toolbar_align : "left",
-		theme_advanced_statusbar_location : "bottom",
-		theme_advanced_resizing : true,
-		//
-		// Example content CSS (should be your site CSS)
-		content_css : "css/content.css"
-		//
+			relative_urls : false,
+			// Location of TinyMCE script
+			script_url : '../jscripts/tiny_mce/tiny_mce.js',
+			// General options
+			theme : "advanced",
+			plugins : "autolink,lists,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template,advlist,jbimages",
+//			plugins : "autolink,lists,pagebreak,style,layer,table,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template,advlist,imagemanager",
+	
+			// Theme options
+//			theme_advanced_buttons1 : "save,newdocument,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,styleselect,formatselect,fontselect,fontsizeselect,jbimages",
+			theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,styleselect,formatselect,fontselect,fontsizeselect,jbimages",
+			theme_advanced_buttons2 : "cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor,image,cleanup,help,code,|,insertdate,inserttime,preview,|,forecolor,backcolor",
+			theme_advanced_buttons3 : "tablecontrols,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,emotions,iespell,media,advhr,|,print,|,ltr,rtl,|,fullscreen",
+			theme_advanced_buttons4 : "insertlayer,moveforward,movebackward,absolute,|,styleprops,|,cite,abbr,acronym,del,ins,attribs,|,visualchars,nonbreaking,template,pagebreak",
+			theme_advanced_toolbar_location : "top",
+			theme_advanced_toolbar_align : "left",
+			theme_advanced_statusbar_location : "bottom",
+			theme_advanced_resizing : true,
+			
+			// Example content CSS (should be your site CSS)
+			content_css : "css/content.css"
 //			// Drop lists for link/image/media/template dialogs
 //			template_external_list_url : "lists/template_list.js",
 //			external_link_list_url : "lists/link_list.js",
 //			external_image_list_url : "lists/image_list.js",
 //			media_external_list_url : "lists/media_list.js",
-		//
+			
 //			// Replace values for the template plugin
 //			template_replace_values : {
 //				username : "Some User",
 //				staffid : "991234"
 //			}
-			});
-	}},
-	
-	initFile: function(selector) { with (this){
-		$(selector).bind('click',function(event) {
-			$.ajax({
-				dataType: 'json',
-				url: url.toLoad,
-				type: "GET",
-				beforeSend: function(XMLHttpRequest) {
-					
-				},
-							
-				success: function(data, textStatus, XMLHttpRequest) {
-					var tinyObj = tinyMCE.get('contain');
-					tinyObj.setContent(data.htmlContent);
-				},
-	
-				complete: function(jqXHR, textStatus) {
-					
-				},
-				
-				error: function (jqXHR, textStatus, errorThrown) {
-									
-				}
-			});
 		});
 	}},
-	
+		
 	/**
 	 * 
 	 * Validates privilege form

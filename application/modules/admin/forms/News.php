@@ -57,9 +57,7 @@ class Admin_Form_News extends Zend_Form {
               
         $file = new Zend_Form_Element_File('imageFile');
 		$file->setLabel(_('Upload Image'))
-			->setMultiFile(5)
 			->setDestination(APPLICATION_PATH.'/../data/upload')
-			->addValidator('Count', false, 2)//ensure only 1 file
 			->addValidator('Extension', false, 'jpg, png, gif')            
             ;
         	
@@ -69,16 +67,11 @@ class Admin_Form_News extends Zend_Form {
 			->setRequired(TRUE)
 			;
 			
-		$loadButton = new Zend_Form_Element_Button('load');
-        $loadButton->setLabel(_('Load'))
-        	->setAttrib('class', 'green buttonNg')
-        	;
-        	
         $saveButton = new Zend_Form_Element_Submit('update');
         $saveButton->setLabel(_('Save'))
         	->setAttrib('class', 'green buttonNg')
         	;
         	
-        $this->addElements(array($hidden, $title, $summary, $contain, $fount, $file, $category, $loadButton, $saveButton));
+        $this->addElements(array($hidden, $title, $summary, $contain, $fount, $file, $category, $saveButton));
 	}
 }

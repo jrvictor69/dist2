@@ -13,24 +13,6 @@
 <script type="text/javascript">
 	$(document).ready(function() {		
 		var news = new com.em.NewsUpdate();
-		news.configureTinymce('textarea.contain');
-		
-		// network
-		news.setUrl({
-			toUpdate : '<?php echo $this->url(array('module'=>'admin', 'controller'=>'news', 'action'=>'create-save'));?>'
-		});
-		
-		news.clickToUpdate('#save-news');
-
-		$('#imageFile').MultiFile({
-			max: 2,
-			accept: 'gif|jpg|png'
-//			STRING: {
-//				remove:'Remover',
-//				selected:'Selecionado: $file',
-//				denied:'Invalido arquivo de tipo $ext!'
-//				}			
-		});
-					
+		news.configureTinymce('textarea.contain');			
 	});
 </script>
