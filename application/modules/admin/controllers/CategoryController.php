@@ -61,26 +61,23 @@ class Admin_CategoryController extends App_Controller_Action {
                 		
                 	$categoryMapper->save($category);
                 	
-                	$this->view->success = TRUE;
-                	$this->_messenger->clearMessages();
-                   	$this->_messenger->addSuccess(_("Category saved"));	
+                	$this->stdResponse->success = TRUE;
+                   	$this->stdResponse->message = _("Category saved");	
                 } else {
-					$this->view->success = FALSE;
-					$this->view->name_duplicate = TRUE;
-                   	$this->_messenger->addError(_("The Category already exists"));                			
+					$this->stdResponse->success = FALSE;
+					$this->stdResponse->name_duplicate = TRUE;
+                   	$this->stdResponse->message = _("The Category already exists");                			
                 }
           	} catch (Exception $e) {
                 $this->exception($this->view, $e);
           	}
     	} else {
-			$this->view->success = FALSE;
-			$this->view->messageArray = $form->getMessages();
-			$this->_messenger->addError(_("The form contains error and is not saved"));
-			
+			$this->stdResponse->success = FALSE;
+			$this->stdResponse->messageArray = $form->getMessages();
+			$this->stdResponse->message = _("The form contains error and is not saved");
      	}
-     	$this->view->message = $this->view->seeMessages();
         // sends response to client
-        $this->_helper->json($this->view);
+        $this->_helper->json($this->stdResponse);
 	}
 	
 	/**
@@ -101,14 +98,13 @@ class Admin_CategoryController extends App_Controller_Action {
 				$form->getElement('description')->setValue($category->getDescription());
           	} else {
             	// response to client
-	          	$this->view->success = FALSE;
-	          	$this->_messenger->addSuccess(_("The requested record was not found."));
-	     		$this->view->message = $this->view->seeMessages();
-	            $this->_helper->json($this->view);
+	          	$this->stdResponse->success = FALSE;
+	     		$this->stdResponse->message = _("The requested record was not found.");
+	            $this->_helper->json($this->stdResponse);
           	}
         } catch (Exception $e) {
         	$this->exception($this->view, $e);
-           	$this->_helper->json($this->view);
+           	$this->_helper->json($this->stdResponse);
        	}
         
         $this->view->form = $form;
@@ -143,29 +139,27 @@ class Admin_CategoryController extends App_Controller_Action {
 	                			
 	                	$categoryMapper->update($id, $category);
 	                		
-	                	$this->view->success = TRUE;
-	                	$this->_messenger->clearMessages();
-	                    $this->_messenger->addSuccess(_("Category updated"));
+	                	$this->stdResponse->success = TRUE;
+	                    $this->stdResponse->message = _("Category updated");
                 	} else {
-                		$this->view->success = FALSE;
-                		$this->view->name_duplicate = TRUE;
-                    	$this->_messenger->addError(_("The Category already exists"));
+                		$this->stdResponse->success = FALSE;
+                		$this->stdResponse->name_duplicate = TRUE;
+                    	$this->stdResponse->message = _("The Category already exists");
                 	}
                 } else {
-                	$this->view->success = FALSE;
-                    $this->_messenger->addError(_("The Category does not exists"));
+                	$this->stdResponse->success = FALSE;
+                    $this->stdResponse->message = _("The Category does not exists");
                 }
          	} catch (Exception $e) {
                 $this->exception($this->view, $e);
           	}
       	} else {
-            $this->view->success = FALSE;
-            $this->view->messageArray = $form->getMessages();
-			$this->_messenger->addError(_("The form contains error and is not saved"));
+            $this->stdResponse->success = FALSE;
+            $this->stdResponse->messageArray = $form->getMessages();
+			$this->stdResponse->message = _("The form contains error and is not saved");
       	}
-    	$this->view->message = $this->view->seeMessages();
         // sends response to client
-        $this->_helper->json($this->view);
+        $this->_helper->json($this->stdResponse);
 	}
 	
 	/**
@@ -191,18 +185,18 @@ class Admin_CategoryController extends App_Controller_Action {
                 }
                 $message = sprintf(ngettext('%d category removed.', '%d categories removed.', $removeCount), $removeCount);
                 	
-                $this->view->success = TRUE;
-              	$this->_messenger->addSuccess(_($message));
+                $this->stdResponse->success = TRUE;
+              	$this->stdResponse->message = _($message);
         	} catch (Exception $e) {
             	$this->exception($this->view, $e);
          	}
    		} else {
-        	$this->view->success = FALSE;
-            $this->_messenger->addNotice(_("Data submitted is empty."));
+        	$this->stdResponse->success = FALSE;
+            $this->stdResponse->message = _("Data submitted is empty.");
       	}
-      	$this->view->message = $this->view->seeMessages();
+      	
         // sends response to client
-        $this->_helper->json($this->view);
+        $this->_helper->json($this->stdResponse);
 	}
 	
 	/**
@@ -242,10 +236,10 @@ class Admin_CategoryController extends App_Controller_Action {
 			$posRecord++;
 		}
 		// response
-		$this->view->iTotalRecords = $total;
-		$this->view->iTotalDisplayRecords = $total;
-		$this->view->aaData = $data;
-		$this->_helper->json($this->view);
+		$this->stdResponse->iTotalRecords = $total;
+		$this->stdResponse->iTotalDisplayRecords = $total;
+		$this->stdResponse->aaData = $data;
+		$this->_helper->json($this->stdResponse);
 	}
 	
 	/**
