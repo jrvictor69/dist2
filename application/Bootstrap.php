@@ -62,23 +62,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
 		if ($this->view === null) {
 		    return;
 		}
-		// Style sheets
-		$this->view->headLink()->appendStylesheet($this->view->baseUrl() . "/css/jscal2.css");
-		$this->view->headLink()->appendStylesheet($this->view->baseUrl() . "/css/zebralist.css");
-		$this->view->headLink()->appendStylesheet($this->view->baseUrl() . "/css/screen.css");
-		$this->view->headLink()->appendStylesheet($this->view->baseUrl() . "/css/print.css", "print");
-		$this->view->headLink()->appendStylesheet($this->view->baseUrl() . "/css/dialog.css");
-		$this->view->headLink()->appendStylesheet($this->view->baseUrl() . "/css/input.css");
-		$this->view->headLink()->appendStylesheet($this->view->baseUrl() . "/css/infopanel.css");
-		$this->view->headLink()->appendStylesheet($this->view->baseUrl() . "/css/menu_new.css");
-		$this->view->headLink()->appendStylesheet($this->view->baseUrl() . "/css/tabs_new.css");
-		$this->view->headLink()->appendStylesheet($this->view->baseUrl() . "/css/new_form.css");
-		$this->view->headLink()->appendStylesheet($this->view->baseUrl() . "/css/navigation.css");
-		$this->view->headLink()->appendStylesheet($this->view->baseUrl() . "/css/form2.0.css");
-		$this->view->headLink()->appendStylesheet($this->view->baseUrl() . "/css/siteapp.css");
-		
-		$this->view->headLink()->appendStylesheet($this->view->baseUrl() . "/css/flashnotification.css");
-		
+				
 		// jquery core
 		$this->view->headScript()->appendFile($this->view->baseUrl().'/js/lib/jquery/jquery.min.js','text/javascript');
 		
