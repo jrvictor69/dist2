@@ -63,6 +63,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
 		    return;
 		}
 				
+		// Guest
+		$this->view->headScript()->appendFile($this->view->baseUrl().'/layoutguest/orange/dropdown/stuHover.js','text/javascript');
+		
 		// jquery core
 		$this->view->headScript()->appendFile($this->view->baseUrl().'/js/lib/jquery/jquery.min.js','text/javascript');
 		
@@ -76,9 +79,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
 	    $this->view->headScript()->appendFile($this->view->baseUrl().'/js/lib/jgrowl/Alert.js','text/javascript');
 	    
 	    // Datatables plugin jquery
-	    $this->view->headLink()->appendStylesheet($this->view->baseUrl() . "/js/lib/jquery-datatables/css/demo_table.css");
-		$this->view->headScript()->appendFile($this->view->baseUrl() . "/js/lib/jquery-datatables/jquery.dataTables.min.js","text/javascript");
-		$this->view->headScript()->appendFile($this->view->baseUrl() . "/js/lib/jquery-validate/jquery.validate.min.js","text/javascript");
+//	    $this->view->headLink()->appendStylesheet($this->view->baseUrl() . "/js/lib/jquery-datatables/css/demo_table.css");
+//		$this->view->headScript()->appendFile($this->view->baseUrl() . "/js/lib/jquery-datatables/jquery.dataTables.min.js","text/javascript");
+//		$this->view->headScript()->appendFile($this->view->baseUrl() . "/js/lib/jquery-validate/jquery.validate.min.js","text/javascript");
 		
 		// Alert Dialogs plugin jquery
 		$this->view->headScript()->appendFile($this->view->baseUrl() . "/js/lib/jquery.alerts-1.1/jquery.alerts.js","text/javascript");

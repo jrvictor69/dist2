@@ -5,6 +5,7 @@
 		<title><?php echo _("Distrito la Colorada");?></title>
 	  	<?php 
 			$this->headLink()->appendStylesheet("/layoutguest/orange/css/style.css");
+			$this->headLink()->appendStylesheet("/layoutguest/orange/siteapp.css");
 		?>
 		<?php //echo $this->jQuery(); ?>
 		<?php echo $this->headMeta(); ?>
@@ -14,26 +15,22 @@
 		<?php echo $this->headScript(); ?>
 	</head>
 	<body>
+
   		<div id="container_header"><p>&nbsp;</p></div>
   			<div id="main">
-    			<div id="header">
-		  			<div id="banner">
-		    			<h1><span>Your</span> Business</h1>
-		  			</div><!--close banner-->
-		  			<div id="banner_slogan">
-		    			<h2>Company Slogan Here</h2>
-		  			</div><!--close banner_slogan-->	  
-	      			<div id="menubar">
-	        			<ul id="menu">
-	          				<li class="current"><a href="index.html">Home</a></li>
-				          	<li><a href="ourwork.html">Our Work</a></li>
-				          	<li><a href="testimonials.html">Testimonials</a></li>
-				          	<li><a href="projects.html">Projects</a></li>
-				          	<li><a href="contact.html">Contact Us</a></li>
-	        			</ul>
-	      			</div><!--close menubar-->
-    			</div><!--close header-->
-
+  				<div id="header">
+	  <div id="banner">
+	    <h1><span>Your</span> Business</h1>
+	  </div><!--close banner-->
+	  <div id="banner_slogan">
+	    <h2>Company Slogan Here</h2>
+	  </div><!--close banner_slogan-->	  
+      <div id="menubar">
+        <div id="nav">
+			<?php echo $this->navigation()->menu(); ?>
+     	</div>
+      </div><!--close menubar-->
+    </div><!--close header-->
 				<div id="site_content">	
 	  				<div class="sidebar_container">
 						<div class="sidebar">
@@ -83,7 +80,7 @@
   
 		<div id="container_footer">&nbsp;</div>
   			<p style="float: left;padding: 0;">&nbsp;</p>
-  
+  		<?php echo $this->headScript(); //very important?>
 		<div style="margin: 1em 0 3em 0; text-align: center;"></div>
 	</body>
 </html>
