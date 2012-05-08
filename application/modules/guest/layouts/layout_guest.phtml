@@ -5,7 +5,9 @@
 		<title><?php echo _("Distrito la Colorada");?></title>
 	  	<?php 
 			$this->headLink()->appendStylesheet("/layoutguest/orange/css/style.css");
-			$this->headLink()->appendStylesheet("/layoutguest/orange/siteapp.css");
+//			$this->headLink()->appendStylesheet("/layoutguest/orange/siteapp.css");
+			
+			$this->headLink()->appendStylesheet("/layoutguest/orange/pro_dropdown_2/pro_dropdown_2.css");
 		?>
 		<?php //echo $this->jQuery(); ?>
 		<?php echo $this->headMeta(); ?>
@@ -26,9 +28,29 @@
 	    <h2>Company Slogan Here</h2>
 	  </div><!--close banner_slogan-->	  
       <div id="menubar">
-        <div id="nav">
-			<?php echo $this->navigation()->menu(); ?>
-     	</div>
+        <ul id="nav">
+			<?php //echo $this->navigation()->menu(); ?>
+			<?php $firstGroup = $this->navigation()->getContainer();?>
+			<?php $menus = $firstGroup->getPages(); ?>
+			
+			<?php foreach ($menus as $menu) :?>
+				<li class="<?php echo $menu->isActive() ? "active" : 'top'; ?>">
+					<a href="<?php echo $menu->getHref();?>" class="top_link"><span class="down"><?php echo $this->translate($menu->getLabel()); ?></span></a>
+					<?php $submenus = $menu->getPages(); ?>
+					<ul class="sub">
+					<?php foreach ($submenus as $submenu) :?>
+						<li><a href="<?php echo $submenu->getHref();?>"><?php  echo $submenu->getLabel();?></a></li>
+					<?php endforeach; ?>
+					</ul>
+				</li>
+			<?php endforeach; ?>
+		   	<?php echo $this->navigation()->menu()
+                        ->setOnlyActiveBranch(true) // I do not want items from other pages
+                        ->setRenderParents(false)
+                        ->setMinDepth(1)            // Start at the "child" level of the navigation
+                        ->setMaxDepth(10)           // Go as far as the 10th generation
+                        ->renderMenu();?>
+     	</ul>
       </div><!--close menubar-->
     </div><!--close header-->
 				<div id="site_content">	
