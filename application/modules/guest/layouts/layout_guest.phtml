@@ -5,9 +5,8 @@
 		<title><?php echo _("Distrito la Colorada");?></title>
 	  	<?php 
 			$this->headLink()->appendStylesheet("/layoutguest/orange/css/style.css");
-//			$this->headLink()->appendStylesheet("/layoutguest/orange/siteapp.css");
-			
 			$this->headLink()->appendStylesheet("/layoutguest/orange/pro_dropdown_2/pro_dropdown_2.css");
+			$this->headLink()->appendStylesheet("/layoutguest/orange/tabmenu/tabmenu.css");
 		?>
 		<?php //echo $this->jQuery(); ?>
 		<?php echo $this->headMeta(); ?>
@@ -17,42 +16,50 @@
 		<?php echo $this->headScript(); ?>
 	</head>
 	<body>
-
   		<div id="container_header"><p>&nbsp;</p></div>
   			<div id="main">
-  				<div id="header">
-	  <div id="banner">
-	    <h1><span>Your</span> Business</h1>
-	  </div><!--close banner-->
-	  <div id="banner_slogan">
-	    <h2>Company Slogan Here</h2>
-	  </div><!--close banner_slogan-->	  
-      <div id="menubar">
-        <ul id="nav">
-			<?php //echo $this->navigation()->menu(); ?>
-			<?php $firstGroup = $this->navigation()->getContainer();?>
-			<?php $menus = $firstGroup->getPages(); ?>
-			
-			<?php foreach ($menus as $menu) :?>
-				<li class="<?php echo $menu->isActive() ? "active" : 'top'; ?>">
-					<a href="<?php echo $menu->getHref();?>" class="top_link"><span class="down"><?php echo $this->translate($menu->getLabel()); ?></span></a>
-					<?php $submenus = $menu->getPages(); ?>
-					<ul class="sub">
-					<?php foreach ($submenus as $submenu) :?>
-						<li><a href="<?php echo $submenu->getHref();?>"><?php  echo $submenu->getLabel();?></a></li>
-					<?php endforeach; ?>
-					</ul>
-				</li>
-			<?php endforeach; ?>
-		   	<?php echo $this->navigation()->menu()
-                        ->setOnlyActiveBranch(true) // I do not want items from other pages
-                        ->setRenderParents(false)
-                        ->setMinDepth(1)            // Start at the "child" level of the navigation
-                        ->setMaxDepth(10)           // Go as far as the 10th generation
-                        ->renderMenu();?>
-     	</ul>
-      </div><!--close menubar-->
-    </div><!--close header-->
+  				<?php $container = $this->navigation()->getContainer();?>
+	  			<div id="header">
+					<div id="banner">
+	  					<h1><span>Your</span> Business</h1>
+	  				</div><!--close banner-->
+	    				<h2>Company Slogan Here</h2>
+      				<div id="menubar">
+        				<ul id="nav">
+						<?php
+							$menus = $container->getPages();
+							foreach ($menus as $menu):?>
+							<li class="<?php echo $menu->isActive() ? "active" : "top"; ?>">	
+								<a href="<?php echo $menu->getHref();?>" class="top_link"><span class="<?php echo $menu->hasPages() ? "down" : ""; ?>"><?php echo $this->translate($menu->getLabel());?></span></a>
+								<?php if ($menu->hasPages()) {?>
+									<?php $submenus = $menu->getPages(); ?>
+									<ul class="sub">
+									<?php foreach ($submenus as $submenu):?>
+										<li><a href="<?php echo $submenu->getHref();?>"><?php echo $this->translate($submenu->getLabel());?></a></li>
+									<?php endforeach; ?>
+									</ul>
+								<?php }?>
+							</li>
+						<?php endforeach; ?>
+     					</ul>
+      				</div><!--close menubar-->
+    			</div><!--close header-->
+    			
+	      		<div id="tabs">
+	  				<ul>
+	  				<?php
+						$menusch = $container->getChildren();
+						foreach ($menusch as $menuch):?>
+						<li class="<?php echo $menuch->isActive() ? "active" : '';?>">
+							<a href="<?php echo $menuch->getHref();?>" title="<?php echo $this->translate($menuch->getLabel());?>"><span><?php echo $this->translate($menuch->getLabel());?></span></a>
+						</li>
+					<?php endforeach;?>
+			    		<li><a href="#" title="Link 5"><span>Link 5</span></a></li>
+			    		<li><a href="#" title="Link 6"><span>Link 6</span></a></li>
+						<li><a href="#" title="Link 7"><span>Link 7</span></a></li>
+	  				</ul>
+				</div>
+				
 				<div id="site_content">	
 	  				<div class="sidebar_container">
 						<div class="sidebar">
@@ -63,7 +70,7 @@
 			  					<div class="button_small">
 			      					<a href="#">Read more</a>
 			    				</div><!--close button_small-->
-	          				</div><!--close sidebar_item--> 
+          				</div><!--close sidebar_item--> 
         				</div><!--close sidebar-->    
         				 		
 						<div class="sidebar">
@@ -74,8 +81,8 @@
 						  		<div class="button_small">
 						      		<a href="#">Read more</a>
 						    	</div><!--close button_small-->
-				          	</div><!--close sidebar_item--> 
-				        </div><!--close sidebar-->  
+		          	</div><!--close sidebar_item--> 
+		        </div><!--close sidebar-->  
 				        
 						<div class="sidebar">
           					<h2>Latest Blog</h2>

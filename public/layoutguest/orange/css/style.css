@@ -5,8 +5,10 @@ html
 { margin: 0;
   padding: 0;}
 
-body
-{ font: normal 100% Arial, Helvetica, sans-serif;
+body { 
+  font: normal 100% Arial, Helvetica, sans-serif;
+  font-size:13px;
+/*	font: bold 12px/1.5em Verdana;*/
   background: #1B1B1B url(../images/pattern.jpg) repeat;
   color: #000;
 }
@@ -113,7 +115,7 @@ span
 { width: 940px;
   float: left;
   text-align: center; 
-  height: 25px;
+  height: 20px;
   padding-top: 10px;
   background: #FFF;
   border-top: 5px solid #1D1D1D;} 
