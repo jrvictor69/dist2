@@ -1,22 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
-    <nav>
+    <navigation>
     	<home>
-	   		<label>Home</label>
-	   		<action>index</action>
+	   		<id>home</id>
+			<label>Home</label>
+			<module>guest</module>
 			<controller>index</controller>
-	   		<pages>
+			<action>about</action>
+			<params>
+				<type>home</type>
+			</params>
+			<pages>
 		    	<about>
-			   		<label>About</label>			   		   
-					<action>about</action>
-			   		<controller>index</controller>			   		 	
+			   		<label>About</label>
+			   		<module>guest</module>
+			   		<controller>index</controller>
+			   		<action>about</action>
+			   		<params>
+						<type>home</type>
+					</params>
 		    	</about>
 		    	<contact>
 			   		<label>Contact</label>
+			   		<module>guest</module>
+			   		<controller>index</controller>
 			   		<action>contact</action>
-			   		<controller>index</controller>    	
+			   		<params>
+						<type>home</type>
+					</params>
 			    </contact>
-	   		</pages>    		
+	   		</pages>   		
     	</home>
     	
     	<who_we>
@@ -30,7 +43,7 @@
 			   		<controller>whowe</controller>
 			   	</history>
 			   	<visionMission>
-			   		<label>Our Vision and Mission</label>
+			   		<label>Vision  Mission</label>
 			   		<action>visionmission</action>
 			   		<controller>whowe</controller>  
 			    </visionMission>
@@ -64,5 +77,5 @@
 				</guides>
 			</pages>
     	</news>	
-   	</nav>
+   	</navigation>
 </config>
