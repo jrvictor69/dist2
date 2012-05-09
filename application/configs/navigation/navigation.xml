@@ -6,7 +6,7 @@
 			<label>Home</label>
 			<module>guest</module>
 			<controller>index</controller>
-			<action>about</action>
+			<action>index</action>
 			<params>
 				<type>home</type>
 			</params>
