@@ -21,4 +21,12 @@ class Guest_IndexController extends App_Controller_Action {
 	public function indexAction() {
 		
 	}
+	
+	public function aboutAction() {
+		
+	}
+	
+	public function contactAction() {
+		
+	}
 }
