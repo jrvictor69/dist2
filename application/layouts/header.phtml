@@ -24,7 +24,7 @@
 				</a>
 			</li>
 			<li class="protocol <?php echo (isset($this->layout()->activeProtocol)) ? 'active' : ''; ?>">
-				<a href="<?php echo $this->url(array('module'=>'member', 'controller'=>'index', 'action'=>'index', 'type'=>'search'),null,true); ?>" class="candidate">
+				<a href="<?php echo $this->url(array('module'=>'member', 'controller'=>'search', 'action'=>'index', 'type'=>'search'),null,true); ?>" class="candidate">
 					<span class="left candidate"></span>
 					<span class="center candidate"><?php echo $this->translate("Member church"); ?></span>
 					<span class="right candidate"></span>
