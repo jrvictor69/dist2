@@ -62,9 +62,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
 		if ($this->view === null) {
 		    return;
 		}
-				
-		// Guest
-		$this->view->headScript()->appendFile($this->view->baseUrl().'/layoutguest/orange/dropdown/stuHover.js','text/javascript');
 		
 		// jquery core
 		$this->view->headScript()->appendFile($this->view->baseUrl().'/js/lib/jquery/jquery.min.js','text/javascript');
