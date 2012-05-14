@@ -76,14 +76,17 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
 	    $this->view->headScript()->appendFile($this->view->baseUrl().'/js/lib/jgrowl/Alert.js','text/javascript');
 	    
 	    // Datatables plugin jquery
-//	    $this->view->headLink()->appendStylesheet($this->view->baseUrl() . "/js/lib/jquery-datatables/css/demo_table.css");
-//		$this->view->headScript()->appendFile($this->view->baseUrl() . "/js/lib/jquery-datatables/jquery.dataTables.min.js","text/javascript");
-//		$this->view->headScript()->appendFile($this->view->baseUrl() . "/js/lib/jquery-validate/jquery.validate.min.js","text/javascript");
+	    $this->view->headLink()->appendStylesheet($this->view->baseUrl() . "/js/lib/jquery-datatables/css/demo_table.css");
+		$this->view->headScript()->appendFile($this->view->baseUrl() . "/js/lib/jquery-datatables/jquery.dataTables.min.js","text/javascript");
+		$this->view->headScript()->appendFile($this->view->baseUrl() . "/js/lib/jquery-validate/jquery.validate.min.js","text/javascript");
 		
 		// Alert Dialogs plugin jquery
 		$this->view->headScript()->appendFile($this->view->baseUrl() . "/js/lib/jquery.alerts-1.1/jquery.alerts.js","text/javascript");
 		$this->view->headLink()->appendStylesheet($this->view->baseUrl() . "/js/lib/jquery.alerts-1.1/jquery.alerts.css");
+		
 		$this->view->headScript()->appendFile($this->view->baseUrl() . "/js/lib/jquery.alerts-1.1/jquery.alerts.js","text/javascript");
+		
+		$this->view->doctype("XHTML1_STRICT");
 	}
 	
 	/**
@@ -128,4 +131,14 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
 	    Zend_Registry::set('config', $config);
 	    return $config;
 	}
+	
+	
+	 protected function _initLayoutHelper()
+    {
+//        $this->bootstrap('frontController');
+        $this->bootstrap('frontController');
+//        $layout = Zend_Controller_Action_HelperBroker::addHelper(
+//            new ModuleLayoutLoader());
+    }
+	
 }

@@ -8,7 +8,7 @@ class App_Controller_Plugin_ViewSetup extends Zend_Controller_Plugin_Abstract {
 	 * (non-PHPdoc)
 	 * @see Zend_Controller_Plugin_Abstract::postDispatch()
 	 */
-	public function postDispatch(Zend_Controller_Request_Abstract $request) {
+	public function preDispatch(Zend_Controller_Request_Abstract $request) {
 		// if not the request has been dispatched
 		if (!$request->isDispatched()) {
 			return;
@@ -21,7 +21,7 @@ class App_Controller_Plugin_ViewSetup extends Zend_Controller_Plugin_Abstract {
 		}
 		
 		$moduleName = $request->getModuleName();
-		if ($moduleName === "admin") {
+		if ($moduleName === "default") {
 			//if module default use the template
 //			$layoutPath = APPLICATION_PATH.'/layouts';
 //			Zend_Layout::getMvcInstance()->setLayout('layout');
@@ -63,6 +63,7 @@ class App_Controller_Plugin_ViewSetup extends Zend_Controller_Plugin_Abstract {
     	$view = $bootstrap->getResource('view');
     	$layout = $bootstrap->getResource('layout');
     			
+    	$layout->moduleName = $request->getModuleName();
 		if ($request->getModuleName() == 'user') {
 			$config = new Zend_Config_Xml(APPLICATION_PATH . '/configs/navigation/navigation_user.xml','navigation');
 			$navigation = new Zend_Navigation($config);
