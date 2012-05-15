@@ -4,7 +4,6 @@
     	<home>
 	   		<id>home</id>
 			<label>Home</label>
-			<module>guest</module>
 			<controller>index</controller>
 			<action>index</action>
 			<params>
@@ -13,7 +12,6 @@
 			<pages>
 		    	<about>
 			   		<label>About</label>
-			   		<module>guest</module>
 			   		<controller>index</controller>
 			   		<action>about</action>
 			   		<params>
@@ -22,7 +20,6 @@
 		    	</about>
 		    	<contact>
 			   		<label>Contact</label>
-			   		<module>guest</module>
 			   		<controller>index</controller>
 			   		<action>contact</action>
 			   		<params>

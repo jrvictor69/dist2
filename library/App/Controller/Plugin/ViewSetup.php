@@ -85,6 +85,10 @@ class App_Controller_Plugin_ViewSetup extends Zend_Controller_Plugin_Abstract {
 					Zend_Registry::set('navigation', $navigation);
 				} else {
 					if ($request->getModuleName() == "admin") {
+						$config = new Zend_Config_Xml(APPLICATION_PATH . '/configs/navigation/navigation_admin.xml','navigation');
+						$navigation = new Zend_Navigation($config);
+						$view->navigation($navigation);
+						Zend_Registry::set('navigation', $navigation);
 						$layout->activeAdmin = FALSE;	
 					}
 				}

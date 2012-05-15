@@ -48,7 +48,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
 		    return;
 		}
 		
-		$config = new Zend_Config_Xml(APPLICATION_PATH . '/configs/navigation/navigation_admin.xml','navigation');
+		$config = new Zend_Config_Xml(APPLICATION_PATH . '/configs/navigation/navigation.xml','navigation');
 		$navigation = new Zend_Navigation($config);
 		Zend_Registry::set('navigation', $navigation);
 		$this->view->navigation($navigation); 
