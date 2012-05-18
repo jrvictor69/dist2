@@ -30,12 +30,12 @@
 		<?php echo $this->headLink(); ?>
 		<?php echo $this->headStyle(); ?>
 		<?php echo $this->headScript(); ?>
-		<?php echo $this->layout()->moduleName; ?>
 	</head>
 	<body>
   		<div id="container_header"><p>&nbsp;</p></div>
   			<div id="main">
   				<?php $container = $this->navigation()->getContainer();?>
+  				<?php $menuActive = "";?>
 	  			<div id="header">
 					<div id="banner">
 	  					<h1><span>Your</span> Business</h1>
@@ -46,9 +46,10 @@
 						<?php
 							$menus = $container->getPages();
 							foreach ($menus as $menu):?>
+							<?php $menuActive = $menu;?>
 							<li class="<?php echo $menu->isActive() ? "active" : "top"; ?>">	
 								<a href="<?php echo $menu->getHref();?>" class="top_link"><span class="<?php echo $menu->hasPages() ? "down" : ""; ?>"><?php echo $this->translate($menu->getLabel());?></span></a>
-								<?php if ($menu->hasPages()) {?>
+								<?php if ($menu->hasPages() && $menu->count() > 1) {?>
 									<?php $submenus = $menu->getPages(); ?>
 									<ul class="sub">
 									<?php foreach ($submenus as $submenu):?>
@@ -63,8 +64,15 @@
     			</div><!--close header-->
     			
 	      		<div id="tabs">
-	  				<ul>
+	  				<ul>	  				
 	  				<?php
+	  					echo $this->navigation()->menu()
+                        ->setOnlyActiveBranch(true) // I do not want items from other pages
+                        ->setRenderParents(true)
+                        ->setMinDepth(1)            // Start at the "child" level of the navigation
+                        ->setMaxDepth(10)           // Go as far as the 10th generation
+                        ->renderMenu();
+
 						$menusch = $container->getChildren();
 						foreach ($menusch as $menuch):?>
 						<li class="<?php echo $menuch->isActive() ? "active" : '';?>">

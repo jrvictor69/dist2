@@ -77,6 +77,9 @@ class App_Controller_Plugin_ViewSetup extends Zend_Controller_Plugin_Abstract {
 				$view->navigation($navigation);
 				Zend_Registry::set('navigation', $navigation);
 				$layout->activeProtocol = TRUE;
+				
+				$menuPrincipal = $navigation->findBy('id', $request->getParam('type'));
+				$menuPrincipal->setActive(TRUE);
 			} else {
 				if ($request->getModuleName() == 'guest') {
 					$config = new Zend_Config_Xml(APPLICATION_PATH . '/configs/navigation/navigation.xml','navigation');
@@ -89,13 +92,13 @@ class App_Controller_Plugin_ViewSetup extends Zend_Controller_Plugin_Abstract {
 						$navigation = new Zend_Navigation($config);
 						$view->navigation($navigation);
 						Zend_Registry::set('navigation', $navigation);
-						$layout->activeAdmin = FALSE;	
+						$layout->activeAdmin = FALSE;
+
+						$menuPrincipal = $navigation->findBy('id', $request->getParam('type'));
+						$menuPrincipal->setActive(TRUE);
 					}
 				}
 			}	
 		}
-
-		$menuPrincipal = $navigation->findBy('id', $request->getParam('type'));
-		$menuPrincipal->setActive(TRUE);
 	}
 }

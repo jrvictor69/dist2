@@ -6,33 +6,20 @@
 			<label>Home</label>
 			<controller>index</controller>
 			<action>index</action>
-			<params>
-				<type>home</type>
-			</params>
 			<pages>
-		    	<about>
-			   		<label>About</label>
+		    	<home>
+			   		<label>Home</label>
+			   		<action>home</action>
 			   		<controller>index</controller>
-			   		<action>about</action>
-			   		<params>
-						<type>home</type>
-					</params>
-		    	</about>
-		    	<contact>
-			   		<label>Contact</label>
-			   		<controller>index</controller>
-			   		<action>contact</action>
-			   		<params>
-						<type>home</type>
-					</params>
-			    </contact>
+			   	</home>
 	   		</pages>   		
     	</home>
     	
-    	<who_we>
+    	<whowe>
 	   		<label>Who We?</label>
-	   		<uri>#</uri>
-	   		
+<!--	   		<uri>#</uri>-->
+	   		<action>index</action>
+			<controller>whowe</controller>
 	   		<pages>
 		    	<history>
 			   		<label>Our History</label>
@@ -55,7 +42,7 @@
 			   		<controller>whowe</controller>    	
 			    </belief>
 	   		</pages>    		
-    	</who_we>
+    	</whowe>
     	
     	<news>
     		<label>News</label>

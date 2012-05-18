@@ -8,7 +8,7 @@
  * @license Proprietary
  */
 
-class IndexController extends App_Controller_Action {
+class WhoWeController extends App_Controller_Action {
 
 	/**
 	 * (non-PHPdoc)
@@ -19,19 +19,22 @@ class IndexController extends App_Controller_Action {
 	}
 
     public function indexAction() {
-		$this->_helper->redirector("home");
+		$this->_helper->redirector("history");
     }
 
-	public function homeAction() {
-        // action body
+	public function historyAction() {
+		
     }
     
-	public function aboutAction() {
-		
+	public function visionmissionAction() {
+
 	}
 	
-	public function contactAction() {
+	public function logoAction() {
+
+	}
+	
+	public function beliefAction() {
 		
 	}
 }
-
