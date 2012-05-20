@@ -8,6 +8,7 @@
 			<action>index</action>
 			<pages>
 		    	<home>
+					<id>home</id>
 			   		<label>Home</label>
 			   		<action>home</action>
 			   		<controller>index</controller>
@@ -16,10 +17,11 @@
     	</home>
     	
     	<whowe>
-	   		<label>Who We?</label>
-<!--	   		<uri>#</uri>-->
-	   		<action>index</action>
-			<controller>whowe</controller>
+			<id>whowe</id>
+			<label>Who We?</label>
+			<uri>#</uri>
+<!--	   		<action>index</action>-->
+<!--			<controller>whowe</controller>-->
 	   		<pages>
 		    	<history>
 			   		<label>Our History</label>

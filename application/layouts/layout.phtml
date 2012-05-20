@@ -14,15 +14,17 @@
 			$this->headLink()->appendStylesheet("/css/menu_new.css");
 			$this->headLink()->appendStylesheet("/css/tabs_new.css");
 			$this->headLink()->appendStylesheet("/css/new_form.css");
-			$this->headLink()->appendStylesheet("/css/navigation.css");
+//			$this->headLink()->appendStylesheet("/css/navigation.css");
 			$this->headLink()->appendStylesheet("/css/form2.0.css");
-			$this->headLink()->appendStylesheet("/css/siteapp.css");
+//			$this->headLink()->appendStylesheet("/css/siteapp.css");
 			//flash messages
 			$this->headLink()->appendStylesheet("/css/flashnotification.css");
-	  	
 			$this->headLink()->appendStylesheet("/layoutguest/orange/css/style.css");
-			$this->headLink()->appendStylesheet("/layoutguest/orange/pro_dropdown_2/pro_dropdown_2.css");
+//			$this->headLink()->appendStylesheet("/layoutguest/orange/pro_dropdown_2/pro_dropdown_2.css");
 			$this->headLink()->appendStylesheet("/layoutguest/orange/tabmenu/tabmenu.css");
+
+			$this->headLink()->appendStylesheet("/layoutguest/orange/dropdownmenu/dropdown.css");
+			$this->headScript()->appendFile("/layoutguest/orange/dropdownmenu/dropdown.js","text/javascript");
 		?>
 		<?php //echo $this->jQuery(); ?>
 		<?php echo $this->headMeta(); ?>
@@ -33,104 +35,19 @@
 	</head>
 	<body>
   		<div id="container_header"><p>&nbsp;</p></div>
-  			<div id="main">
-  				<?php $container = $this->navigation()->getContainer();?>
-  				<?php $menuActive = "";?>
-	  			<div id="header">
-					<div id="banner">
-	  					<h1><span>Your</span> Business</h1>
-	  				</div><!--close banner-->
-	    				<h2>Company Slogan Here</h2>
-      				<div id="menubar">
-        				<ul id="nav">
-						<?php
-							$menus = $container->getPages();
-							foreach ($menus as $menu):?>
-							<?php $menuActive = $menu;?>
-							<li class="<?php echo $menu->isActive() ? "active" : "top"; ?>">	
-								<a href="<?php echo $menu->getHref();?>" class="top_link"><span class="<?php echo $menu->hasPages() ? "down" : ""; ?>"><?php echo $this->translate($menu->getLabel());?></span></a>
-								<?php if ($menu->hasPages() && $menu->count() > 1) {?>
-									<?php $submenus = $menu->getPages(); ?>
-									<ul class="sub">
-									<?php foreach ($submenus as $submenu):?>
-										<li><a href="<?php echo $submenu->getHref();?>"><?php echo $this->translate($submenu->getLabel());?></a></li>
-									<?php endforeach; ?>
-									</ul>
-								<?php }?>
-							</li>
-						<?php endforeach; ?>
-     					</ul>
-      				</div><!--close menubar-->
-    			</div><!--close header-->
-    			
-	      		<div id="tabs">
-	  				<ul>	  				
-	  				<?php
-	  					echo $this->navigation()->menu()
-                        ->setOnlyActiveBranch(true) // I do not want items from other pages
-                        ->setRenderParents(true)
-                        ->setMinDepth(1)            // Start at the "child" level of the navigation
-                        ->setMaxDepth(10)           // Go as far as the 10th generation
-                        ->renderMenu();
-
-						$menusch = $container->getChildren();
-						foreach ($menusch as $menuch):?>
-						<li class="<?php echo $menuch->isActive() ? "active" : '';?>">
-							<a href="<?php echo $menuch->getHref();?>" title="<?php echo $this->translate($menuch->getLabel());?>"><span><?php echo $this->translate($menuch->getLabel());?></span></a>
-						</li>
-					<?php endforeach;?>
-			    		<li><a href="#" title="Link 5"><span>Link 5</span></a></li>
-			    		<li><a href="#" title="Link 6"><span>Link 6</span></a></li>
-						<li><a href="#" title="Link 7"><span>Link 7</span></a></li>
-	  				</ul>
-				</div>
-				
+			<div id="main">
+				<?php echo $this->partial('header.phtml');?>
+				<?php echo $this->partial('actionbar.phtml');?>
 				<div id="site_content">	
 	  				<div class="sidebar_container">
-						<div class="sidebar">
-          					<h2>Latest Blog</h2>
-			  				<div class="sidebar_item">
-								<h4>March 2012</h4>
-	            				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque cursus tempor enim.</p>
-			  					<div class="button_small">
-			      					<a href="#">Read more</a>
-			    				</div><!--close button_small-->
-          				</div><!--close sidebar_item--> 
-        				</div><!--close sidebar-->    
-        				 		
-						<div class="sidebar">
-				        	<h2>Latest Blog</h2>
-						  	<div class="sidebar_item">
-								<h4>March 2012</h4>
-				            	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque cursus tempor enim.</p>
-						  		<div class="button_small">
-						      		<a href="#">Read more</a>
-						    	</div><!--close button_small-->
-		          	</div><!--close sidebar_item--> 
-		        </div><!--close sidebar-->  
-				        
-						<div class="sidebar">
-          					<h2>Latest Blog</h2>
-		  					<div class="sidebar_item">
-								<h4>March 2012</h4>
-	            				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque cursus tempor enim.</p>
-			  					<div class="button_small">
-			      					<a href="#">Read more</a>
-			    				</div><!--close button_small-->
-          					</div><!--close sidebar_item--> 
-        				</div><!--close sidebar-->  
+						<?php echo $this->layout()->sidebar;?>	  
        				</div><!--close sidebar_container-->
-	 
 	  				<div id="content">
-        				<?php echo $this->layout()->content; ?>
+						<?php echo $this->layout()->content;?>
       				</div><!--close content-->
-    
 				</div><!--close site_content-->
-    
-			<div id="footer">
-      			<a href="http://validator.w3.org/check?uri=referer">Valid XHTML</a> | <a href="http://jigsaw.w3.org/css-validator/check/referer">Valid CSS</a> | <a href="http://www.pdphoto.org/">Images</a> | website template by <a href="http://www.araynordesign.co.uk">ARaynorDesign</a>
-    		</div><!--close footer-->    
-		</div><!--close main-->  
+				<?php echo $this->partial('footer.phtml');?>
+			</div><!--close main-->
   
 		<div id="container_footer">&nbsp;</div>
   			<p style="float: left;padding: 0;">&nbsp;</p>

@@ -16,6 +16,8 @@ class WhoWeController extends App_Controller_Action {
 	 */
 	public function init() {
 		parent::init();
+		$response = $this->getResponse();
+		$response->insert("sidebar", $this->view->render("sidebar.phtml"));
 	}
 
     public function indexAction() {
