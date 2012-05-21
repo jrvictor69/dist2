@@ -51,6 +51,15 @@
 						<type>information</type>
 					</params>
 				</news>
+				<picture>
+					<label>Picture</label>
+					<module>admin</module>
+					<controller>picture</controller>
+					<action>read</action>
+					<params>
+						<type>information</type>
+					</params>
+				</picture>
 				<category>
 			   		<label>Category</label>
 			   		<module>admin</module>
