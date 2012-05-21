@@ -1,27 +1,32 @@
+<div id="menu">
+    <ul class="menu">
+    	<?php
+		$container = $this->navigation()->getContainer();
+		$pages = $container->getPages();
+		foreach ($pages as $menu):?>
+		<li><a href="<?php echo $menu->getHref();?>" class="parent"><span><?php echo $this->translate($menu->getLabel());?></span></a>
+			<?php if ($menu->count() > 1) {?>
+			<div>
+				<ul>			
+					<?php $submenus = $menu->getPages(); ?>
+					<?php foreach ($submenus as $submenu):?>
+					<li><a href="<?php echo $submenu->getHref();?>"><span><?php echo $this->translate($submenu->getLabel());?></span></a>
+					<?php endforeach; ?>
+				</ul>			
+			</div>
+			<?php }?>
+		</li>
+		<?php endforeach; ?>
+    </ul>
+</div>
+
+<div id="copyright"><a href="http://apycom.com/"></a></div>
+
 <div id="header">
 	<div id="banner">
 		<h1><span>Your</span> Business</h1>
 	</div><!--close banner-->
 	    <h2>Church Slogan Here</h2>
 	<div id="menubar">
-		<ul id="nav">
-		<?php
-			$container = $this->navigation()->getContainer();
-			$menus = $container->getPages();
-			foreach ($menus as $menu):
-				$menuActive = $menu;?>
-			<li class="<?php echo $menu->isActive() ? "active" : ""; ?>">	
-				<a href="<?php echo $menu->getHref();?>" class="top_lik"><?php echo $this->translate($menu->getLabel());?></a>
-				<?php if ($menu->hasPages() && $menu->count() > 1) {?>
-					<?php $submenus = $menu->getPages(); ?>
-				<ul>
-				<?php foreach ($submenus as $submenu):?>
-					<li><a href="<?php echo $submenu->getHref();?>"><?php echo $this->translate($submenu->getLabel());?></a></li>
-				<?php endforeach; ?>
-				</ul>
-				<?php }?>
-			</li>
-			<?php endforeach; ?>
-		</ul>
 	</div><!--close menubar-->
 </div><!--close header-->
