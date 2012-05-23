@@ -45,7 +45,7 @@
 			<id>log</id>
 			<label>Log</label>
 			<module>member</module>
-			<controller>logbook</controller>
+			<controller>Archive</controller>
 			<action>read</action>
 			<params>
 				<type>log</type>
