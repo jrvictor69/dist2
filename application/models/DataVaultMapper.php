@@ -43,6 +43,9 @@ class Model_DataVaultMapper {
 		
 		unset($data['id']);
 		$this->getDbTable()->insert($data);
+		
+		$id = (int)$this->getDbTable()->getAdapter()->lastInsertId();
+		$dataVault->setId($id);
     }
 
     /**
@@ -101,22 +104,25 @@ class Model_DataVaultMapper {
      * @param int $id
      * @param Model_DataVault $dataVault
      */
-    public function find($id, Model_DataVault $dataVault) {
+    public function find($id) {
         $result = $this->getDbTable()->find($id);
         if (0 == count($result)) {
-            return;
+            return NULL;
         }
         
         $row = $result->current();
+        
+        $dataVault = new Model_DataVault();
         $dataVault
        			->setFilename($row->filename)
-       			->setMimeType($row->$mimeType)
-       			->setBinary($row->$binary)
-       			->setExpires($row->$expires)
-       			->setCreated($row->$created)
-       			->setChanged($row->$changed)
-       			->setId($row->$id)
+       			->setMimeType($row->mimeType)
+       			->setBinary($row->binary)
+       			->setExpires($row->expires)
+       			->setCreated($row->created)
+       			->setChanged($row->changed)
+       			->setId($row->id)
         		;
+		return $dataVault;
     }
 	  
     /**
