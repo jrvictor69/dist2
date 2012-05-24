@@ -9,8 +9,8 @@
 	<?php echo $this->tableHeader('archiveHeader', _("Archives"));?>
 	<?php echo $this->tableList("tblMemberFile");?>	
 	<div class="buttons right">
-		<?php echo $this->buttonRemove("delete-archive", $this->translate('Remove'), $this->url(array('action'=>'delete')));?>
-		<?php echo $this->buttonAdd("create-archive", $this->translate('Add'), $this->url(array('action'=>'create')));?>
+		<?php echo $this->buttonRemove("delete-memberFile", $this->translate('Remove'), $this->url(array('action'=>'delete')));?>
+		<?php echo $this->buttonAdd("create-memberFile", $this->translate('Add'), $this->url(array('action'=>'create')));?>
 	</div>
 
 	<div id="dialog"><!-- Loads ajax dialog form --></div>
@@ -24,13 +24,15 @@
 	archive.setUrl({
 		toTable : '<?php echo $this->url(array('action'=>'read-items'));?>',
 		toBase : '<?php echo $this->baseUrl(); ?>',
-		toUpdate : '<?php echo $this->url(array('action'=>'update')); ?>'
+		toUpdate : '<?php echo $this->url(array('action'=>'update')); ?>',
+		toDownload : '<?php echo $this->url(array('action'=>'download')); ?>'
 	});
 	
 	var headers = new Object();
 	headers.headerArray = new Array(
 		'<?php echo $this->translate('Name'); ?>',
 		'<?php echo $this->translate('Note'); ?>',
+		'<?php echo $this->translate('Download'); ?>',
 		'<?php echo $this->translate('Created'); ?>',
 		'<?php echo $this->translate('Changed'); ?>');
 	archive.setHeaders(headers);

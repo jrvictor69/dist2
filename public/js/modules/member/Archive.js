@@ -153,13 +153,20 @@ com.em.MemberFile.prototype = {
 		//Sets every element of the table headers
 		columns.push({bVisible:false});
 		columns.push({
-			"sWidth": "25%",
+			"sWidth": "20%",
 			"bSercheable": "true",
 			fnRender : function (oObj){
 				return '<a id="update-memberFile-'+oObj.aData[0]+'" href="'+url.toUpdate+'/id/'+oObj.aData[0]+'">'+oObj.aData[1]+'</a>';
 				}
 			});
-		columns.push({"sWidth": "53%"});
+		columns.push({"sWidth": "40%"});
+		columns.push({
+			"sWidth": "18%",
+			"bSercheable": "true",
+			fnRender : function (oObj){
+				return '<a id="download-memberFile-'+oObj.aData[0]+'" href="'+url.toDownload+'/id/'+oObj.aData[0]+'">'+oObj.aData[3]+'</a>';
+				}
+			});
 		columns.push({"sWidth": "10%"});
 		columns.push({"sWidth": "10%"});
 		columns.push({

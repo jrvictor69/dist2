@@ -35,7 +35,95 @@ class Member_ArchiveController extends App_Controller_Action {
 	public function readAction() {
 		$formFilter = new Admin_Form_SearchFilter();
 		$formFilter->getElement('nameFilter')->setLabel(_("Name archive"));
-		$this->view->formFilter = $formFilter;		 
+		$this->view->formFilter = $formFilter;
+	}
+	
+	/**
+	 * 
+	 * This action shows a form in create mode
+	 * @access public
+	 */
+	public function createAction() {
+		$this->_helper->layout()->disableLayout();
+		
+		$form = new Member_Form_Archive();
+		$form->setAction($this->_helper->url("save"));
+		$this->view->form = $form;
+	}
+	
+	/**
+	 * 
+	 * Creates a new Archive
+	 * @access public
+	 */
+	public function saveAction() {
+		if ($this->_request->isPost()) {
+			$form = new Member_Form_Archive();
+			$formData = $this->getRequest()->getPost();
+			if ($form->isValid($formData)) {
+				$memberFileMapper = new Model_MemberFileMapper();
+				if (!$memberFileMapper->verifyExistName($formData['name'])) {
+					$accountMapper = new Model_AccountMapper();
+					$account = $accountMapper->find(11);
+					
+					$fh = fopen($_FILES['file']['tmp_name'], 'r');
+					$binary = fread($fh, filesize($_FILES['file']['tmp_name']));
+					$binary = addslashes($binary);
+					fclose($fh);
+					
+					$mimeType = $_FILES['file']['type'];
+					$fileName = $_FILES['file']['name'];
+
+					$dataVault = new Model_DataVault();
+					$dataVault->setFilename($fileName)->setMimeType($mimeType)->setBinary($binary);
+
+					$archive = new Model_MemberFile();
+					$archive->setName($formData['name'])
+							->setNote($formData['note'])
+							->setCreatedBy($account)
+							->setFile($dataVault);
+
+					$memberFileMapper->save($archive);
+
+					$this->_helper->flashMessenger(array('success' => _("Archive saved")));
+					$this->_helper->redirector('read', 'Archive', 'member', array('type'=>'log'));								            
+				}
+			}
+		}
+	}
+	
+	/**
+	 * 
+	 * Downloads the Archives
+	 * @access public
+	 */
+	public function downloadAction() {
+//		$this->_helper->layout()->disableLayout();
+		$this->_helper->viewRenderer->setNoRender(true);
+
+//		$dispatcher = Front::getInstance()->getDispatcher();
+		$dispatcher = $this->getFrontController()->getInstance()->getDispatcher();
+		$id = (int)$this->_getParam('id', 0);
+    	 
+		$archiveMapper = new Model_MemberFileMapper();
+		$archive = $archiveMapper->find($id);
+
+   	 	$file = $archive->getFile();
+    	if ($file->getBinary()) {
+    		$this->_response
+    			//For downloading
+    			->setHeader('Content-type', $file->getMimeType())
+				->setHeader('Content-Disposition', sprintf('attachment; filename="%s"', $file->getFilename()))
+				->setHeader('Content-Transfer-Encoding', 'binary')
+				->setHeader('Content-Length', strlen($file->getBinary()))
+				// IE headers to make sure it will download it in https
+				->setHeader('Expires', '0', TRUE)
+				->setHeader('Cache-Control', 'private', TRUE)
+				->setHeader('Pragma', 'cache');
+    		echo $file->getBinary();
+    	} else {
+    		$this->_response->setHttpResponseCode(404);
+    	}
 	}
 	
 	/**
@@ -64,12 +152,20 @@ class Member_ArchiveController extends App_Controller_Action {
 		$posRecord = $start+1;
 		$data = array();
 		foreach ($archives as $archive) {
+			$created = new Zend_Date($archive->getCreated());
+			$changed = $archive->getChanged();
+			if ($changed != NULL) {
+				$changed = new Zend_Date($archive->getChanged());
+				$changed = $changed->toString("dd.MM.YYYY");
+			}
+			
 			$row = array();			
 			$row[] = $archive->getId();
 			$row[] = $archive->getName();
 			$row[] = $archive->getNote();
-			$row[] = $archive->getCreated();
-			$row[] = $archive->getChanged();
+			$row[] = $archive->getFile()->getFilename();
+			$row[] = $created->toString("dd.MM.YYYY");
+			$row[] = $changed;
 			$row[] = '[]';
 			$data[] = $row;
 			$posRecord++;
