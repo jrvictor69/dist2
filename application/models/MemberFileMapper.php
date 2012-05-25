@@ -103,6 +103,11 @@ class Model_MemberFileMapper extends Model_TemporalMapper {
             return;
         }
         
+        $row = $result->current();
+        
+		$dataVaultMapper = new Model_DataVaultMapper();
+		$dataVaultMapper->delete($row->fileId);
+				
         $data = array(
             'changed' => date('Y-m-d H:i:s'),
         	self::STATE_FIELDNAME => FALSE,
@@ -206,7 +211,7 @@ class Model_MemberFileMapper extends Model_TemporalMapper {
 				break;
 				
 			case 3:
-				$order = 'visibleExtWeb';
+				$order = 'fileId';
 				break;
 				
 			case 4:
@@ -230,7 +235,7 @@ class Model_MemberFileMapper extends Model_TemporalMapper {
 			$member->setId(1);
         
 			$dataVaultMapper = new Model_DataVaultMapper();
-			$file = $dataVaultMapper->find($row->fileId);
+			$file = $dataVaultMapper->find($row->fileId, FALSE);
         
 			$accountMapper = new Model_AccountMapper();
 			$createdBy = $accountMapper->find($row->createdById);

@@ -1,14 +1,28 @@
 <?php
+/**
+ * DataMapper for Dist 2.
+ *
+ * @category Dist
+ * @package Models
+ * @author Victor Villca <victor.villca@people-t.com>
+ * @copyright Copyright (c) 2012 Gisof A/S
+ * @license Proprietary
+ */
 
 class Model_DataVaultMapper {
 	
 	/**
 	 * 
-	 * Enter description here ...
-	 * @var unknown_type
+	 * This class abstract is from Zend framework
+	 * @var Zend_Db_Table_Abstract
 	 */
 	protected $_dbTable;
 
+	/**
+	 *  
+	 * Creates a new object Zend_Db_Table_Abstract
+	 * @param string $dbTable
+	 */
 	public function setDbTable($dbTable) {
         if (is_string($dbTable)) {
             $dbTable = new $dbTable();
@@ -20,6 +34,11 @@ class Model_DataVaultMapper {
         return $this;
     }
 
+    /**
+	 * 
+	 * Returns the class abstract
+	 * @return Zend_Db_Table_Abstract
+	 */
     public function getDbTable() {
         if (null === $this->_dbTable) {
             $this->setDbTable('Model_DbTable_DataVault');
@@ -88,23 +107,15 @@ class Model_DataVaultMapper {
         
     	$this->getDbTable()->update($data, array('id = ?' => $id));
     }
-    
-//    public function delete($id) {
-//    	$result = $this->getDbTable()->find($id);
-//        if (0 == count($result)) {
-//            return;
-//        }
-//        
-//    	$this->getDbTable()->delete(array('id = ?' => $id));
-//    }
 	 
     /**
      * 
-     * Finds model
+     * Finds model with and without field binary
      * @param int $id
+     * @param int $isBinary
      * @param Model_DataVault $dataVault
      */
-    public function find($id) {
+    public function find($id, $isBinary = TRUE) {
         $result = $this->getDbTable()->find($id);
         if (0 == count($result)) {
             return NULL;
@@ -116,22 +127,15 @@ class Model_DataVaultMapper {
         $dataVault
        			->setFilename($row->filename)
        			->setMimeType($row->mimeType)
-       			->setBinary($row->binary)
        			->setExpires($row->expires)
        			->setCreated($row->created)
        			->setChanged($row->changed)
        			->setId($row->id)
         		;
+        if ($isBinary) {
+        	$dataVault->setBinary($row->binary);
+        }
+        
 		return $dataVault;
-    }
-	  
-    /**
-     * 
-     * Finds models
-     * @return array
-     */
-    public function fetchAll() {
-        $resultSet = $this->getDbTable()->fetchAll();
-        return $resultSet;
     }
 }

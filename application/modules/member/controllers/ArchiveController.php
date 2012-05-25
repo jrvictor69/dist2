@@ -68,7 +68,6 @@ class Member_ArchiveController extends App_Controller_Action {
 					
 					$fh = fopen($_FILES['file']['tmp_name'], 'r');
 					$binary = fread($fh, filesize($_FILES['file']['tmp_name']));
-					$binary = addslashes($binary);
 					fclose($fh);
 					
 					$mimeType = $_FILES['file']['type'];
@@ -89,6 +88,8 @@ class Member_ArchiveController extends App_Controller_Action {
 					$this->_helper->redirector('read', 'Archive', 'member', array('type'=>'log'));								            
 				}
 			}
+		} else {
+			$this->_helper->redirector('read', 'Archive', 'member', array('type'=>'log'));
 		}
 	}
 	
@@ -98,16 +99,14 @@ class Member_ArchiveController extends App_Controller_Action {
 	 * @access public
 	 */
 	public function downloadAction() {
-//		$this->_helper->layout()->disableLayout();
+		$this->_helper->layout()->disableLayout();
 		$this->_helper->viewRenderer->setNoRender(true);
 
-//		$dispatcher = Front::getInstance()->getDispatcher();
-		$dispatcher = $this->getFrontController()->getInstance()->getDispatcher();
 		$id = (int)$this->_getParam('id', 0);
     	 
 		$archiveMapper = new Model_MemberFileMapper();
 		$archive = $archiveMapper->find($id);
-
+		
    	 	$file = $archive->getFile();
     	if ($file->getBinary()) {
     		$this->_response
@@ -124,6 +123,37 @@ class Member_ArchiveController extends App_Controller_Action {
     	} else {
     		$this->_response->setHttpResponseCode(404);
     	}
+	}
+	
+	/**
+	 * 
+	 * Deletes archives
+	 * @access public
+	 * @internal
+	 * 1) Gets the model Member File
+	 * 2) Validate the existance of dependencies
+	 * 3) Change the state field or records to delete 
+	 */
+	public function deleteAction() {
+		$this->_helper->viewRenderer->setNoRender(TRUE);
+		
+		$itemIds = $this->_getParam('itemIds', array());
+		if (!empty($itemIds) ) {
+			$removeCount = 0;
+			foreach ($itemIds as $id) {
+				$memberFileMapper = new Model_MemberFileMapper();
+				$memberFileMapper->delete($id);
+				$removeCount++;
+			}
+			$message = sprintf(ngettext('%d archive removed.', '%d archives removed.', $removeCount), $removeCount);            	
+			$this->stdResponse->success = TRUE;
+			$this->stdResponse->message = _($message);
+		} else {
+			$this->stdResponse->success = FALSE;
+			$this->stdResponse->message = _("Data submitted is empty.");
+		}      	
+        // sends response to client
+        $this->_helper->json($this->stdResponse);
 	}
 	
 	/**
