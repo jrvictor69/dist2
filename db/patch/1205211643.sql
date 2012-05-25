@@ -8,9 +8,14 @@ CREATE TABLE `tblPicture` (
   `createdBy` INT(11) DEFAULT NULL,
   `changedBy` INT(11) DEFAULT NULL,
   `state` TINYINT(1) NOT NULL DEFAULT '1',
+  `fileId` INT(11) NOT NULL,
   `categoryId` INT(11) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_tblPicture_categoryId` (`categoryId`),
+  CONSTRAINT `pk_tblPicture` PRIMARY KEY (`id`),
+  KEY `i_tblPicture_id` (`id`),
+  INDEX `i_tblPicture_state_id` (`state`, `id`),
+  INDEX `fk_tblPicture_fileId` (`fileId`),
+  INDEX `fk_tblPicture_categoryId` (`categoryId`),
+  CONSTRAINT `fk_tblPicture_fileId` FOREIGN KEY (`fileId`) REFERENCES `tblImageDataVault` (`id`) ON UPDATE CASCADE ON DELETE RESTRICT,
   CONSTRAINT `fk_tblPicture_categoryId` FOREIGN KEY (`categoryId`) REFERENCES `tblCategory` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
 ) ENGINE=INNODB;
 
