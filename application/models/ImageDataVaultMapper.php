@@ -122,8 +122,8 @@ class Model_ImageDataVaultMapper {
         }
         
         $row = $result->current();
-        
-        $dataVault = new Model_DataVault();
+
+        $dataVault = new Model_ImageDataVault();
         $dataVault
        			->setFilename($row->filename)
        			->setMimeType($row->mimeType)

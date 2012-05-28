@@ -50,14 +50,20 @@ class Model_PictureMapper extends Model_TemporalMapper {
      * @param Model_Picture $picture
      */
 	public function save(Model_Picture $picture) {
+		$file = $picture->getFile();
+		$dataVaultMapper = new Model_ImageDataVaultMapper();
+		$dataVaultMapper->save($file);
+		
 		$data = array(
-            'title' => $picture->getTitle(),
+			'title' => $picture->getTitle(),
             'description' => $picture->getDescription(),
 			'src' => $picture->getSrc(),
 			'srcCrops' => $picture->getSrcCrops(),
             'created' => date('Y-m-d H:i:s'),
 			'createdBy' => $picture->getCreatedBy(),
-			'categoryId' => $picture->getCategory()->getId(),
+//			'categoryId' => $picture->getCategory()->getId(),
+			'fileId' => $file->getId(),
+			'categoryId' => 153,
         	self::STATE_FIELDNAME => TRUE
         );
         
@@ -77,6 +83,10 @@ class Model_PictureMapper extends Model_TemporalMapper {
             return;
         }
         
+		$file = $picture->getFile();
+		$dataVaultMapper = new Model_ImageDataVaultMapper();
+		$dataVaultMapper->save($file);
+		
 	 	$data = array(
 			'title' => $picture->getTitle(),
 			'description' => $picture->getDescription(),
@@ -101,6 +111,11 @@ class Model_PictureMapper extends Model_TemporalMapper {
             return;
         }
         
+        $row = $result->current();
+                
+        $dataVaultMapper = new Model_ImageDataVaultMapper();
+		$dataVaultMapper->delete($row->fileId);
+		
         $data = array(
             'changed' => date('Y-m-d H:i:s'),
         	self::STATE_FIELDNAME => FALSE,
@@ -122,6 +137,9 @@ class Model_PictureMapper extends Model_TemporalMapper {
         
         $row = $result->current();
         
+        $dataVaultMapper = new Model_ImageDataVaultMapper();
+        $file = $dataVaultMapper->find($row->fileId);
+        
         $categoryMapper = new Model_CategoryMapper();
         $category = $categoryMapper->find($row->categoryId);
         
@@ -130,10 +148,12 @@ class Model_PictureMapper extends Model_TemporalMapper {
 			->setDescription($row->description)
 			->setSrc($row->src)
 			->setSrcCrops($row->srcCrops)
+			->setVisibleExtWeb($row->visibleExtWeb)
 			->setCreated($row->created)
 			->setChanged($row->changed)
 			->setCreatedBy($row->createdBy)
 			->setChangedBy($row->changedBy)
+			->setFile($file)
 			->setCategory($category)
 			->setId($row->id);
 		
@@ -150,6 +170,9 @@ class Model_PictureMapper extends Model_TemporalMapper {
         
         $entries = array();
         foreach ($resultSet as $row) {
+			$dataVaultMapper = new Model_ImageDataVaultMapper();
+			$file = $dataVaultMapper->find($row->fileId, FALSE);
+			
         	$categoryMapper = new Model_CategoryMapper();
         	$category = $categoryMapper->find($row->categoryId);
         	
@@ -162,6 +185,7 @@ class Model_PictureMapper extends Model_TemporalMapper {
 				->setChanged($row->changed)
 				->setCreatedBy($row->createdBy)
 				->setChangedBy($row->changedBy)
+				->setFile($file)
 				->setCategory($category)
 				->setId($row->id);
 				
@@ -178,7 +202,7 @@ class Model_PictureMapper extends Model_TemporalMapper {
 	public function findByCriteria($filters = array(), $limit = NULL, $offset = NULL, $sortColumn = NULL, $sortDirection = NULL) {
 		
 		$where = $this->getFilterQuery($filters);
-					
+				
 		// Order
 		$order = '';
 		switch ($sortColumn) {
@@ -212,9 +236,12 @@ class Model_PictureMapper extends Model_TemporalMapper {
         
         $entries = array();
         foreach ($resultSet as $row) {
+        	$dataVaultMapper = new Model_ImageDataVaultMapper();
+			$file = $dataVaultMapper->find($row->fileId, FALSE);
+			
         	$categoryMapper = new Model_CategoryMapper();
         	$category = $categoryMapper->find($row->categoryId);
-        	
+
         	$entry = new Model_Picture();
         	$entry->setTitle($row->title)
         		->setDescription($row->description)
@@ -224,6 +251,7 @@ class Model_PictureMapper extends Model_TemporalMapper {
 				->setChanged($row->changed)
 				->setCreatedBy($row->createdBy)
 				->setChangedBy($row->changedBy)
+				->setFile($file)
 				->setCategory($category)
 				->setId($row->id);
 				
@@ -255,11 +283,7 @@ class Model_PictureMapper extends Model_TemporalMapper {
 	public function verifyExistTitle($title) {
     	$whereState = sprintf("%s = 1", self::STATE_FIELDNAME);
     	$resultSet = $this->getDbTable()->fetchRow("$whereState AND title = '$title'");
-    	if ($resultSet != NULL) {
-    		return TRUE;
-    	} else {
-    		return FALSE;
-    	}
+    	return $resultSet != NULL? TRUE : FALSE;
     }
     
 	/**
@@ -272,11 +296,7 @@ class Model_PictureMapper extends Model_TemporalMapper {
     public function verifyExistIdAndTitle($id, $title) {
     	$whereState = sprintf("%s = 1", self::STATE_FIELDNAME);
     	$resultSet = $this->getDbTable()->fetchRow("$whereState AND id = $id AND  title = '$title'");
-    	if ($resultSet != NULL) {
-    		return TRUE;
-    	} else {
-    		return FALSE;
-    	}
+    	return $resultSet != NULL? TRUE : FALSE;
     }
     
 	/**

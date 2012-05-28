@@ -208,7 +208,7 @@ com.em.Picture.prototype = {
 	configureDialogForm: function(selector) {with (this) {
 		dialogForm = $(selector).dialog({
 			autoOpen: false,
-			height: 400,
+			height: 210,
 			width: 350,
 			modal: true,
 			close: function(event, ui) {
@@ -382,10 +382,10 @@ com.em.Picture.prototype = {
 	setValidatorForm : function(selector) {
 		validator = $(selector).validate({
 	        rules:{
-//	        	'title':{
-//					required: true,
-//					maxlength: 255
-//				},
+	        	'title':{
+					required: true,
+					maxlength: 255
+				}
 //				'summary':{
 //					required: true
 //				},
