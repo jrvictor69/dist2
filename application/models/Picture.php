@@ -37,6 +37,12 @@ class Model_Picture extends Model_Entity {
 	
 	/**
 	 * 
+	 * @var boolean
+	 */
+	protected $visibleExtWeb;
+		
+	/**
+	 * 
 	 * @var int
 	 */
 	private $createdBy;
@@ -46,6 +52,20 @@ class Model_Picture extends Model_Entity {
 	 * @var int
 	 */
 	private $changedBy;
+	
+	/**
+	 * 
+	 * Id of the DataVault this model is associated with.
+	 * @var int
+	 */
+	protected $fileId;
+	
+	/**
+	 * 
+	 * DataVault this model is associated with.
+	 * @var Model_DataVault
+	 */
+	protected $file;
 	
 	/**
 	 * 
@@ -132,6 +152,22 @@ class Model_Picture extends Model_Entity {
 	}
 	
 	/**
+	 * @return boolean
+	 */
+	public function getVisibleExtWeb() {
+		return $this->visibleExtWeb;
+	}
+
+	/**
+	 * @param boolean $visibleExtWeb
+	 * @return Model_Picture
+	 */
+	public function setVisibleExtWeb($visibleExtWeb) {
+		$this->visibleExtWeb = $visibleExtWeb;
+		return $this;
+	}
+	
+	/**
 	 * @return int
 	 */
 	public function getCreatedBy() {
@@ -160,6 +196,27 @@ class Model_Picture extends Model_Entity {
 	 */
 	public function setChangedBy($changedBy) {
 		$this->changedBy = $changedBy;
+		return $this;
+	}
+	
+	/**
+	 * @return Model_ImageDataVault
+	 */
+	public function getFile() {
+		if (empty($this->file)) {
+			$dataVaultMapper = new Model_ImageDataVaultMapper();
+			$this->file = $dataVaultMapper->find($this->fileId);
+		}
+		return $this->file;
+	}
+
+	/**
+	 * @param Model_ImageDataVault $file
+	 * @return Model_Picture
+	 */
+	public function setFile(Model_ImageDataVault $file) {
+		$this->file = $file;
+		$this->fileId = $file->getId();
 		return $this;
 	}
 	
