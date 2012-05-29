@@ -9,7 +9,9 @@
  */
 
 class Admin_PictureController extends App_Controller_Action {
-	
+	const SRC_PICTURE = "/image/upload/galleryview/photos/";
+	const SRC_CROP_PICTURE = "/image/upload/galleryview/photos/crops/";
+	 
 	/**
 	 * (non-PHPdoc)
 	 * @see App_Controller_Action::init()
@@ -64,9 +66,11 @@ class Admin_PictureController extends App_Controller_Action {
 				$pictureMapper = new Model_PictureMapper();
 				if (!$pictureMapper->verifyExistTitle($formData['title'])) {
 					$imageFile = $form->getElement('file');
+            		$imageFilecrop = $form->getElement('filecrop');
             		
 					try {
 						$imageFile->receive();
+						$imageFilecrop->receive();
 					} catch (Zend_File_Transfer_Exception $e) {
 						$e->getMessage();
 					}
@@ -85,7 +89,8 @@ class Admin_PictureController extends App_Controller_Action {
 					$picture->setFile($dataVault)
 							->setCreatedBy(1)
 							->setDescription($formData['description'])
-							->setSrc("/image/upload/galleryview/photos/")
+							->setSrc(self::SRC_PICTURE)
+							->setSrcCrops(self::SRC_CROP_PICTURE)
 							->setTitle($formData['title']);
 
 					$pictureMapper->save($picture);
@@ -101,6 +106,82 @@ class Admin_PictureController extends App_Controller_Action {
 	
 	/**
 	 * 
+	 * This action shows the form in update the title and description for Picture.
+	 * @access public
+	 */
+	public function updateAction() {
+		$this->_helper->layout()->disableLayout();
+		
+		$form = new Admin_Form_Picture();
+        $form->removeElement('file');
+        $form->removeElement('filecrop');
+
+		$id = $this->_getParam('id', 0);
+		$pictureMapper = new Model_PictureMapper();
+		$picture = $pictureMapper->find($id);
+		if ($picture != NULL) {//security
+			$form->getElement('title')->setValue($picture->getTitle());
+			$form->getElement('description')->setValue($picture->getDescription());
+		} else {
+			$this->stdResponse->success = FALSE;
+			$this->stdResponse->message = _("The requested record was not found.");
+			$this->_helper->json($this->stdResponse);
+		}
+		$this->view->form = $form;
+	}
+	
+	/**
+	 * 
+	 * Updates the title and description of a Picture
+	 * @access public
+	 * 1) Get the record to edit
+	 * 2) Validate the record was no deleted
+	 * 3) Validate the existance of another Picture with the same title.
+	 * 4) Saves the changes.
+	 */
+	public function updateSaveAction() {
+		$this->_helper->viewRenderer->setNoRender(TRUE);
+		
+		$form = new Admin_Form_Picture();
+		$form->removeElement('file');
+        $form->removeElement('filecrop');
+		
+		$formData = $this->getRequest()->getPost();
+     	if ($form->isValid($formData)) {
+			$id = $this->_getParam('id', 0);
+                	
+			$pictureMapper = new Model_PictureMapper();
+			$picture = $pictureMapper->find($id);
+			if ($picture != NULL) {
+				if (!$pictureMapper->verifyExistTitle($formData['title']) || $pictureMapper->verifyExistIdAndTitle($id, $formData['title'])) {
+					$picture->setTitle($formData['title'])
+						->setDescription($formData['description'])
+						->setChangedBy(Zend_Auth::getInstance()->getIdentity()->id);
+					
+					$pictureMapper->update($id, $picture);
+
+					$this->stdResponse->success = TRUE;
+					$this->stdResponse->message = _("Picture updated");
+				} else {
+					$this->stdResponse->success = FALSE;
+					$this->stdResponse->name_duplicate = TRUE;
+					$this->stdResponse->message = _("The Picture already exists");
+				}
+			} else {
+				$this->stdResponse->success = FALSE;
+				$this->stdResponse->message = _("The Picture does not exists");
+			}
+      	} else {
+			$this->stdResponse->success = FALSE;
+			$this->stdResponse->messageArray = $form->getMessages();
+			$this->stdResponse->message = _("The form contains error and is not saved");
+      	}
+        // sends response to client
+        $this->_helper->json($this->stdResponse);
+	}
+	
+	/**
+	 * 
 	 * Downloads Picture
 	 * @access public
 	 */
@@ -109,26 +190,21 @@ class Admin_PictureController extends App_Controller_Action {
 		$this->_helper->viewRenderer->setNoRender(true);
 
 		$id = (int)$this->_getParam('id', 0);
-    	 
+    			
 		$pictureMapper = new Model_PictureMapper();
 		$picture = $pictureMapper->find($id);
 		
    	 	$file = $picture->getFile();
-    	if ($file->getBinary()) {
-    		$this->_response
-    			//For downloading
-    			->setHeader('Content-type', $file->getMimeType())
-				->setHeader('Content-Disposition', sprintf('attachment; filename="%s"', $file->getFilename()))
-				->setHeader('Content-Transfer-Encoding', 'binary')
-				->setHeader('Content-Length', strlen($file->getBinary()))
-				// IE headers to make sure it will download it in https
-				->setHeader('Expires', '0', TRUE)
-				->setHeader('Cache-Control', 'private', TRUE)
-				->setHeader('Pragma', 'cache');
-    		echo $file->getBinary();
-    	} else {
-    		$this->_response->setHttpResponseCode(404);
-    	}
+   		$this->_response
+				->setHeader('Content-type', $file->getMimeType())
+				->setHeader('Content-Disposition', sprintf('attachment; filename="%s"', $file->getFilename()));
+
+		$protocol = 'http:';
+		if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ) {
+			$protocol = 'https:';
+		}
+		
+		readfile(sprintf('%s//%s%s%s', $protocol, $_SERVER['SERVER_NAME'], $picture->getSrc(), $file->getFilename()));
 	}
 	
 	/**
@@ -239,5 +315,16 @@ class Admin_PictureController extends App_Controller_Action {
 		}
 				
 		return $filters;
+	}
+	
+	/**
+	 * 
+	 * Outputs an XHR response, loads the titles of the pictures. 
+	 */
+	public function autocompleteAction() {
+		$titleAuto = $this->_getParam('title_auto', NULL);
+
+		$this->stdResponse->items = array('one', 'javascript', 'java');
+		$this->_helper->json($this->stdResponse);		
 	}
 }

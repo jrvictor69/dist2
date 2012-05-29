@@ -41,7 +41,7 @@ com.em.Picture.prototype = {
 	 * Initializes all the events for items on page
 	 */
 	initEvents: function() {with(this) {
-		$("#titleFilter").bind('keydown', function(e) {
+		$("#nameFilter").bind('keydown', function(e) {
 			if (e.type == 'keydown' && e.which == '13') {
 				initDisplayStart();
 				table.oApi._fnAjaxUpdate(table.fnSettings());
@@ -113,6 +113,30 @@ com.em.Picture.prototype = {
 	
 	/**
 	 * 
+	 * Configures the autocomplete of the filter
+	 * @param selector
+	 */
+	configureAuto: function(selector) { with (this) {
+		$(selector).autocomplete({
+			source: function(request, response) {
+				$.ajax({
+					url: "http://dist2/admin/picture/autocomplete",
+					dataType: 'json',
+					data: {title_auto: request.term},
+					success: function(data, textStatus, XMLHttpRequest) {
+						response($.map(data.items, function(item) {
+							return {
+								label: item
+							};
+						}));
+					}
+				});
+			}
+		});
+	}},
+	
+	/**
+	 * 
 	 * Configures the table and elements
 	 * @param selector
 	 */
@@ -128,26 +152,26 @@ com.em.Picture.prototype = {
 			"aoColumns"     : getColumns(),
 		    "sPaginationType" : "full_numbers",
 			"oLanguage": {
-				"sEmptyTable": "No Catagory found."
+				"sEmptyTable": "No Picture found."
 			},
 			"fnDrawCallback": function() {
 				clickToUpdate('#tblPicture a[id^=update-picture-]');
 			},
 			
 			"fnServerData": function (sSource, aoData, fnCallback ) { 
-				//applying filter_title
+				//applying filter title
 				var position = getPosition(aoData, 'filter_title');
 				
 				if (position == -1)
-					aoData.push({"title": "filter_title", "value": $('#titleFilter').attr('value')});				
+					aoData.push({"name": "filter_title", "value": $('#nameFilter').attr('value')});				
 				else
-					aoData[position].value=$('#titleFilter').attr('value');
+					aoData[position].value=$('#nameFilter').attr('value');
 				
-				//applying filter_maingroup
+				//applying filter category
 				position = getPosition(aoData,'filter_category');
 				
 				if(position == -1)
-					aoData.push({"title": "filter_category", "value": $('#categoryFilter').attr('value')});				
+					aoData.push({"name": "filter_category", "value": $('#categoryFilter').attr('value')});				
 				else
 					aoData[position].value = $('#categoryFilter').attr('value');
 				
@@ -215,7 +239,7 @@ com.em.Picture.prototype = {
 	configureDialogForm: function(selector) {with (this) {
 		dialogForm = $(selector).dialog({
 			autoOpen: false,
-			height: 210,
+			height: 240,
 			width: 350,
 			modal: true,
 			close: function(event, ui) {
@@ -391,17 +415,16 @@ com.em.Picture.prototype = {
 	        rules:{
 	        	'title':{
 					required: true,
-					maxlength: 255
+					maxlength: 45
+				},
+				'file':{
+					required: true,
+					accept: "jpg|png|gif"
+				},
+				'filecrop':{
+					required: true,
+					accept: "jpg|png|gif"
 				}
-//				'summary':{
-//					required: true
-//				},
-//				'fount':{
-//					required: true
-//				},
-//				'imageFile':{
-//					accept: "git|jpg|png"
-//				}
 	        }
 	    });
 	},
@@ -442,5 +465,31 @@ com.em.Picture.prototype = {
 			this.alert = new com.em.Alert();
 		}
 		alert.show(message, header);
+	}},
+	
+	/**
+	 * 
+	 * Shows flash message success if it exists, if not creates a new instance of flash message success and shows it.
+	 * @param message string
+	 * @param header string
+	 */
+	flashSuccess: function(message, header) {with (this) {
+		if (this.alert == undefined) {
+			this.alert = new com.em.Alert();
+		}
+		alert.flashSuccess(message, header);
+	}},
+	
+	/**
+	 * 
+	 * Shows flash message error if it exists, if not creates a new instance of flash message error and shows it.
+	 * @param message string
+	 * @param header string
+	 */
+	flashError: function(message, header) {with (this) {
+		if (this.alert == undefined) {
+			this.alert = new com.em.Alert();
+		}
+		alert.flashError(message, header);
 	}}
 };

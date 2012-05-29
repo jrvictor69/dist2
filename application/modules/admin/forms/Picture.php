@@ -32,7 +32,13 @@ class Admin_Form_Picture extends Zend_Form {
 				->setRequired(TRUE)
 				->setDestination(APPLICATION_PATH.'/../public/image/upload/galleryview/photos')
 				->addValidator('Extension', false, 'jpg, png, gif');
+				
+		$filecrop = new Zend_Form_Element_File('filecrop');
+		$filecrop->setLabel(_('Crop file'))
+				->setRequired(TRUE)
+				->setDestination(APPLICATION_PATH.'/../public/image/upload/galleryview/photos/crops')
+				->addValidator('Extension', false, 'jpg, png, gif');
 
-		$this->addElements(array($title, $description, $file));
+		$this->addElements(array($title, $description, $file, $filecrop));
 	}
 }

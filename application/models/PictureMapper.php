@@ -82,19 +82,16 @@ class Model_PictureMapper extends Model_TemporalMapper {
         if (0 == count($result)) {
             return;
         }
-        
-		$file = $picture->getFile();
-		$dataVaultMapper = new Model_ImageDataVaultMapper();
-		$dataVaultMapper->save($file);
-		
+        		
 	 	$data = array(
 			'title' => $picture->getTitle(),
 			'description' => $picture->getDescription(),
-			'src' => $picture->getSrc(),
-			'srcCrops' => $picture->getSrcCrops(),
+//			'src' => $picture->getSrc(),
+//			'srcCrops' => $picture->getSrcCrops(),
 			'changed' => date('Y-m-d H:i:s'),
 			'changedBy' => $picture->getChangedBy(),
-			'categoryId' => $picture->getCategory()->getId()
+//			'categoryId' => $picture->getCategory()->getId()
+	 		'categoryId' => 35
 		);
 
 		$this->getDbTable()->update($data, array('id = ?' => $id));
