@@ -63,22 +63,29 @@ class Admin_PictureController extends App_Controller_Action {
 			if ($form->isValid($formData)) {
 				$pictureMapper = new Model_PictureMapper();
 				if (!$pictureMapper->verifyExistTitle($formData['title'])) {
+					$imageFile = $form->getElement('file');
+            		
+					try {
+						$imageFile->receive();
+					} catch (Zend_File_Transfer_Exception $e) {
+						$e->getMessage();
+					}
 					
-					$fh = fopen($_FILES['file']['tmp_name'], 'r');
-					$binary = fread($fh, filesize($_FILES['file']['tmp_name']));
-					fclose($fh);
+//					$fh = fopen($_FILES['file']['tmp_name'], 'r');
+//					$binary = fread($fh, filesize($_FILES['file']['tmp_name']));
+//					fclose($fh);
 					
 					$mimeType = $_FILES['file']['type'];
 					$fileName = $_FILES['file']['name'];
 
 					$dataVault = new Model_ImageDataVault();
-					$dataVault->setFilename($fileName)->setMimeType($mimeType)->setBinary($binary);
+					$dataVault->setFilename($fileName)->setMimeType($mimeType)->setBinary("");
 
 					$picture = new Model_Picture();
 					$picture->setFile($dataVault)
 							->setCreatedBy(1)
 							->setDescription($formData['description'])
-							->setSrc("src")
+							->setSrc("/image/upload/galleryview/photos/")
 							->setTitle($formData['title']);
 
 					$pictureMapper->save($picture);
@@ -144,7 +151,7 @@ class Admin_PictureController extends App_Controller_Action {
 				$pictureMapper->delete($id);
 				$removeCount++;
 			}
-			$message = sprintf(ngettext('%d archive removed.', '%d archives removed.', $removeCount), $removeCount);            	
+			$message = sprintf(ngettext('%d picture removed.', '%d pictures removed.', $removeCount), $removeCount);            	
 			$this->stdResponse->success = TRUE;
 			$this->stdResponse->message = _($message);
 		} else {
@@ -193,6 +200,7 @@ class Admin_PictureController extends App_Controller_Action {
 			$row[] = $picture->getTitle();
 			$row[] = $picture->getDescription();
 			$row[] = $picture->getFile()->getFilename();
+			$row[] = $picture->getCategory()->getName();
 			$row[] = $created->toString("dd.MM.YYYY");
 			$row[] = $changed;
 			$row[] = '[]';

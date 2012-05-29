@@ -99,10 +99,10 @@ class Model_ImageDataVaultMapper {
         if (0 == count($result)) {
             return;
         }
-        
+
         $data = array(
-            'changed' => date('Y-m-d H:i:s'),
-        	'state' => FALSE,
+//            'changed' => date('Y-m-d H:i:s'),
+        	'state' => FALSE
         );
         
     	$this->getDbTable()->update($data, array('id = ?' => $id));

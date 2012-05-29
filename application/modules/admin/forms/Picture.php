@@ -30,7 +30,7 @@ class Admin_Form_Picture extends Zend_Form {
 		$file = new Zend_Form_Element_File('file');
 		$file->setLabel(_('File'))
 				->setRequired(TRUE)
-				->setDestination(APPLICATION_PATH.'/../public/image/upload')
+				->setDestination(APPLICATION_PATH.'/../public/image/upload/galleryview/photos')
 				->addValidator('Extension', false, 'jpg, png, gif');
 
 		$this->addElements(array($title, $description, $file));

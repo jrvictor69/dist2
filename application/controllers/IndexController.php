@@ -23,7 +23,9 @@ class IndexController extends App_Controller_Action {
     }
 
 	public function homeAction() {
-        // action body
+		$pictureMapper = new Model_PictureMapper();
+		$pictures = $pictureMapper->findByCriteria();
+		$this->view->pictures = $pictures;				        
     }
     
 	public function aboutAction() {

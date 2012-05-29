@@ -63,7 +63,7 @@ class Model_PictureMapper extends Model_TemporalMapper {
 			'createdBy' => $picture->getCreatedBy(),
 //			'categoryId' => $picture->getCategory()->getId(),
 			'fileId' => $file->getId(),
-			'categoryId' => 153,
+			'categoryId' => 35,
         	self::STATE_FIELDNAME => TRUE
         );
         
@@ -112,7 +112,7 @@ class Model_PictureMapper extends Model_TemporalMapper {
         }
         
         $row = $result->current();
-                
+		                
         $dataVaultMapper = new Model_ImageDataVaultMapper();
 		$dataVaultMapper->delete($row->fileId);
 		
@@ -215,18 +215,26 @@ class Model_PictureMapper extends Model_TemporalMapper {
 				break;
 				
 			case 3:
-				$order = 'categoryId';
+				$order = 'fileId';
 				break;
 			
 			case 4:
-				$order = 'created';
+				$order = 'categoryId';
 				break;
 				
 			case 5:
+				$order = 'created';
+				break;
+				
+			case 6:
 				$order = 'changed';
 				break;
 				
 			default: $order = 'title';
+		}
+		
+		if ($sortDirection == NULL) {
+			$sortDirection = 'asc';
 		}
 		
 		$sortOrder = sprintf("%s %s", $order, $sortDirection);
