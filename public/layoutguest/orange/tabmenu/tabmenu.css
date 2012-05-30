@@ -59,8 +59,6 @@ h2 {
       background-position:100% -42px;
       }
       
-/*      victor*/
-	#tabs ul li.active {  
-		background:url("tabright.gif") no-repeat right top;
-/*      color: blue;*/
-      }
+/*@autor victor*/
+#tabs ul li a.active {background-position:0% -42px;}
+#tabs ul li a.active span {background-position:100% -42px;}

@@ -5,9 +5,9 @@
 		$childPage = $container->findOneBy('active', TRUE);
 		$parent = $childPage->getParent();
 		foreach ($parent as $submenu):?>
-			<li class="<?php echo $submenu->isActive() ? "active" : '';?>">
+			<li>
 				<?php $label = $this->translate($submenu->getLabel());?>
-				<a href="<?php echo $submenu->getHref();?>" title="<?php echo $label;?>"><span><?php echo $label;?></span></a>
+				<a class="<?php echo $submenu->isActive() ? "active" : '';?>" href="<?php echo $submenu->getHref();?>" title="<?php echo $label;?>"><span><?php echo $label;?></span></a>
 			</li>
 		<?php endforeach;?>
 	</ul>

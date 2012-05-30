@@ -54,12 +54,12 @@
      			<ja>
 					<label>Young</label>
 					<action>ja</action>
-					<controller>news</controller>
+					<controller>News</controller>
 				</ja>
 				<guides>
 					<label>More Guides</label>
-					<action>guias</action>
-					<controller>news</controller>
+					<action>guides</action>
+					<controller>News</controller>
 				</guides>
 			</pages>
     	</news>	
