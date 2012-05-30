@@ -256,4 +256,22 @@ class Model_CategoryMapper extends Model_TemporalMapper {
             
         return $data;
     }
+    
+    /**
+     *
+     * Finds only names by criteria
+     * @param array $filters
+     */
+	public function findByCriteriaOnlyName($filters = array()) {
+		$where = $this->getFilterQuery($filters);
+		$sortOrder = sprintf("%s %s", 'name', 'asc');
+		$whereState = sprintf("%s = 1", self::STATE_FIELDNAME);
+		
+		$resultSet = $this->getDbTable()->fetchAll("$whereState $where", $sortOrder);
+		$data = array();
+		foreach ($resultSet as $row) {
+			$data[] = $row->name;
+		}
+		return $data;
+    }
 }

@@ -23,7 +23,8 @@
 	category.setUrl({
 		toTable : '<?php echo $this->url(array('action'=>'read-items'));?>',
 		toBase : '<?php echo $this->baseUrl(); ?>',
-		toUpdate : '<?php echo $this->url(array('action'=>'update')); ?>'
+		toUpdate : '<?php echo $this->url(array('action'=>'update')); ?>',
+		toAutocomplete : '<?php echo $this->url(array('action'=>'autocomplete'));?>'
 	});
 	
 	var headers = new Object();
@@ -40,5 +41,6 @@
 	category.clickToAdd('#create-category');
 	category.clickToUpdate('#tblCategory a[id^=update-category-]');
 	category.clickToDelete('#delete-category');
+	category.configureAuto('input#nameFilter');
 });
 </script>

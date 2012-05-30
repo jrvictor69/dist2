@@ -381,6 +381,30 @@ com.em.Category.prototype = {
 	
 	/**
 	 * 
+	 * Configures the name autocomplete of the filter
+	 * @param selector
+	 */
+	configureAuto: function(selector) { with (this) {
+		$(selector).autocomplete({
+			source: function(request, response) {
+				$.ajax({
+					url: url.toAutocomplete,
+					dataType: 'json',
+					data: {name_auto: request.term},
+					success: function(data, textStatus, XMLHttpRequest) {
+						response($.map(data.items, function(item) {
+							return {
+								label: item
+							};
+						}));
+					}
+				});
+			}
+		});
+	}},
+	
+	/**
+	 *
 	 * Validates category form
 	 * @param selector
 	 */

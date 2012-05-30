@@ -252,11 +252,11 @@ class Admin_CategoryController extends App_Controller_Action {
 	 * @return array(field, filter, operator)
 	 */
 	private function getFilters($filterParams) {
-		foreach ($filterParams as $field => $filter) {
-			$filterParams[$field] = trim($filter);
-		}
-		
 		$filters = array ();
+		
+		if (empty($filterParams)) {
+			return $filters;
+		}
 		
 		if (!empty($filterParams['name'])) {
 			$filters[] = array('field' => 'name', 'filter' => '%'.$filterParams['name'].'%', 'operator' => 'LIKE');
@@ -283,4 +283,17 @@ class Admin_CategoryController extends App_Controller_Action {
         	$this->_messenger->addError(_("An error occurred while processing the data. <br/> Please Try again."));
        	$view->message = $view->seeMessages();
 	}
+	
+	/**
+	 *
+	 * Outputs an XHR response, loads the names of the categories.
+	 */
+	public function autocompleteAction() {
+		$filterParams['name'] = $this->_getParam('name_auto', NULL);
+		$filters = $this->getFilters($filterParams);
+		
+		$categoryMapper = new Model_CategoryMapper();
+		$this->stdResponse->items = $categoryMapper->findByCriteriaOnlyName($filters);
+		$this->_helper->json($this->stdResponse);
+	}	
 }
