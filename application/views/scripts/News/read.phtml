@@ -1,0 +1,34 @@
+<?php $this->headScript()->appendFile($this->baseUrl() . "/js/Newsja.js","text/javascript");?>
+
+<div style="margin:20px;">
+	<?php echo $this->tableHeader('filterHeader', _("Filter Picture"));?>
+	<div id="containerFormFilter">
+		<?php echo $this->formFilter; ?>
+	</div>
+	<br>
+	<?php echo $this->tableHeader('newsHeader', _("News ja"));?>
+	<?php echo $this->tableList("tblNews");?>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+	var news = new com.em.Newsja();
+			
+	// network
+	news.setUrl({
+		toTable : '<?php echo $this->url(array('action'=>'read-items'));?>',
+		toBase : '<?php echo $this->baseUrl(); ?>'
+	});
+	
+	var headers = new Object();
+	headers.headerArray = new Array(
+		'<?php echo $this->translate('Title');?>',
+		'<?php echo $this->translate('Description');?>');
+//	news.setHeaders(headers);
+	// configuration of widgets
+	news.configureTable('#tblNews', true);
+	
+	// Filter
+//	news.configureAuto('input#nameFilter');
+});
+</script>

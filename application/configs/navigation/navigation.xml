@@ -53,7 +53,7 @@
     		<pages>
      			<ja>
 					<label>Young</label>
-					<action>ja</action>
+					<action>read</action>
 					<controller>News</controller>
 				</ja>
 				<guides>
