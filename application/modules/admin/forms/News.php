@@ -57,7 +57,7 @@ class Admin_Form_News extends Zend_Form {
               
         $file = new Zend_Form_Element_File('imageFile');
 		$file->setLabel(_('Upload Image'))
-			->setDestination(APPLICATION_PATH.'/../data/upload')
+			->setDestination(APPLICATION_PATH.'/../public/image/upload/news')
 			->addValidator('Extension', false, 'jpg, png, gif')            
             ;
         	

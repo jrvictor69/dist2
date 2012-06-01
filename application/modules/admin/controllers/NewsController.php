@@ -44,15 +44,16 @@ class Admin_NewsController extends App_Controller_Action {
 			$formData = $this->_request->getPost();
 	        if ($form->isValid($formData)) {
         		$newsMapper = new Model_NewsMapper();
-        		if (!$newsMapper->verifyExistTitle($formData['title'])) {				
-        			// Managerial
+        		if (!$newsMapper->verifyExistTitle($formData['title'])) {
+        			$fileName = $_FILES['imageFile']['name'];
+        			
         			$imageFile = $form->getElement('imageFile');
         			try {
 		 				$imageFile->receive();
 					} catch (Zend_File_Transfer_Exception $e) {
 						$e->getMessage();
 					}
-					
+					// Managerial
 					$managerialId = Zend_Auth::getInstance()->getIdentity()->id;
 					$managerial = new Model_Managerial();
 					$managerial->setId($managerialId);
@@ -69,7 +70,7 @@ class Admin_NewsController extends App_Controller_Action {
 						->setCategory($category)
 						->setManagerial($managerial)
 						->setTitle($formData['title'])
-						->setImagename("image name")
+						->setImagename($fileName)
 						->setCreatedBy($managerialId)
 						;
 					

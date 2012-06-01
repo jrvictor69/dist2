@@ -145,7 +145,7 @@ com.em.Newsja.prototype = {
 			"sWidth": "30%",
 			"bSercheable": "true",
 			fnRender : function (oObj){
-				return '<a id="update-news-'+oObj.aData[0]+'" href="'+url.toUpdate+'/id/'+oObj.aData[0]+'">'+oObj.aData[1]+'</a>';
+				return '<a id="update-news-'+oObj.aData[0]+'" href="'+url.toUpdate+'/id/'+oObj.aData[0]+'">'+oObj.aData[1]+'</a><div><img src="/image/upload/news/'+oObj.aData[3]+'" height="90" width="100" title="Lone Tree Yellowstone" data-description="A solitary tree surviving another harsh winter in Yellowstone National Park. Yellowstone National Park, Wyoming. (Photo and caption by Anita Erdmann/Nature/National Geographic Photo Contest) " /></div>';
 				}
 			});
 		columns.push({"sWidth": "70%"});

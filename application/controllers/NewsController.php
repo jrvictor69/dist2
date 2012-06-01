@@ -69,6 +69,7 @@ class NewsController extends App_Controller_Action {
 			$row[] = $information->getId();
 			$row[] = $information->getTitle();
 			$row[] = $information->getSummary();
+			$row[] = $information->getImagename();
 			$data[] = $row;
 			$posRecord++;
 		}
