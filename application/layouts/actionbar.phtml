@@ -3,7 +3,11 @@
 		<?php
 		$container = $this->navigation()->getContainer();
 		$childPage = $container->findOneBy('active', TRUE);
-		$parent = $childPage->getParent();
+		if (!$childPage->hasPages()) {
+			$parent = $childPage->getParent();	
+		} else {
+			$parent = $childPage;	
+		}
 		foreach ($parent as $submenu):?>
 			<li>
 				<?php $label = $this->translate($submenu->getLabel());?>

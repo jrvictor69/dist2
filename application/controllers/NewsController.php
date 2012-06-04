@@ -20,12 +20,13 @@ class NewsController extends App_Controller_Action {
 	}
 
     public function indexAction() {
-		$this->_helper->redirector("read");
+//		$this->_helper->redirector("read");
+		$this->_helper->redirector('read', NULL, NULL, array('type'=>'news'));
     }
     
 	public function jaAction() {
-		
-    }
+		$this->view->navigation()->getContainer()->findOneBy('id', 'newsja')->setActive(TRUE);
+	}
     
 	public function readAction() {
 		$formFilter = new Form_SearchFilter();

@@ -23,6 +23,8 @@ class IndexController extends App_Controller_Action {
     }
 
 	public function homeAction() {
+		$this->view->navigation()->getContainer()->findOneBy('id', 'home')->setActive(TRUE);
+		
 		$pictureMapper = new Model_PictureMapper();
 		$pictures = $pictureMapper->findByCriteria();
 		$this->view->pictures = $pictures;				        

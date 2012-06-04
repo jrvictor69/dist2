@@ -4,14 +4,13 @@
     	<home>
 	   		<id>home</id>
 			<label>Home</label>
-			<controller>index</controller>
-			<action>index</action>
+			<controller>Index</controller>
+			<action>home</action>
 			<pages>
 		    	<home>
-					<id>home</id>
 			   		<label>Home</label>
+			   		<controller>Index</controller>
 			   		<action>home</action>
-			   		<controller>index</controller>
 			   	</home>
 	   		</pages>   		
     	</home>
@@ -24,42 +23,43 @@
 <!--			<controller>whowe</controller>-->
 	   		<pages>
 		    	<history>
-			   		<label>Our History</label>
+			   		<label>Our History</label>			   		
+			   		<controller>Whowe</controller>
 			   		<action>history</action>
-			   		<controller>whowe</controller>
 			   	</history>
 			   	<visionMission>
 			   		<label>Vision  Mission</label>
-			   		<action>visionmission</action>
-			   		<controller>whowe</controller>  
+			   		<controller>Whowe</controller>
+			   		<action>visionmission</action>  
 			    </visionMission>
 		    	<logo>
 			   		<label>Our Logo</label>
-			   		<action>logo</action>
-			   		<controller>whowe</controller>    	
+			   		<controller>Whowe</controller>
+			   		<action>logo</action>    	
 			    </logo>
 			    <belief>
-			   		<label>Our Belief</label>
-			   		<action>belief</action>
-			   		<controller>whowe</controller>    	
+			   		<label>Our Belief</label>		   		
+					<controller>Whowe</controller>
+					<action>belief</action>    	
 			    </belief>
 	   		</pages>    		
     	</whowe>
     	
     	<news>
-    		<label>News</label>
-	   		<action>index</action>
-			<controller>news</controller>
+    		<label>News</label>	   		
+			<controller>News</controller>
+			<action>index</action>
     		<pages>
      			<ja>
+     				<id>newsja</id>
 					<label>Young</label>
-					<action>read</action>
 					<controller>News</controller>
+					<action>read</action>
 				</ja>
 				<guides>
 					<label>More Guides</label>
-					<action>guides</action>
 					<controller>News</controller>
+					<action>guides</action>
 				</guides>
 			</pages>
     	</news>	
