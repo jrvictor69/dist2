@@ -10,7 +10,7 @@
 				<ul>			
 					<?php $submenus = $menu->getPages(); ?>
 					<?php foreach ($submenus as $submenu):?>
-					<li><a href="<?php echo $submenu->getHref();?>"><span><?php echo $this->translate($submenu->getLabel());?></span></a>
+					<li><a href="<?php echo $submenu->getHref();?>"><span><?php echo $this->translate($submenu->getLabel());?></span></a></li>
 					<?php endforeach; ?>
 				</ul>			
 			</div>
