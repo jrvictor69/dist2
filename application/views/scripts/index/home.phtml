@@ -2,7 +2,12 @@
 <?php $this->headScript()->appendFile($this->baseUrl() . "/js/lib/galleryView/js/jquery.easing.1.3.js","text/javascript");?>
 <?php $this->headScript()->appendFile($this->baseUrl() . "/js/lib/galleryView/js/jquery.galleryview-3.0-dev.js","text/javascript");?>
 <?php $this->headLink()->appendStylesheet($this->baseUrl() . "/js/lib/galleryView/css/jquery.galleryview-3.0-dev.css");?>
-
+<!-- title -->
+<div id="page-title">
+	<span class="title">The Blog</span>
+	<span class="subtitle">Donec eu libero sit amet quam egestas semper.</span>
+</div>
+<!-- ENDS title -->
 		<ul id="myGallery">
             <li><img data-frame="/image/upload/galleryview/photos/crops/bp1.jpg" src="/image/upload/galleryview/photos/bp1.jpg" title="Lone Tree Yellowstone" data-description="A solitary tree surviving another harsh winter in Yellowstone National Park. Yellowstone National Park, Wyoming. (Photo and caption by Anita Erdmann/Nature/National Geographic Photo Contest) " /></li>
             <li><img data-frame="/image/upload/galleryview/photos/crops/bp2.jpg" src="/image/upload/galleryview/photos/bp2.jpg" title="Is He Still There?!" data-description="One morning while on the Big Island of Hawaii, i exploring my surroundings to see if i could find something to photograph. I almost went back inside when something on this huge palm tree leaf caught my eye. I stayed around and it was this little gecko, startled by my presence he was hidden between the ridges of the leaf. He would pop his head up periodically to check his surroundings, as soon as he saw i was still there he would hide again. We played this game for a while until i got the shot. Holualoa big Island, Hawaii. (Photo and caption by Lorenzo Menendez/Nature/National Geographic Photo Contest)" /></li>
@@ -24,7 +29,101 @@
         	<li><img data-frame="<?php echo $picture->getSrcCrops() . $picture->getFile()->getFilename();?>" src="<?php echo $picture->getSrc() . $picture->getFile()->getFilename();?>" title="<?php echo $picture->getTitle();?>" data-description="<?php echo $picture->getDescription();?>"/></li>
         <?php }?> 
         </ul>
-        
+ 
+ 
+<!-- content -->
+
+						
+							<!-- TABS -->
+							<!-- the tabs -->
+							<ul class="tabs">
+								<li><a href="#"><span>Featured Pages</span></a></li>
+								<li><a href="#"><span>Information</span></a></li>
+								<li><a href="#"><span>Recent posts</span></a></li>
+							</ul>
+							
+							<!-- tab "panes" -->
+							<div class="panes">
+							
+								<!-- Posts -->
+								<div>
+									<ul class="blocks-thumbs thumbs-rollover">
+										<li>
+											<a href="single.html" class="thumb" title="An image"><img src="img/dummies/282x150.gif" alt="Post" /></a>
+											<div class="excerpt">
+												<a href="single.html" class="header">Lorem ipsum dolor</a>
+												Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra.
+											</div>
+											<a href="single.html" class="link-button"><span>Read more &#8594;</span></a>
+										</li>
+										<li>
+											<a href="single.html" class="thumb" title="An image"><img src="img/dummies/282x150.gif" alt="Post" /></a>
+											<div class="excerpt">
+												<a href="single.html" class="header">Lorem ipsum dolor</a>
+												Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra.
+											</div>
+											<a href="single.html" class="link-button"><span>Read more &#8594;</span></a>
+										</li>
+										<li>
+											<a href="single.html" class="thumb" title="An image"><img src="img/dummies/282x150.gif" alt="Post" /></a>
+											<div class="excerpt">
+												<a href="single.html" class="header">Lorem ipsum dolor</a>
+												Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra.
+											</div>
+											<a href="single.html" class="link-button"><span>Read more &#8594;</span></a>
+										</li>
+									</ul>
+								</div>
+								<!-- ENDS posts -->
+								
+								<!-- Information  -->
+								<div>
+									<div class="plain-text">
+										<h6>Pellentesque habitant morbi tristique senectus et netus et malesuada.</h6> 
+										<p>Fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Cursus faucibus, tortor neque egestas augue, eu vulputate magna eros eu erat. Aliquam erat volutpat. Nam dui mi, tincidunt quis, accumsan porttitor, facilisis luctus, metus. </p>
+										<p>Fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Cursus faucibus, tortor neque egestas augue, eu vulputate magna eros eu erat. Aliquam erat volutpat. Nam dui mi, tincidunt quis, accumsan porttitor, facilisis luctus, metus.Fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper <a href="single.html">This is a link</a>. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Cursus faucibus, tortor neque egestas augue, eu vulputate magna eros eu erat. Aliquam erat volutpat. Nam dui mi, tincidunt quis, accumsan porttitor, facilisis luctus, metus. </p>
+										<a href="single.html" class="link-button"><span>Read more &#8594;</span></a>
+									</div>
+								</div>
+								<!-- ENDS Information -->
+
+								<!-- Posts -->
+								<div>
+									<ul class="blocks-thumbs thumbs-rollover">
+										<li>
+											<a href="single.html" class="thumb" title="An image"><img src="img/dummies/282x150.gif" alt="Post" /></a>
+											<div class="excerpt">
+												<a href="single.html" class="header">Lorem ipsum dolor</a>
+												Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra.
+											</div>
+											<a href="single.html" class="link-button"><span>Read more &#8594;</span></a>
+										</li>
+										<li>
+											<a href="single.html" class="thumb" title="An image"><img src="img/dummies/282x150.gif" alt="Post" /></a>
+											<div class="excerpt">
+												<a href="single.html" class="header">Lorem ipsum dolor</a>
+												Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra.
+											</div>
+											<a href="single.html" class="link-button"><span>Read more &#8594;</span></a>
+										</li>
+										<li>
+											<a href="single.html" class="thumb" title="An image"><img src="img/dummies/282x150.gif" alt="Post" /></a>
+											<div class="excerpt">
+												<a href="single.html" class="header">Lorem ipsum dolor</a>
+												Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra.
+											</div>
+											<a href="single.html" class="link-button"><span>Read more &#8594;</span></a>
+										</li>
+									</ul>
+								</div>
+								<!-- ENDS posts -->
+								
+								
+							</div>
+							<!-- ENDS TABS -->
+		
+		
+					<!-- ENDS content -->      
 <script type="text/javascript">
 	$(function(){
 		$('#myGallery').galleryView({

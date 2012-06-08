@@ -28,7 +28,7 @@
 //			$this->headScript()->appendFile("/layoutguest/orange/dropdownmenu/dropdown.js","text/javascript");
 			
 			$this->headLink()->appendStylesheet("/layoutguest/orange/apycom-red/menu.css");
-			$this->headScript()->appendFile("/layoutguest/orange/apycom-red/menu.js","text/javascript");
+//			$this->headScript()->appendFile("/layoutguest/orange/apycom-red/menu.js","text/javascript");
 		?>
 		<?php //echo $this->jQuery(); ?>
 		<?php echo $this->headMeta(); ?>
@@ -40,17 +40,43 @@
 	<body>
   		<div id="container_header"><p>&nbsp;</p></div>
 			<div id="main">
+				<!-- wrapper-main -->
+				<div class="wrapper">
 				<?php echo $this->partial('header.phtml');?>
 				<?php echo $this->partial('actionbar.phtml');?>
 				<div id="site_content">	
-	  				<div class="sidebar_container">
-						<?php echo $this->layout()->sidebar;?>	  
-       				</div><!--close sidebar_container-->
+<!--	  				<div class="sidebar_container">-->
+						<?php //echo $this->layout()->sidebar;?>	  
+<!--       				</div>close sidebar_container-->
 	  				<div id="content">
+	  					<ul id="sidebar">
+							<!-- init sidebar -->
+							<li>
+								<h6>Categories</h6>		
+								<ul>
+									<li class="cat-item"><a href="#" title="View all posts">Pellentesque habitant morbi</a></li>
+									<li class="cat-item"><a href="#" title="View all posts">Pellentesque habitant morbi</a></li>
+									<li class="cat-item"><a href="#" title="View all posts">Pellentesque habitant morbi</a></li>
+									<li class="cat-item"><a href="#" title="View all posts">Pellentesque habitant morbi</a></li>
+								</ul>
+							</li>	
+							
+							<li>
+								<h6>Archives</h6>		
+								<ul>
+									<li class="cat-item"><a href="#" title="View all posts">Pellentesque habitant morbi</a></li>
+									<li class="cat-item"><a href="#" title="View all posts">Pellentesque habitant morbi</a></li>
+									<li class="cat-item"><a href="#" title="View all posts">Pellentesque habitant morbi</a></li>
+									<li class="cat-item"><a href="#" title="View all posts">Pellentesque habitant morbi</a></li>
+								</ul>
+							</li>
+							<!-- ENDS init sidebar -->
+						</ul>
 						<?php echo $this->layout()->content;?>
       				</div><!--close content-->
 				</div><!--close site_content-->
 				<?php echo $this->partial('footer.phtml');?>
+				</div>
 			</div><!--close main-->
   
 		<div id="container_footer">&nbsp;</div>

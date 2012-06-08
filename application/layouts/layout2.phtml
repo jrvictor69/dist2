@@ -1,17 +1,27 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE  html>
 <html>
 	<head>
-<!--		<meta charset="utf-8">-->
-		<title>NOVA</title>
-		
-		<!-- CSS -->
-<!--		<link rel="stylesheet" href="css/style.css" type="text/css" media="screen" />-->
-	<?php $this->headLink()->appendStylesheet("/layoutguest/nova/HTML/css/reset.css");?>
-	
-	<?php $this->headLink()->appendStylesheet("/layoutguest/nova/HTML/css/styled-elements.css");?>
+		<meta charset="utf-8">
+		<title>NOVA</title>	
+		<?php //$this->headLink()->appendStylesheet("/layoutguest/nova/HTML/css/reset.css");?>
+		<?php $this->headLink()->appendStylesheet("/layoutguest/nova/HTML/css/styled-elements.css");?>
 		<?php $this->headLink()->appendStylesheet("/layoutguest/nova/HTML/css/style.css");?>
-<!--		<link rel="stylesheet" href="css/social-icons.css" type="text/css" media="screen" />-->
-		<?php $this->headLink()->appendStylesheet("/layoutguest/nova/HTML/css/social-icons.css");?>
+		<?php //$this->headLink()->appendStylesheet("/layoutguest/nova/HTML/css/social-icons.css");?>
+		<?php $this->headLink()->appendStylesheet("/layoutguest/nova/HTML/css/tabs.css");?>
+		<?php $this->headScript()->appendFile("/layoutguest/nova/HTML/js/nivo-slider/jquery.nivo.slider.js","text/javascript");?>
+		
+		<?php $this->headScript()->appendFile("/layoutguest/nova/HTML/js/jquery.isotope.min.js","text/javascript");?>
+		
+		<?php $this->headLink()->appendStylesheet("/layoutguest/nova/HTML/css/nivo-slider.css");?>
+		<?php $this->headScript()->appendFile("/layoutguest/nova/HTML/js/tabs.js","text/javascript");?>
+		
+		<!-- JS -->
+		
+		<?php $this->headScript()->appendFile("/layoutguest/nova/HTML/js/easing.js","text/javascript");?>
+		<?php $this->headScript()->appendFile("/layoutguest/nova/HTML/js/jquery.scrollTo-1.4.2-min.js","text/javascript");?>
+		<?php $this->headScript()->appendFile("/layoutguest/nova/HTML/js/jquery.cycle.all.js","text/javascript");?>
+		<?php //$this->headScript()->appendFile("/layoutguest/nova/HTML/js/custom.js","text/javascript");?>
+		
 		<!--[if IE 8]>
 			<link rel="stylesheet" type="text/css" media="screen" href="css/ie8-hacks.css" />
 		<![endif]-->
@@ -35,27 +45,14 @@
 	    	</script>
 		<![endif]-->
 		<!-- ENDS JS -->
-		
-		
-
-  		
-
-		
+				
 		<!-- superfish -->
 <!--		<link rel="stylesheet" media="screen" href="css/superfish.css" /> -->
 		<?php $this->headLink()->appendStylesheet("/layoutguest/nova/HTML/css/superfish.css");?>
-		
-
-
-		
-
+		<?php $this->headLink()->appendStylesheet("/layoutguest/orange/tabmenu/tabmenu.css");?>
 		
 		
-		
-		
-		
-		<?php //$this->headLink()->appendStylesheet("/layoutguest/orange/apycom-red/menu.css");?>
-		<?php ?>
+		<?php $this->headScript()->appendFile("/js/lib/poshytip-1.1/src/jquery.poshytip.min.js","text/javascript");?>
 		<?php //echo $this->jQuery(); ?>
 		<?php echo $this->headMeta(); ?>
 		<?php echo $this->headTitle(); ?>
@@ -68,70 +65,13 @@
 
 			<!-- HEADER -->
 			<div id="header">
-				<!-- wrapper-header -->
-				<div class="wrapper">
-					<a href="index.html"><img id="logo" src="/layoutguest/nova/HTML/img/logo.png" alt="Nova" /></a>
-					<!-- search -->
-					<div class="top-search">
-						<form  method="get" id="searchform" action="#">
-							<div>
-								<input type="text" value="Search..." name="s" id="s" onfocus="defaultInput(this)" onblur="clearInput(this)" />
-								<input type="submit" id="searchsubmit" value=" " />
-							</div>
-						</form>
-					</div>
-					<!-- ENDS search -->
-				</div>
-				<!-- ENDS wrapper-header -->					
+				<?php echo $this->partial('scripts/header.phtml');?>									
 			</div>
 			<!-- ENDS HEADER -->
+						
+			<?php echo $this->partial('navigation.phtml');?>
 			
-			
-			<!-- Menu -->
-			<div id="menu">
-			
-			
-			
-				<!-- ENDS menu-holder -->
-				<div id="menu-holder">
-					<!-- wrapper-menu -->
-					<div class="wrapper">
-						<!-- Navigation -->
-						<ul id="nav" class="sf-menu">
-							<li class="current-menu-item"><a href="index.html">Home<span class="subheader">Welcome</span></a></li>
-							<li><a href="features.html">Features<span class="subheader">Awesome options</span></a>
-								<ul>
-									
-									<li><a href="features-columns.html"><span> Columns layout</span></a></li>
-									<li><a href="features-accordion.html"><span> Accordion</span></a></li>
-									<li><a href="features-toggle.html"><span> Toggle box</span></a></li>
-									<li><a href="features-tabs.html"><span> Tabs</span></a></li>
-									<li><a href="features-infobox.html"><span> Text box</span></a></li>
-									<li><a href="features-monobox.html"><span> Icons</span></a></li>
-								</ul>
-							</li>
-							<li><a href="blog.html">Blog<span class="subheader">Read our posts</span></a></li>
-							<li><a href="portfolio.html">Portfolio <span class="subheader">Showcase work</span></a></li>
-							<li><a href="gallery.html">Gallery<span class="subheader">Featured work</span></a>
-								<ul>
-									<li><a href="gallery.html"><span> Four columns</span></a></li>
-									<li><a href="gallery-3.html"><span> Three columns </span></a></li>
-									<li><a href="gallery-2.html"><span> Two columns </span></a></li>
-									<li><a href="video-gallery.html"><span> Video gallery </span></a></li>
-								</ul>
-							</li>
-							<li><a href="contact.html">Contact<span class="subheader">Get in touch</span></a></li>
-						</ul>
-						<!-- Navigation -->
-					</div>
-					<!-- wrapper-menu -->
-				</div>
-				<!-- ENDS menu-holder -->
-			</div>
-			<!-- ENDS Menu -->
-			
-			
-			
+			<?php echo $this->partial('actionbar.phtml');?>
 
 			<!-- Slider -->
 			
@@ -142,110 +82,13 @@
 				<!-- wrapper-main -->
 				<div class="wrapper">
 					
-					<!-- headline -->
-					<div class="clear"></div>
-					<div id="headline">
-						<span class="main">Nova is a FREE HTML template</span>
-						<span class="sub">Need a professional and sleek html web site design. Try nova is free and easy to use.</span>
-						<a href="http://luiszuno.com/blog/downloads/nova-html-template" id="link" class="link-button-big"><span>Download Nova</span></a> 
-					</div>
-					<!-- ENDS headline -->
 					
 					<!-- content -->
 					<div id="content">
-						
-							<!-- TABS -->
-							<!-- the tabs -->
-							<ul class="tabs">
-								<li><a href="#"><span>Featured Pages</span></a></li>
-								<li><a href="#"><span>Information</span></a></li>
-								<li><a href="#"><span>Recent posts</span></a></li>
-							</ul>
-							
-							<!-- tab "panes" -->
-							<div class="panes">
-							
-								<!-- Posts -->
-								<div>
-									<ul class="blocks-thumbs thumbs-rollover">
-										<li>
-											<a href="single.html" class="thumb" title="An image"><img src="/layoutguest/nova/HTML/img/dummies/282x150.gif" alt="Post" /></a>
-											<div class="excerpt">
-												<a href="single.html" class="header">Lorem ipsum dolor</a>
-												Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra.
-											</div>
-											<a href="single.html" class="link-button"><span>Read more &#8594;</span></a>
-										</li>
-										<li>
-											<a href="single.html" class="thumb" title="An image"><img src="/layoutguest/nova/HTML/img/dummies/282x150.gif" alt="Post" /></a>
-											<div class="excerpt">
-												<a href="single.html" class="header">Lorem ipsum dolor</a>
-												Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra.
-											</div>
-											<a href="single.html" class="link-button"><span>Read more &#8594;</span></a>
-										</li>
-										<li>
-											<a href="single.html" class="thumb" title="An image"><img src="/layoutguest/nova/HTML/img/dummies/282x150.gif" alt="Post" /></a>
-											<div class="excerpt">
-												<a href="single.html" class="header">Lorem ipsum dolor</a>
-												Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra.
-											</div>
-											<a href="single.html" class="link-button"><span>Read more &#8594;</span></a>
-										</li>
-									</ul>
-								</div>
-								<!-- ENDS posts -->
-								
-								<!-- Information  -->
-								<div>
-									<div class="plain-text">
-										<h6>Pellentesque habitant morbi tristique senectus et netus et malesuada.</h6> 
-										<p>Fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Cursus faucibus, tortor neque egestas augue, eu vulputate magna eros eu erat. Aliquam erat volutpat. Nam dui mi, tincidunt quis, accumsan porttitor, facilisis luctus, metus. </p>
-										<p>Fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Cursus faucibus, tortor neque egestas augue, eu vulputate magna eros eu erat. Aliquam erat volutpat. Nam dui mi, tincidunt quis, accumsan porttitor, facilisis luctus, metus.Fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper <a href="single.html">This is a link</a>. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Cursus faucibus, tortor neque egestas augue, eu vulputate magna eros eu erat. Aliquam erat volutpat. Nam dui mi, tincidunt quis, accumsan porttitor, facilisis luctus, metus. </p>
-										<a href="single.html" class="link-button"><span>Read more &#8594;</span></a>
-									</div>
-								</div>
-								<!-- ENDS Information -->
-
-								<!-- Posts -->
-								<div>
-									<ul class="blocks-thumbs thumbs-rollover">
-										<li>
-											<a href="single.html" class="thumb" title="An image"><img src="/layoutguest/nova/HTML/img/dummies/282x150.gif" alt="Post" /></a>
-											<div class="excerpt">
-												<a href="single.html" class="header">Lorem ipsum dolor</a>
-												Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra.
-											</div>
-											<a href="single.html" class="link-button"><span>Read more &#8594;</span></a>
-										</li>
-										<li>
-											<a href="single.html" class="thumb" title="An image"><img src="/layoutguest/nova/HTML/img/dummies/282x150.gif" alt="Post" /></a>
-											<div class="excerpt">
-												<a href="single.html" class="header">Lorem ipsum dolor</a>
-												Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra.
-											</div>
-											<a href="single.html" class="link-button"><span>Read more &#8594;</span></a>
-										</li>
-										<li>
-											<a href="single.html" class="thumb" title="An image"><img src="/layoutguest/nova/HTML/img/dummies/282x150.gif" alt="Post" /></a>
-											<div class="excerpt">
-												<a href="single.html" class="header">Lorem ipsum dolor</a>
-												Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra.
-											</div>
-											<a href="single.html" class="link-button"><span>Read more &#8594;</span></a>
-										</li>
-									</ul>
-								</div>
-								<!-- ENDS posts -->
-								
-								
-							</div>
-							<!-- ENDS TABS -->
-		
-		
-		
+						<?php echo $this->layout()->content;?>
 					</div>
 					<!-- ENDS content -->
+
 				</div>
 				<!-- ENDS wrapper-main -->
 			</div>
@@ -266,70 +109,12 @@
 
 			
 			<!-- FOOTER -->
-			<div id="footer">
-				<!-- wrapper-footer -->
-				<div class="wrapper">
-					<!-- footer-cols -->
-					<ul id="footer-cols">
-						<li class="col">
-							<h6>Pages</h6>
-							<ul>
-								<li class="page_item"><a href="index.html">Home</a></li>
-								<li class="page_item"><a href="features.html">Features</a></li>
-								<li class="page_item"><a href="blog.html">Blog</a></li>
-								<li class="page_item"><a href="portfolio.html">Portfolio</a></li>
-								<li class="page_item"><a href="gallery.html">Gallery</a></li>
-								<li class="page_item"><a href="contact.html">Contact</a></li>
-							</ul>
-						</li>
-						
-						<li class="col">
-							<h6>Categories</h6>
-							<ul>
-								<li><a href="#">Webdesign projects senectus</a></li>
-								<li><a href="#/">Wordpress projects senectus</a></li>
-								<li><a href="#">Vestibulum tortor quam</a></li>
-								<li><a href="#">Code projects amet quam egestas</a></li>
-								<li><a href="#">Web design projects senectus</a></li>
-								<li><a href="#/">Marketplace projects</a></li>
-								<li><a href="#">Writting projects senectus</a></li>
-								<li><a href="#">Drawings projects fames Aenean</a></li>
-								<li><a href="#/">Wordpress projects Aenean ultricies</a></li>
-							</ul>
-						</li>
-						<li class="col">
-							<h6>About the theme</h6>
-							Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Cursus faucibus, tortor neque egestas augue, eu vulputate magna eros.
-						</li>
-						
-					</ul>
-					<!-- ENDS footer-cols -->
-				</div>
-				<!-- ENDS wrapper-footer -->
-			</div>
+			<?php echo $this->partial('footer2.phtml');?>
 			<!-- ENDS FOOTER -->
 		
-		
+
 			<!-- Bottom -->
-			<div id="bottom">
-				<!-- wrapper-bottom -->
-				<div class="wrapper">
-					<div id="bottom-text">2011 Nova all rights reserved. <a href="http://www.luiszuno.com"> Victor.Villca</a> </div>
-					<!-- Social -->
-					<ul class="social ">
-						<li><a href="http://www.facebook.com" class="poshytip  facebook" title="Become a fan"></a></li>
-						<li><a href="http://www.twitter.com" class="poshytip twitter" title="Follow our tweets"></a></li>
-						<li><a href="http://www.dribbble.com" class="poshytip dribbble" title="View our work"></a></li>
-						<li><a href="http://www.addthis.com" class="poshytip addthis" title="Tell everybody"></a></li>
-						<li><a href="http://www.vimeo.com" class="poshytip vimeo" title="View our videos"></a></li>
-						<li><a href="http://www.youtube.com" class="poshytip youtube" title="View our videos"></a></li>
-					</ul>
-					<!-- ENDS Social -->
-					<div id="to-top" class="poshytip" title="To top"></div>
-				</div>
-				<!-- ENDS wrapper-bottom -->
-			</div>
+			<?php echo $this->partial('bottom.phtml');?>
 			<!-- ENDS Bottom -->
-	
 	</body>
 </html>
