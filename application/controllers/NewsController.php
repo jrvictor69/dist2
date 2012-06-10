@@ -31,6 +31,22 @@ class NewsController extends App_Controller_Action {
 	public function readAction() {
 		$formFilter = new Form_SearchFilter();
 		$this->view->formFilter = $formFilter;
+		
+		$newsMapper = new Model_NewsMapper();
+		$news = $newsMapper->findByCriteria();
+		$this->view->news = $news; 
+    }
+    
+	public function resultAction() {
+		$this->view->navigation()->getContainer()->findOneBy('id', 'newsja')->setActive(TRUE);
+		
+		$formFilter = new Form_SearchFilter();
+		$this->view->formFilter = $formFilter;
+    }
+    
+	public function singleAction() {
+		$this->view->navigation()->getContainer()->findOneBy('id', 'newsja')->setActive(TRUE);
+		
     }
     
 	/**
