@@ -47,6 +47,10 @@ class NewsController extends App_Controller_Action {
 	public function singleAction() {
 		$this->view->navigation()->getContainer()->findOneBy('id', 'newsja')->setActive(TRUE);
 		
+		$id = $this->_request->getParam('id', 0);
+		$newsMapper = new Model_NewsMapper();
+		$news = $newsMapper->find($id);
+		$this->view->news = $news;		
     }
     
 	/**

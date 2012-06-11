@@ -227,6 +227,10 @@ class Model_NewsMapper extends Model_TemporalMapper {
 			default: $order = 'title';
 		}
 		
+		if ($sortDirection == NULL) {
+			$sortDirection = 'asc';
+		}
+		
 		$sortOrder = sprintf("%s %s", $order, $sortDirection);
 		
 		$whereState = sprintf("%s = 1", self::STATE_FIELDNAME);
