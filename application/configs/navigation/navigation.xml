@@ -62,6 +62,50 @@
 					<action>guides</action>
 				</guides>
 			</pages>
-    	</news>	
-   	</navigation>
+    	</news>
+    	
+    	<pathfinder>
+    		<id>pathfinder</id>
+    		<label>Conquistadores</label>	   		
+			<uri>#</uri>
+    		<pages>
+     			<alas>
+     				<id>alas</id>
+					<label>Alas de Orion</label>
+					<controller>Pathfinder</controller>
+					<action>alasorion</action>
+				</alas>
+				<estrella>
+					<id>estrella</id>
+					<label>Estrella de David</label>
+					<controller>Pathfinder</controller>
+					<action>estrelladavid</action>
+				</estrella>
+				<leon>
+					<id>leon</id>
+					<label>Leon de Juda</label>
+					<controller>Pathfinder</controller>
+					<action>leonjuda</action>
+				</leon>
+				<nuam>
+					<id>nuam</id>
+					<label>Nuevo Amanecer</label>
+					<controller>Pathfinder</controller>
+					<action>nuevoamanecer</action>
+				</nuam>
+				<nuori>
+					<id>nuori</id>
+					<label>Nuevo Oriente</label>
+					<controller>Pathfinder</controller>
+					<action>nuevooriente</action>
+				</nuori>
+				<orion>
+					<id>orion</id>
+					<label>Orion</label>
+					<controller>Pathfinder</controller>
+					<action>orion</action>
+				</orion>
+			</pages>
+    	</pathfinder>
+    </navigation>
 </config>
