@@ -121,6 +121,28 @@
 			</pages>
 		</organization>
 		
+		<pathfinder>
+			<id>pathfinder</id>
+			<label>Pathfinders</label>
+			<module>admin</module>
+			<controller>Pathfinder</controller>
+			<action>read</action>
+			<params>
+				<type>pathfinder</type>
+			</params>
+			<pages>
+				<managerial>
+					<label>Club Pathfinders</label>
+			   		<module>admin</module>
+			   		<controller>Pathfinder</controller>
+			   		<action>read</action>
+			   		<params>
+						<type>pathfinder</type>
+					</params>
+				</managerial>
+			</pages>
+		</pathfinder>
+		
 		<security>
 			<id>security</id>
 			<label>Security</label>
