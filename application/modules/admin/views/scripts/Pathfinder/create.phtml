@@ -1,0 +1,18 @@
+<div id="dialog-form" title="<?php echo $this->translate('Add Club Pathfinder'); ?>">
+<p>The Ajax Upload script works perfectly with jQuery UI dialog</p>
+			<a id="button4">Click to Upload</a>
+</div>
+
+<script>
+new AjaxUpload('button4', {
+	action: '<?php echo $this->url(array('action'=>'upload'));?>', 
+	name: 'myfile',
+	onSubmit : function(file , ext){
+		$('#button4').text('Uploading ' + file);
+		this.disable();	
+	},
+	onComplete : function(file){
+		$('#button4').text('Uploaded ' + file);				
+	}		
+});	
+</script>

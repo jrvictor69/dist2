@@ -1,0 +1,221 @@
+<?php $this->headScript()->appendFile($this->baseUrl() . "/js/lib/ajax-upload/ajaxupload.js","text/javascript");?>
+<?php $this->headScript()->appendFile($this->baseUrl() . "/js/modules/admin/Pathfinder.js","text/javascript");?>
+
+<div style="margin:20px;">
+	<?php echo $this->tableHeader('filterHeader', _("Filter Pathfinder"));?>
+	<div id="containerFormFilter">
+	</div>
+	<br>
+	<?php echo $this->tableHeader('pathfinderHeader', _("Pathfinders"));?>
+	<?php //echo $this->tableList("tblPathfinder");?>	
+	<div class="buttons right">
+		<?php //echo $this->buttonRemove("delete-pathfinder", $this->translate('Remove'), $this->url(array('action'=>'delete')));?>
+		<?php echo $this->buttonAdd("create-pathfinder", $this->translate('Add'), $this->url(array('action'=>'create')));?>
+	</div>
+		
+<!--	<div id="dialog"> Loads ajax dialog form </div>-->
+</div>
+
+<div id="text">
+<h1>Ajax upload for jQuery demo</h1>
+<p>
+	Feel free to view the source code of this page to see how the demo is done.
+	Back to the <a href="http://valums.com/ajax-upload/">AJAX upload</a> project page
+</p>
+</div>
+
+<ul>
+	<li id="example1" class="example">
+		<p>You can style button as you want</p>
+		<div class="wrapper">
+			<div id="button1" class="button">Upload</div>
+		</div>
+		<p>Uploaded files:</p>
+		<ol class="files"></ol>
+	</li>
+	
+	<li id="example2" class="example">
+		<p>You can make a list of allowed file types</p>
+		<a href="#" id="button2">Upload Image</a>
+		<p class="text"></p>		
+		
+		<!-- Example 4 -->
+		<p>You can use Ajax Uploader with jQuery UI dialog</p>
+		<p><a id="open_dialog" href="#">Open dialog</a></p>
+		
+		<div id="dialog" style="display:none;" title="Basic dialog with Upload button">
+			<p>The Ajax Upload script works perfectly with jQuery UI dialog</p>
+			<a id="button4">Click to Upload</a>
+		</div>
+		<!-- /Example 4 -->
+	</li>
+	<li id="example3" class="example">
+		<p>This script even works inside a form</p>		
+		<form action="#" method="post">
+			<p>Field 1 <input type="text" /></p>		
+			<div>
+				<input id="button3" type="file" />
+			</div>
+			<p>Uploaded files:</p>
+			<ol class="files"></ol>
+			<p>
+				<input class="submit" type="submit" value="Submit form"/>	
+			</p>
+		</form>
+	</li>
+</ul>
+
+<style type="text/css">
+        body {font-family: verdana, arial, helvetica, sans-serif;font-size: 12px;background: #373A32;color: #D0D0D0; direction: ltr;}
+        h1 {color: #C7D92C;	font-size: 18px; font-weight: 400;}
+        a {	color: white;}
+        a:hover, a.hover {color: #C7D92C;}
+        #text {	margin: 25px; }
+        ul { list-style: none; }
+        .example { padding: 0 20px; float: left; width: 230px; }
+		.wrapper { width: 133px; margin: 0 auto; }
+		
+		div.button {
+			height: 29px;	
+			width: 133px;
+			background: url(button.png) 0 0;
+			
+			font-size: 14px; color: #C7D92C; text-align: center; padding-top: 15px;
+		}
+		/* 
+		We can't use ":hover" preudo-class because we have
+		invisible file input above, so we have to simulate
+		hover effect with JavaScript. 
+		 */
+		div.button.hover {
+			background: url(button.png) 0 56px;
+			color: #95A226;	
+		}
+		
+		#button2.hover, #button4.hover { text-decoration:underline; }
+	</style>
+	
+	<script type="text/javascript">/*<![CDATA[*/
+	$(document).ready(function(){
+
+		var managerial = new com.em.Pathfinder();
+		
+		// network
+		managerial.setUrl({
+			toTable : '<?php echo $this->url(array('action'=>'read-items'));?>',
+			toBase : '<?php echo $this->baseUrl(); ?>',
+			toUpdate : '<?php echo $this->url(array('action'=>'update')); ?>'
+		});
+		
+		var headers = new Object();
+		headers.headerArray = new Array(
+			'<?php echo $this->translate('Firstname'); ?>',
+			'<?php echo $this->translate('Lastname'); ?>',
+			'<?php echo $this->translate('Mobile'); ?>',
+			'<?php echo $this->translate('Phone'); ?>',
+			'<?php echo $this->translate('Email'); ?>',
+			'<?php echo $this->translate('Department'); ?>',
+			'<?php echo $this->translate('User group'); ?>',
+			'<?php echo $this->translate('Created'); ?>',
+			'<?php echo $this->translate('Changed'); ?>');
+		managerial.setHeaders(headers);
+		// configuration of widgets
+//		managerial.configureTable('#tblPathfinder', true);
+		
+		// CRUD
+		managerial.clickToAdd('#create-pathfinder');
+		
+		/* Example 1 */
+		var button = $('#button1'), interval;
+		
+		new AjaxUpload(button, {
+			action: 'do-nothing.htm', 
+			name: 'myfile',
+			onSubmit : function(file, ext){
+				// change button text, when user selects file			
+				button.text('Uploading');
+								
+				// If you want to allow uploading only 1 file at time,
+				// you can disable upload button
+				this.disable();
+				
+				// Uploding -> Uploading. -> Uploading...
+				interval = window.setInterval(function(){
+					var text = button.text();
+					if (text.length < 13){
+						button.text(text + '.');					
+					} else {
+						button.text('Uploading');				
+					}
+				}, 200);
+			},
+			onComplete: function(file, response){
+				button.text('Upload');
+							
+				window.clearInterval(interval);
+							
+				// enable upload button
+				this.enable();
+				
+				// add file to the list
+				$('<li></li>').appendTo('#example1 .files').text(file);						
+			}
+		});
+	
+		/* Example 2 */
+		new AjaxUpload('button2', {
+            action: 'do-nothing.htm',
+			data : {
+				'key1' : "This data won't",
+				'key2' : "be send because",
+				'key3' : "we will overwrite it"
+			},
+			onSubmit : function(file , ext){
+                // Allow only images. You should add security check on the server-side.
+				if (ext && /^(jpg|png|jpeg|gif)$/.test(ext)){
+					/* Setting data */
+					this.setData({
+						'key': 'This string will be send with the file'
+					});					
+					$('#example2 .text').text('Uploading ' + file);	
+				} else {					
+					// extension is not allowed
+					$('#example2 .text').text('Error: only images are allowed');
+					// cancel upload
+					return false;				
+				}		
+			},
+			onComplete : function(file){
+				$('#example2 .text').text('Uploaded ' + file);				
+			}		
+		});
+		
+		/* Example3 */
+		new AjaxUpload('button3', {
+			action: 'do-nothing.htm',
+			name: 'myfile',
+			onComplete : function(file){
+				$('<li></li>').appendTo($('#example3 .files')).text(file);
+			}	
+		});		
+		
+		/* example4 */
+		$("#dialog").dialog({ autoOpen: false });
+		
+		$('#open_dialog').click(function(){
+			$("#dialog").dialog("open");
+			return false;	
+		});	
+		
+		new AjaxUpload('button4', {
+			action: '<?php echo $this->url(array('action'=>'upload'));?>', 
+			name: 'myfile',
+			onSubmit : function(file , ext){
+				$('#button4').text('Uploading ' + file);
+				this.disable();	
+			},
+			onComplete : function(file){
+				$('#button4').text('Uploaded ' + file);				
+			}		
+		});	
+	});/*]]>*/</script>
