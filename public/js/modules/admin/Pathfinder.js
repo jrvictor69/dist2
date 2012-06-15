@@ -67,8 +67,6 @@ com.em.Pathfinder.prototype = {
 	initDisplayStart: function() {with(this) {
 		var oSettings = table.fnSettings();
 		oSettings._iDisplayStart = 0;
-		//rows by page
-//		oSettings._iDisplayLength = 3;
 	}},
 	
 	/**
@@ -185,21 +183,6 @@ com.em.Pathfinder.prototype = {
 		settings.oApi._fnProcessingDisplay(settings, bShow);
 	},
 	
-//	processingDisplay : function(bShow) {
-//		if(bShow)
-//			$.blockUI({ css:{ 
-//				border					: 'none', 
-//				padding					: '15px', 
-//				backgroundColor			: '#000', 
-//				'-webkit-border-radius'	: '10px', 
-//				'-moz-border-radius'	: '10px', 
-//				opacity					: .5, 
-//				color					: '#fff' 
-//			} }); 
-//		else
-//			$.unblockUI();
-//	},
-	
 	/**
 	 * 
 	 * Configures the form
@@ -210,16 +193,11 @@ com.em.Pathfinder.prototype = {
 			autoOpen: false,
 			height: 165,
 			width: 350,
-			modal: true,
+			modal: false,
 			close: function(event, ui) {
 				$(this).remove();
 			}
-		});				
-		
-//		$('#formId').submit(function() {
-//			return false;
-//		});
-		
+		});
 		// Configs font-size for header dialog and buttons
 		$(selector).parent().css('font-size','0.7em');
 	}},
