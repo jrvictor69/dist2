@@ -80,6 +80,29 @@ class Admin_PathfinderController extends App_Controller_Action {
 		$this->_helper->json($this->stdResponse);
 	}
 	
+	/**
+	 * 
+	 * Returns an associative array where:
+	 * field: name of the table field
+	 * filter: value to match
+	 * operator: the sql operator.
+	 * @param array $filterParams contains the values selected by the user.
+	 * @return array(field, filter, operator)
+	 */
+	private function getFilters($filterParams) {
+		$filters = array ();
+		
+		if (empty($filterParams)) {
+			return $filters;
+		}
+		
+		if (!empty($filterParams['name'])) {
+			$filters[] = array('field' => 'name', 'filter' => '%'.$filterParams['name'].'%', 'operator' => 'LIKE');
+		}
+				
+		return $filters;
+	}
+	
 	public function uploadAction() {
 		$this->_helper->layout()->disableLayout();
 		$this->_helper->viewRenderer->setNoRender(true);

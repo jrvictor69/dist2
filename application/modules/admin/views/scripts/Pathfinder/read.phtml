@@ -1,45 +1,47 @@
 <?php $this->headScript()->appendFile($this->baseUrl() . "/js/lib/ajax-upload/ajaxupload.js","text/javascript");?>
-<?php $this->headScript()->appendFile($this->baseUrl() . "/js/modules/admin/Pathfinder.js","text/javascript");?>
-
+<?php $this->headScript()->appendFile($this->baseUrl() . "/js/modules/admin/Category.js","text/javascript");?>
 <div style="margin:20px;">
-	<?php echo $this->tableHeader('filterHeader', _("Filter Pathfinder"));?>
+	<?php echo $this->tableHeader('filterHeader', _("Filter Category"));?>
 	<div id="containerFormFilter">
+		<?php echo $this->formFilter; ?>
 	</div>
 	<br>
-	<?php echo $this->tableHeader('pathfinderHeader', _("Pathfinders"));?>
-	<?php echo $this->tableList("tblPathfinder");?>	
+	<?php echo $this->tableHeader('categoryHeader', _("Categories"));?>
+	<?php echo $this->tableList("tblCategory");?>	
 	<div class="buttons right">
-		<?php echo $this->buttonRemove("delete-pathfinder", $this->translate('Remove'), $this->url(array('action'=>'delete')));?>
-		<?php echo $this->buttonAdd("create-pathfinder", $this->translate('Add'), $this->url(array('action'=>'create')));?>
+		<?php echo $this->buttonRemove("delete-category", $this->translate('Remove'), $this->url(array('action'=>'delete')));?>
+		<?php echo $this->buttonAdd("create-category", $this->translate('Add'), $this->url(array('action'=>'create')));?>
 	</div>
 		
-	<div id="dialog"></div>
+	<div id="dialog"><!-- Loads ajax dialog form --></div>
 </div>
 
 <script type="text/javascript">
 	$(document).ready(function() {
-		var managerial = new com.em.Pathfinder();
-		
-		// network
-		managerial.setUrl({
-			toTable : '<?php echo $this->url(array('action'=>'read-items'));?>',
-			toBase : '<?php echo $this->baseUrl(); ?>',
-			toUpdate : '<?php echo $this->url(array('action'=>'update')); ?>'
-		});
-		
-		var headers = new Object();
-		headers.headerArray = new Array(
-			'<?php echo $this->translate('Firstname'); ?>',
-			'<?php echo $this->translate('Lastname'); ?>',
-			'<?php echo $this->translate('Mobile'); ?>',
-			'<?php echo $this->translate('Changed'); ?>');
-		managerial.setHeaders(headers);
-		// configuration of widgets
-		managerial.configureTable('#tblPathfinder', true);
-		
-		// CRUD
-		managerial.clickToAdd('#create-pathfinder');
-		managerial.clickToUpdate('#tblPathfinder a[id^=update-pathfinder-]');
-		managerial.clickToDelete('#delete-pathfinder');
+	var category = new com.em.Category();
+			
+	// network
+	category.setUrl({
+		toTable : '<?php echo $this->url(array('action'=>'read-items'));?>',
+		toBase : '<?php echo $this->baseUrl(); ?>',
+		toUpdate : '<?php echo $this->url(array('action'=>'update')); ?>',
+		toAutocomplete : '<?php echo $this->url(array('action'=>'autocomplete'));?>'
 	});
+	
+	var headers = new Object();
+	headers.headerArray = new Array(
+		'<?php echo $this->translate('Name'); ?>',
+		'<?php echo $this->translate('Description'); ?>',
+		'<?php echo $this->translate('Created'); ?>',
+		'<?php echo $this->translate('Changed'); ?>');
+	category.setHeaders(headers);
+	// configuration of widgets
+	category.configureTable('#tblCategory', true);
+	
+	// CRUD
+	category.clickToAdd('#create-category');
+	category.clickToUpdate('#tblCategory a[id^=update-category-]');
+	category.clickToDelete('#delete-category');
+	category.configureAuto('input#nameFilter');
+});
 </script>

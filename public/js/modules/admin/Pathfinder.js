@@ -107,7 +107,7 @@ com.em.Pathfinder.prototype = {
 	 * 
 	 * Configures the table and elements
 	 * @param selector
-	 */
+	 */	
 	configureTable: function(selector, pdestroy) { with (this) {
 		table = $(selector).dataTable({
 			"bProcessing"   : true,
@@ -123,7 +123,7 @@ com.em.Pathfinder.prototype = {
 				"sEmptyTable": "No Catagory found."
 			},
 			"fnDrawCallback": function() {
-				clickToUpdate('#tblPathfinder a[id^=update-pathfinder-]');
+				clickToUpdate('#tblCategory a[id^=update-category-]');
 			},
 			
 			"fnServerData": function (sSource, aoData, fnCallback ) { 
