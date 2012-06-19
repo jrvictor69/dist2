@@ -85,6 +85,30 @@ class Admin_PositionController extends App_Controller_Action {
 
 	/**
 	 * 
+	 * This action shows the form in update mode for Position.
+	 * @access public
+	 */
+	public function updateAction() {
+		$this->_helper->layout()->disableLayout();
+		$form = new Admin_Form_Position();
+		
+		$id = $this->_getParam('id', 0);
+		$positionMapper = new Model_PositionMapper();
+		$position = $positionMapper->find($id);
+		if ($position != NULL) {//security
+			$form->getElement('name')->setValue($position->getName());
+			$form->getElement('description')->setValue($position->getDescription());
+		} else {
+			// response to client
+			$this->stdResponse->success = FALSE;
+			$this->stdResponse->message = _("The requested record was not found.");
+			$this->_helper->json($this->stdResponse);
+		}
+		$this->view->form = $form;
+	}
+
+	/**
+	 * 
 	 * Outputs an XHR response containing all entries in positions.
 	 * This action serves as a datasource for the read/index view
 	 * @xhrParam int filter_name
