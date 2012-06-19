@@ -131,7 +131,7 @@
 				<type>pathfinder</type>
 			</params>
 			<pages>
-				<managerial>
+				<clubPathfinder>
 					<label>Club Pathfinders</label>
 			   		<module>admin</module>
 			   		<controller>Pathfinder</controller>
@@ -139,7 +139,25 @@
 			   		<params>
 						<type>pathfinder</type>
 					</params>
-				</managerial>
+				</clubPathfinder>
+				<directive>
+					<label>Directive</label>
+			   		<module>admin</module>
+			   		<controller>Directive</controller>
+			   		<action>read</action>
+			   		<params>
+						<type>pathfinder</type>
+					</params>
+				</directive>
+				<position>
+					<label>Position</label>
+			   		<module>admin</module>
+			   		<controller>Position</controller>
+			   		<action>read</action>
+			   		<params>
+						<type>pathfinder</type>
+					</params>
+				</position>
 			</pages>
 		</pathfinder>
 		
