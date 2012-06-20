@@ -13,7 +13,7 @@
 				beforeSend: function(XMLHttpRequest) {
 					validator.form();
 					if (!validator.valid()) {
-						com.em.Position.prototype.flashError('<?php echo _("The form contains error and is not updated");?>', {header: com.em.Alert.ERROR});
+						com.em.Position.prototype.flashError('<?php echo _("The form contains error and is not updated");?>', {header: com.em.FlashMessage.ERROR});
 						return false;
 					}
 
@@ -26,7 +26,7 @@
 						if (data.success) {
 							dialogForm.dialog('close');
 							table.fnDraw();
-							com.em.Position.prototype.flashSuccess(data.message, {header: com.em.Alert.SUCCESS});
+							com.em.Position.prototype.flashSuccess(data.message, {header: com.em.FlashMessage.SUCCESS});
 						} else {
 							if (data.name_duplicate) {
 								$("#name").parent().find('.error').remove();
@@ -39,7 +39,7 @@
 									$('#name').parent().append('<label class="error" for="name" generated="true">'+name.isEmpty+'</label>');
 								}
 							}
-							com.em.Position.prototype.flashError(data.message, {header: com.em.Alert.ERROR});
+							com.em.Position.prototype.flashError(data.message, {header: com.em.FlashMessage.ERROR});
 						}
 					}
 				},
@@ -50,7 +50,7 @@
 				
 				error: function(jqXHR, textStatus, errorThrown) {
 					dialogForm.dialog('close');
-					com.em.Position.prototype.flashError(errorThrown, {header: com.em.Alert.ERROR});
+					com.em.Position.prototype.flashError(errorThrown, {header: com.em.FlashMessage.ERROR});
 				}
 			});
 		},

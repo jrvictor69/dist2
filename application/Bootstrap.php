@@ -74,6 +74,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
 	    $this->view->headLink()->appendStylesheet($this->view->baseUrl() . "/js/lib/jgrowl/jquery.jgrowl.css");
 	    $this->view->headScript()->appendFile($this->view->baseUrl().'/js/lib/jgrowl/jquery.jgrowl.js','text/javascript');
 	    $this->view->headScript()->appendFile($this->view->baseUrl().'/js/lib/jgrowl/Alert.js','text/javascript');
+	    $this->view->headScript()->appendFile($this->view->baseUrl().'/js/lib/jgrowl/FlashMessage.js','text/javascript');
 	    
 	    // Datatables plugin jquery
 	    $this->view->headLink()->appendStylesheet($this->view->baseUrl() . "/js/lib/jquery-datatables/css/demo_table.css");

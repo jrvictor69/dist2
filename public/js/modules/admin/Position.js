@@ -12,8 +12,8 @@ com.em = com.em ||{};
 	com.em.Position = function () {
 		// For create or update register
 		this.dialogForm;
-		// For show message to client
-		this.alert;
+		// For show flash messages to client
+		this.flashMessage;
 		// For data table
 		this.table;
 		// urls
@@ -33,7 +33,7 @@ com.em.Position.prototype = {
 	 * Initializes JQuery flash message component
 	 */	
 	initFlashMessage: function() {
-		this.alert = new com.em.Alert();
+		this.flashMessage = new com.em.FlashMessage();
 	},
 	
 	/**
@@ -230,7 +230,7 @@ com.em.Position.prototype = {
 					if (textStatus == 'success') {
 						var contentType = XMLHttpRequest.getResponseHeader('Content-Type');
 						if (contentType == 'application/json') {
-							alert.show(data.message, {header: com.em.Alert.FAILURE});
+							flashMessage.show(data.message, {header: com.em.FlashMessage.FAILURE});
 						} else {
 							// Getting html dialog
 							$('#dialog').html(data);
@@ -252,7 +252,7 @@ com.em.Position.prototype = {
 				
 				error: function(jqXHR, textStatus, errorThrown) {
 					dialogForm.dialog('close');
-					alert.flashError(errorThrown,{header : com.em.Alert.ERROR});
+					flashMessage.flashError(errorThrown,{header : com.em.FlashMessage.ERROR});
 				}
 			});
 		});
@@ -280,7 +280,7 @@ com.em.Position.prototype = {
 					if (textStatus == 'success') {
 						var contentType = XMLHttpRequest.getResponseHeader('Content-Type');
 						if (contentType == 'application/json') {
-							alert.show(data.message, {header: com.em.Alert.FAILURE});
+							flashMessage.show(data.message, {header: com.em.FlashMessage.FAILURE});
 						} else {
 							// Getting html dialog
 							$('#dialog').html(data);
@@ -302,7 +302,7 @@ com.em.Position.prototype = {
 				
 				error: function(jqXHR, textStatus, errorThrown) {
 					dialogForm.dialog('close');
-					alert.flashError(errorThrown,{header: com.em.Alert.ERROR});
+					flashMessage.flashError(errorThrown,{header: com.em.FlashMessage.ERROR});
 				}
 			});
 		});
@@ -320,7 +320,7 @@ com.em.Position.prototype = {
 			var items = $('#tblPosition :checked');
 			var itemsChecked = items.serialize();
 			if (itemsChecked == '') {
-				alert.flashInfo('There is no item selected', {header: com.em.Alert.NOTICE});
+				flashMessage.flashInfo('There is no item selected', {header: com.em.FlashMessage.NOTICE});
 				return;
 			}
 			var action = $(this).attr('href');
@@ -341,9 +341,9 @@ com.em.Position.prototype = {
 							if (textStatus == 'success') {
 								if (data.success) {
 									table.fnDraw();
-									alert.flashSuccess(data.message, {header: com.em.Alert.SUCCESS});
+									flashMessage.flashSuccess(data.message, {header: com.em.FlashMessage.SUCCESS});
 								} else {
-									alert.flashInfo(data.message, {header: com.em.Alert.NOTICE});
+									flashMessage.flashInfo(data.message, {header: com.em.FlashMessage.NOTICE});
 								}
 							}
 						},
@@ -353,7 +353,7 @@ com.em.Position.prototype = {
 						},
 						
 						error: function(jqXHR, textStatus, errorThrown) {
-							alert.flashError(errorThrown,{header: com.em.Alert.ERROR});
+							flashMessage.flashError(errorThrown,{header: com.em.FlashMessage.ERROR});
 						}
 					});
 				} else {
@@ -430,15 +430,15 @@ com.em.Position.prototype = {
 	
 	/**
 	 * 
-	 * Shows alert if it exists, if not create a new instance of alert and show it
+	 * Shows flash message if it exists, if not create a new instance of FlashMessage and show it
 	 * @param message to show
 	 * @param header of the message
 	 */
 	showAlert: function(message, header) {with (this) {
-		if (this.alert == undefined) {
-			this.alert = new com.em.Alert();
+		if (this.flashMessage == undefined) {
+			this.flashMessage = new com.em.FlashMessage();
 		}
-		alert.show(message, header);
+		flashMessage.show(message, header);
 	}},
 	
 	/**
@@ -448,10 +448,10 @@ com.em.Position.prototype = {
 	 * @param header string
 	 */
 	flashSuccess: function(message, header) {with (this) {
-		if (this.alert == undefined) {
-			this.alert = new com.em.Alert();
+		if (this.flashMessage == undefined) {
+			this.flashMessage = new com.em.FlashMessage();
 		}
-		alert.flashSuccess(message, header);
+		flashMessage.flashSuccess(message, header);
 	}},
 	
 	/**
@@ -461,9 +461,9 @@ com.em.Position.prototype = {
 	 * @param header string
 	 */
 	flashError: function(message, header) {with (this) {
-		if (this.alert == undefined) {
-			this.alert = new com.em.Alert();
+		if (this.flashMessage == undefined) {
+			this.flashMessage = new com.em.FlashMessage();
 		}
-		alert.flashError(message, header);
+		flashMessage.flashError(message, header);
 	}}
 };

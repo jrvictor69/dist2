@@ -38,7 +38,7 @@ com.em.FlashMessage = function (){
 	// options by message default
 	this.optionsDefault = {
 		position : "bottom-left",
-		header : com.em.Alert.SUCCESS,
+		header : com.em.FlashMessage.SUCCESS,
 	    animateOpen: {
 	        opacity: 'show'
 	    }
@@ -46,7 +46,6 @@ com.em.FlashMessage = function (){
 };
 
 com.em.FlashMessage.prototype = {
-
 	/**
 	 * Show message on screen, By Default bottom-left.
 	 * 
