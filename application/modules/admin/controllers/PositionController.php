@@ -46,7 +46,7 @@ class Admin_PositionController extends App_Controller_Action {
 	public function createAction() {
 		$this->_helper->layout()->disableLayout();
 		
-		$form = new Admin_Form_Category();
+		$form = new Admin_Form_Position();
 		$this->view->form = $form;
 	}
 	
@@ -109,6 +109,87 @@ class Admin_PositionController extends App_Controller_Action {
 
 	/**
 	 * 
+	 * Updates a Position
+	 * @access public
+	 * 1) Gets the record to edit
+	 * 2) Validates the record was no deleted
+	 * 3) Validates the existance of another Position with the same name.
+	 * 4) Saves the changes.
+	 */
+	public function updateSaveAction() {
+		$this->_helper->viewRenderer->setNoRender(TRUE);
+
+		$form = new Admin_Form_Position();
+
+		$formData = $this->getRequest()->getPost();
+		if ($form->isValid($formData)) {
+			$id = $this->_getParam('id', 0);
+
+			$positionMapper = new Model_PositionMapper();
+			$position = $positionMapper->find($id);
+			if ($position != NULL) {
+				if (!$positionMapper->verifyExistName($formData['name']) || $positionMapper->verifyExistIdAndName($id, $formData['name'])) {
+					$position->setName($formData['name'])
+							->setDescription($formData['description'])
+							->setChangedBy(Zend_Auth::getInstance()->getIdentity()->id);
+
+					$positionMapper->update($id, $position);
+
+					$this->stdResponse->success = TRUE;
+					$this->stdResponse->message = _("Position updated");
+				} else {
+					$this->stdResponse->success = FALSE;
+					$this->stdResponse->name_duplicate = TRUE;
+					$this->stdResponse->message = _("The Position already exists");
+				}
+			} else {
+				$this->stdResponse->success = FALSE;
+				$this->stdResponse->message = _("The Position does not exists");
+			}
+		} else {
+			$this->stdResponse->success = FALSE;
+			$this->stdResponse->messageArray = $form->getMessages();
+			$this->stdResponse->message = _("The form contains error and is not saved");
+		}
+		// sends response to client
+		$this->_helper->json($this->stdResponse);
+	}
+
+	/**
+	 *
+	 * Deletes positions
+	 * @access public
+	 * @internal
+	 * 1) Gets the model position
+	 * 2) Validates the existance of dependencies
+	 * 3) Changes the state field or records to delete
+	 */
+	public function deleteAction() {
+		$this->_helper->viewRenderer->setNoRender(TRUE);
+
+		$itemIds = $this->_getParam('itemIds', array());
+		if (!empty($itemIds) ) {
+
+			$removeCount = 0;
+			foreach ($itemIds as $id) {
+				$positionMapper = new Model_PositionMapper();
+				$positionMapper->delete($id);
+				$removeCount++;
+			}
+			$message = sprintf(ngettext('%d position removed.', '%d positions removed.', $removeCount), $removeCount);
+
+			$this->stdResponse->success = TRUE;
+			$this->stdResponse->message = _($message);
+		} else {
+			$this->stdResponse->success = FALSE;
+			$this->stdResponse->message = _("Data submitted is empty.");
+		}
+		// sends response to client
+		$this->_helper->json($this->stdResponse);
+	}
+
+	/**
+	 *
 	 * Outputs an XHR response containing all entries in positions.
 	 * This action serves as a datasource for the read/index view
 	 * @xhrParam int filter_name
@@ -133,12 +214,19 @@ class Admin_PositionController extends App_Controller_Action {
 		$posRecord = $start+1;
 		$data = array();
 		foreach ($positions as $position) {
+			$created = new Zend_Date($position->getCreated());
+			$changed = $position->getChanged();
+			if ($changed != NULL) {
+				$changed = new Zend_Date($position->getChanged());
+				$changed = $changed->toString("dd.MM.YYYY");
+			}
+
 			$row = array();			
 			$row[] = $position->getId();
 			$row[] = $position->getName();
 			$row[] = $position->getDescription();
-			$row[] = $position->getCreated();
-			$row[] = $position->getChanged();
+			$row[] = $created->toString("dd.MM.YYYY");
+			$row[] = $changed;
 			$row[] = '[]';
 			$data[] = $row;
 			$posRecord++;
