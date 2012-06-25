@@ -8,6 +8,7 @@
  * @license Proprietary
  */
 
+use Doctrine\DBAL\DriverManager;
 class PathfinderController extends App_Controller_Action {
 	
 	/**
@@ -38,12 +39,32 @@ class PathfinderController extends App_Controller_Action {
 	}
 	
 	public function nuevoamanecerAction() {
+		$position = $this->_entityManager->find('Model\Position', 1);
+		var_dump($position->getCreated()->format('Y.m'));
+
+		$position = $this->_entityManager->getRepository('Model\Position');
+		$positions = $position->findByCriteria();
+
+		var_dump($positions);
 	}
 	
 	public function nuevoorienteAction() {
 	}
 	
 	public function orionAction() {
+		$connectionParams = array(
+			'dbname' => 'dbch',
+			'user' => 'root',
+			'password' => '',
+			'host' => 'localhost',
+			'driver' => 'pdo_mysql',
+			);
+		$conn = DriverManager::getConnection($connectionParams);
+
+		$users = $conn->fetchAll('SELECT * FROM tblPosition');
+		echo "<pre>";
+		var_dump($users);
+		echo "</pre>";
 	}
 	
 	public function uploadAction() {
