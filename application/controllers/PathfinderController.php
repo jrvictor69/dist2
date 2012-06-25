@@ -8,6 +8,7 @@
  * @license Proprietary
  */
 
+
 use Doctrine\DBAL\DriverManager;
 class PathfinderController extends App_Controller_Action {
 	
@@ -34,20 +35,48 @@ class PathfinderController extends App_Controller_Action {
 	
 	public function estrelladavidAction() {
 	}
-	
+
 	public function leonjudaAction() {
+		$position = new Model\Position();
+
+
+		$now = new \DateTime('now');
+		$position->setName("new name doctrine")
+				->setDescription("description docrtine")
+				->setCreated($now)
+				->setState(1)
+				;
+
+		$this->_entityManager->persist($position);
+		$this->_entityManager->flush();
+
+		$p = $this->_entityManager->find('Model\Position', 2);
+		$p->setName("changed doctrine sadas2 sadsd")
+			->setDescription("changed doctrine 2dsd")
+			->setChanged(new \DateTime("now"));
+			;
+		$this->_entityManager->persist($p);
+		$this->_entityManager->flush();
+
+		var_dump($p);
+
+		echo "dave";
 	}
 	
 	public function nuevoamanecerAction() {
 		$position = $this->_entityManager->find('Model\Position', 1);
 		var_dump($position->getCreated()->format('Y.m'));
+		echo "<br>";
+		$positionRepo = $this->_entityManager->getRepository('Model\Position');
+		$positions = $positionRepo->findByCriteria();
 
-		$position = $this->_entityManager->getRepository('Model\Position');
-		$positions = $position->findByCriteria();
-
+		echo "<pre>";
 		var_dump($positions);
+		echo "</pre>";
+
+
 	}
-	
+
 	public function nuevoorienteAction() {
 	}
 	
@@ -60,7 +89,6 @@ class PathfinderController extends App_Controller_Action {
 			'driver' => 'pdo_mysql',
 			);
 		$conn = DriverManager::getConnection($connectionParams);
-
 		$users = $conn->fetchAll('SELECT * FROM tblPosition');
 		echo "<pre>";
 		var_dump($users);
