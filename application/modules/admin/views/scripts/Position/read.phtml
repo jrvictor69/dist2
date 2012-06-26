@@ -1,0 +1,46 @@
+<?php $this->headScript()->appendFile($this->baseUrl() . "/js/modules/admin/Position.js","text/javascript");?>
+<div style="margin:20px;">
+	<?php echo $this->tableHeader('filterHeader', _("Filter Position"));?>
+	<div id="containerFormFilter">
+		<?php echo $this->formFilter; ?>
+	</div>
+	<br>
+	<?php echo $this->tableHeader('positionHeader', _("Positions"));?>
+	<?php echo $this->tableList("tblPosition");?>	
+	<div class="buttons right">
+		<?php echo $this->buttonRemove("delete-position", $this->translate('Remove'), $this->url(array('action'=>'delete')));?>
+		<?php echo $this->buttonAdd("create-position", $this->translate('Add'), $this->url(array('action'=>'create')));?>
+	</div>
+
+	<div id="dialog"><!-- Loads ajax dialog form --></div>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+	var position = new com.em.Position();
+
+	// network
+	position.setUrl({
+		toTable : '<?php echo $this->url(array('action'=>'read-items'));?>',
+		toBase : '<?php echo $this->baseUrl(); ?>',
+		toUpdate : '<?php echo $this->url(array('action'=>'update')); ?>',
+		toAutocomplete : '<?php echo $this->url(array('action'=>'autocomplete'));?>'
+	});
+
+	var headers = new Object();
+	headers.headerArray = new Array(
+		'<?php echo $this->translate('Name'); ?>',
+		'<?php echo $this->translate('Description'); ?>',
+		'<?php echo $this->translate('Created'); ?>',
+		'<?php echo $this->translate('Changed'); ?>');
+	position.setHeaders(headers);
+	// configuration of widgets
+	position.configureTable('#tblPosition', true);
+
+	// CRUD
+	position.clickToAdd('#create-position');
+	position.clickToUpdate('#tblPosition a[id^=update-position-]');
+	position.clickToDelete('#delete-position');
+	position.configureAuto('input#nameFilter');
+});
+</script>

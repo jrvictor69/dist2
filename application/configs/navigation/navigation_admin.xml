@@ -51,6 +51,15 @@
 						<type>information</type>
 					</params>
 				</news>
+				<picture>
+					<label>Picture</label>
+					<module>admin</module>
+					<controller>picture</controller>
+					<action>read</action>
+					<params>
+						<type>information</type>
+					</params>
+				</picture>
 				<category>
 			   		<label>Category</label>
 			   		<module>admin</module>
@@ -111,6 +120,46 @@
 		    	</province>
 			</pages>
 		</organization>
+		
+		<pathfinder>
+			<id>pathfinder</id>
+			<label>Pathfinders</label>
+			<module>admin</module>
+			<controller>Pathfinder</controller>
+			<action>read</action>
+			<params>
+				<type>pathfinder</type>
+			</params>
+			<pages>
+				<clubPathfinder>
+					<label>Club Pathfinders</label>
+			   		<module>admin</module>
+			   		<controller>Pathfinder</controller>
+			   		<action>read</action>
+			   		<params>
+						<type>pathfinder</type>
+					</params>
+				</clubPathfinder>
+				<directive>
+					<label>Directive</label>
+			   		<module>admin</module>
+			   		<controller>Directive</controller>
+			   		<action>read</action>
+			   		<params>
+						<type>pathfinder</type>
+					</params>
+				</directive>
+				<position>
+					<label>Position</label>
+			   		<module>admin</module>
+			   		<controller>Position</controller>
+			   		<action>read</action>
+			   		<params>
+						<type>pathfinder</type>
+					</params>
+				</position>
+			</pages>
+		</pathfinder>
 		
 		<security>
 			<id>security</id>

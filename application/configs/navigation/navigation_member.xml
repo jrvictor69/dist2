@@ -40,5 +40,27 @@
 				</history>
 			</pages>			
 		</search>
+		
+		<log>
+			<id>log</id>
+			<label>Log</label>
+			<module>member</module>
+			<controller>Archive</controller>
+			<action>read</action>
+			<params>
+				<type>log</type>
+			</params>
+			<pages>				
+				<archive>
+					<label>Archive</label>
+					<module>member</module>
+					<controller>Archive</controller>
+					<action>read</action>
+					<params>
+						<type>log</type>
+					</params>
+				</archive>
+			</pages>			
+		</log>
 	</navigation>
 </config>

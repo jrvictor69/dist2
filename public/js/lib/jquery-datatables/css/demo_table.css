@@ -289,11 +289,14 @@ td.details {
 	width: 400px;
 	height: 22px;
 	line-height: 22px;
+	font-weight: bold;
+	font-size: 14px;
+	color: #2869FF;
 }
 
 .paging_full_numbers span.paginate_button,
  	.paging_full_numbers span.paginate_active {
-	border: 1px solid #aaa;
+/*	border: 1px solid #aaa;*/
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
 	padding: 2px 5px;
@@ -303,15 +306,27 @@ td.details {
 }
 
 .paging_full_numbers span.paginate_button {
-	background-color: #ddd;
+/*	background-color: #ddd;*/
 }
 
 .paging_full_numbers span.paginate_button:hover {
-	background-color: #ccc;
+/*	background-color: #ccc;*/
+
+	background-color: #bddde8;
+/*	-webkit-border-radius: 3px;*/
+/*	-moz-border-radius: 3px;*/
+/*	border-radius: 3px;*/
+/*	text-decoration: none*/
 }
 
 .paging_full_numbers span.paginate_active {
-	background-color: #99B3FF;
+/*	background-color: #99B3FF;*/
+
+	/*	-webkit-border-radius: 3px;*/
+/*	-moz-border-radius: 3px;*/
+/*	border-radius: 3px;*/
+	background-color: #235;
+	color: white
 }
 
 table.display tr.even.row_selected td {
@@ -536,4 +551,17 @@ div.box {
 	overflow: auto;
 	border: 1px solid #8080FF;
 	background-color: #E5E5FF;
+}
+
+/*
+ * @autor Victor Villca disabled the buttons in full numbers
+ */
+.paging_full_numbers span.paginate_button_disabled {
+/*	display:none;*/
+	color: #cacbd0;
+	cursor: default;
+}
+
+.paging_full_numbers span.paginate_button_disabled:hover {
+	background-color: white;
 }

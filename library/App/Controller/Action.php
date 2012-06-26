@@ -99,7 +99,7 @@ class App_Controller_Action extends Zend_Controller_Action
         $this->_session  = $this->_bootstrap->getResource( 'namespace' );
         
         $this->_messenger  = Zend_Controller_Action_HelperBroker::getStaticHelper('messenger');
-        $this->_entityManager = $this->_bootstrap->getResource( 'doctrine' );
+        $this->_entityManager = $this->_bootstrap->getResource('doctrine');
         $this->_identity = Zend_Auth::getInstance()->getIdentity();
 		
         

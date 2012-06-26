@@ -1,0 +1,127 @@
+<?php $this->headScript()->appendFile($this->baseUrl() . "/js/lib/galleryView/js/jquery.timers-1.2.js","text/javascript");?>
+<?php $this->headScript()->appendFile($this->baseUrl() . "/js/lib/galleryView/js/jquery.easing.1.3.js","text/javascript");?>
+<?php $this->headScript()->appendFile($this->baseUrl() . "/js/lib/galleryView/js/jquery.galleryview-3.0-dev.js","text/javascript");?>
+<?php $this->headLink()->appendStylesheet($this->baseUrl() . "/js/lib/galleryView/css/jquery.galleryview-3.0-dev.css");?>
+
+<?php $this->headScript()->appendFile($this->baseUrl() . "/js/lib/nivo-slider/jquery.nivo.slider.js","text/javascript");?>
+<?php $this->headLink()->appendStylesheet($this->baseUrl() . "/js/lib/nivo-slider/themes/default/default.css");?>
+<?php $this->headLink()->appendStylesheet($this->baseUrl() . "/js/lib/nivo-slider/nivo-slider.css");?>
+<?php //$this->headLink()->appendStylesheet($this->baseUrl() . "/js/lib/demo/style.css");?>
+    
+<div id="page-title">
+	<span class="title">Club Alas de Orion</span>
+	<span class="subtitle">Club de Conquistadores de la Iglesia "Roca Eterna".</span>
+</div>
+
+<ul id="myGallery2">
+	<?php foreach ($this->pictures as $picture) {?>
+	<li><img data-frame="<?php echo $picture->getSrcCrops() . $picture->getFile()->getFilename();?>" src="<?php echo $picture->getSrc() . $picture->getFile()->getFilename();?>" title="<?php echo $picture->getTitle();?>" data-description="<?php echo $picture->getDescription();?>"/></li>
+	<?php }?> 
+</ul>
+<br>
+
+<div id="posts">
+	<div class="slider-wrapper theme-default">
+		<div id="slider" class="nivoSlider">
+	    	<img src="/js/lib/nivo-slider/demo/images/toystory.jpg" data-thumb="/js/lib/nivo-slider/demo/images/toystory.jpg" alt="" />
+	        <a href="#"><img src="/js/lib/nivo-slider/demo/images/up.jpg" data-thumb="/js/lib/nivo-slider/demo/images/up.jpg" alt="" title="This is an example of a caption" /></a>
+	        <img src="/js/lib/nivo-slider/demo/images/walle.jpg" data-thumb="/js/lib/nivo-slider/demo/images/walle.jpg" alt="" data-transition="slideInLeft" />
+	        <img src="/js/lib/nivo-slider/demo/images/nemo.jpg" data-thumb="/js/lib/nivo-slider/demo/images/nemo.jpg" alt="" title="#htmlcaption" />
+	    </div>
+		<div id="htmlcaption" class="nivo-html-caption">
+	    <strong>This</strong> is an example of a <em>HTML</em> caption with <a href="#">a link</a>. 
+		</div>
+	</div>
+</div>	
+<!-- sidebar -->
+<ul id="sidebar">
+	<li>
+	<h6>Categories</h6>		
+		<ul>
+			<li class="cat-item"><a href="#" title="View all posts">Pellentesque habitant morbi</a></li>
+			<li class="cat-item"><a href="#" title="View all posts">Pellentesque habitant morbi</a></li>
+			<li class="cat-item"><a href="#" title="View all posts">Pellentesque habitant morbi</a></li>
+		</ul>
+	</li>	
+							
+	<li>
+	<h6>Archives</h6>		
+		<ul>
+			<li class="cat-item"><a href="#" title="View all posts">Pellentesque habitant morbi</a></li>
+			<li class="cat-item"><a href="#" title="View all posts">Pellentesque habitant morbi</a></li>
+			<li class="cat-item"><a href="#" title="View all posts">Pellentesque habitant morbi</a></li>
+		</ul>
+	</li>
+</ul>
+
+<!-- 3 cols -->
+<div class="one-third">
+	<h6>One third </h6>
+	<p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, elit eget tincidunt condimentum, eros ipsum rutrum orci, sagittis tempus.</p>
+</div>
+<div class="one-third">
+	<h6>One third </h6>
+	<p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, elit eget tincidunt condimentum, eros ipsum rutrum orci, sagittis tempus.</p>
+</div>
+<div class="one-third last">
+	<h6>One third </h6>
+	<p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, elit eget tincidunt condimentum, eros ipsum rutrum orci, sagittis tempus.</p>
+</div>
+<div class="clear "></div>
+<!-- ENDS 3 cols -->
+					
+<script type="text/javascript">
+	$('#myGallery2').galleryView({
+		transition_speed: 1000,
+		transition_interval: 2000,
+		easing: 'swing',
+		show_panels: true,
+		show_panel_nav: true,
+		enable_overlays: true,
+	
+		panel_width: 955,
+		panel_height: 450,
+		panel_animation: 'slide',
+		panel_scale: 'crop',
+		overlay_position: 'bottom',
+		pan_images: true,
+		pan_style: 'drag',
+		pan_smoothness: 15,
+		start_frame: 1,
+		show_filmstrip: true,
+		show_filmstrip_nav: true,
+		enable_slideshow: true,
+		autoplay: true,
+		show_captions: true,	
+		filmstrip_size: 3,
+		filmstrip_style: 'scroll',
+		filmstrip_position: 'bottom',
+		frame_width: 164,
+		frame_height: 80,
+		frame_opacity: 0.5,
+		frame_scale: 'crop',
+		frame_gap: 5,
+		show_infobar: true,
+		infobar_opacity: 1
+	});
+
+	$(window).load(function() {
+        $('#slider').nivoSlider();
+    });
+
+	$("ul.tabs").tabs("div.panes > div", {effect: 'fade'});
+	
+	// Thumbs rollover --------------------------------------------- //
+	
+	$('.thumbs-rollover li a img').hover(function(){
+		// on rollover
+		$(this).stop().animate({ 
+			opacity: "0.5" 
+		}, "fast");
+	} , function() { 
+		// on out
+		$(this).stop().animate({
+			opacity: "1" 
+		}, "fast");
+	});
+</script>

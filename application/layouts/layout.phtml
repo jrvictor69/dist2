@@ -1,8 +1,10 @@
-<?php echo $this->doctype(); ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!--<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">-->
 <html>
 	<head>
-		<?php 
-			$this->headLink()->appendStylesheet("/css/jscal2.css");
+		<title><?php echo _("Distrito la Colorada");?></title>
+	  	<?php 
+	  		$this->headLink()->appendStylesheet("/css/jscal2.css");
 			$this->headLink()->appendStylesheet("/css/zebralist.css");
 			$this->headLink()->appendStylesheet("/css/screen.css");
 			$this->headLink()->appendStylesheet("/css/print.css", "print");
@@ -12,15 +14,21 @@
 			$this->headLink()->appendStylesheet("/css/menu_new.css");
 			$this->headLink()->appendStylesheet("/css/tabs_new.css");
 			$this->headLink()->appendStylesheet("/css/new_form.css");
-			$this->headLink()->appendStylesheet("/css/navigation.css");
+//			$this->headLink()->appendStylesheet("/css/navigation.css");
 			$this->headLink()->appendStylesheet("/css/form2.0.css");
-			$this->headLink()->appendStylesheet("/css/siteapp.css");
+//			$this->headLink()->appendStylesheet("/css/siteapp.css");
 			//flash messages
 			$this->headLink()->appendStylesheet("/css/flashnotification.css");
+			$this->headLink()->appendStylesheet("/layoutguest/orange/css/style.css");
+//			$this->headLink()->appendStylesheet("/layoutguest/nova/HTML/css/style.css");
+//			$this->headLink()->appendStylesheet("/layoutguest/orange/pro_dropdown_2/pro_dropdown_2.css");
+			$this->headLink()->appendStylesheet("/layoutguest/orange/tabmenu/tabmenu.css");
+
+//			$this->headLink()->appendStylesheet("/layoutguest/orange/dropdownmenu/dropdown.css");
+//			$this->headScript()->appendFile("/layoutguest/orange/dropdownmenu/dropdown.js","text/javascript");
 			
-			$this->headLink()->appendStylesheet("/js/lib/jquery-datatables/css/demo_table.css");
-			$this->headScript()->appendFile("/js/lib/jquery-datatables/jquery.dataTables.min.js","text/javascript");
-			$this->headScript()->appendFile("/js/lib/jquery-validate/jquery.validate.min.js","text/javascript");
+			$this->headLink()->appendStylesheet("/layoutguest/orange/apycom-red/menu.css");
+//			$this->headScript()->appendFile("/layoutguest/orange/apycom-red/menu.js","text/javascript");
 		?>
 		<?php //echo $this->jQuery(); ?>
 		<?php echo $this->headMeta(); ?>
@@ -30,21 +38,49 @@
 		<?php echo $this->headScript(); ?> 
 	</head>
 	<body>
-		<div id="header-meta" class="noprint">
-			<?php echo $this->partial('header.phtml'); ?>
-		</div>
-				
-		<div id="actionbar" style="z-index:3;">
-			<?php echo $this->partial('actionbar.phtml'); ?>
-		</div>
-		
-		<div id="footer" class="noprint">
-			<?php echo $this->partial('footer.phtml'); ?>
-		</div>
-		
-		<div id="content">
-			<?php echo $this->layout()->content; ?>
-		</div>
-      	<?php echo $this->flashMessages();?>
+  		<div id="container_header"><p>&nbsp;</p></div>
+			<div id="main">
+				<!-- wrapper-main -->
+				<div class="wrapper">
+				<?php echo $this->partial('header.phtml');?>
+				<?php echo $this->partial('actionbar.phtml');?>
+				<div id="site_content">	
+<!--	  				<div class="sidebar_container">-->
+						<?php //echo $this->layout()->sidebar;?>	  
+<!--       				</div>close sidebar_container-->
+	  				<div id="content">
+	  					<ul id="sidebar">
+							<!-- init sidebar -->
+							<li>
+								<h6>Categories</h6>		
+								<ul>
+									<li class="cat-item"><a href="#" title="View all posts">Pellentesque habitant morbi</a></li>
+									<li class="cat-item"><a href="#" title="View all posts">Pellentesque habitant morbi</a></li>
+									<li class="cat-item"><a href="#" title="View all posts">Pellentesque habitant morbi</a></li>
+									<li class="cat-item"><a href="#" title="View all posts">Pellentesque habitant morbi</a></li>
+								</ul>
+							</li>	
+							
+							<li>
+								<h6>Archives</h6>		
+								<ul>
+									<li class="cat-item"><a href="#" title="View all posts">Pellentesque habitant morbi</a></li>
+									<li class="cat-item"><a href="#" title="View all posts">Pellentesque habitant morbi</a></li>
+									<li class="cat-item"><a href="#" title="View all posts">Pellentesque habitant morbi</a></li>
+									<li class="cat-item"><a href="#" title="View all posts">Pellentesque habitant morbi</a></li>
+								</ul>
+							</li>
+							<!-- ENDS init sidebar -->
+						</ul>
+						<?php echo $this->layout()->content;?>
+      				</div><!--close content-->
+				</div><!--close site_content-->
+				<?php echo $this->partial('footer.phtml');?>
+				</div>
+			</div><!--close main-->
+
+		<div id="container_footer">&nbsp;</div>
+  			<p style="float: left;padding: 0;">&nbsp;</p>
+		<div style="margin: 1em 0 3em 0; text-align: center;"></div>
 	</body>
 </html>

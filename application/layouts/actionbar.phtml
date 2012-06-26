@@ -1,14 +1,20 @@
-<ul class="horizontal navigation" id="leftactiontabs">
-<?php
-	echo $this->navigation()->menu()
-			->setOnlyActiveBranch(TRUE) // I do not want items from other pages
-            ->setRenderParents(FALSE)
-            ->setMinDepth(1)            // Start at the "child" level of the navigation
-            ->setMaxDepth(10)           // Go as far as the 10th generation
-            ->renderMenu();
-?>
-</ul>
-<ul class="horizontal navigation" id="rightactiontabs">
-</ul>
+<div id="tabs">
+	<ul>
+		<?php
+		$container = $this->navigation()->getContainer();
+		$childPage = $container->findOneBy('active', TRUE);
+		if (!$childPage->hasPages()) {
+			$parent = $childPage->getParent();	
+		} else {
+			$parent = $childPage;	
+		}
+		foreach ($parent as $submenu):?>
+			<li>
+				<?php $label = $this->translate($submenu->getLabel());?>
+				<a class="<?php echo $submenu->isActive() ? "active" : '';?>" href="<?php echo $submenu->getHref();?>" title="<?php echo $label;?>"><span><?php echo $label;?></span></a>
+			</li>
+		<?php endforeach;?>
+	</ul>
+</div>
 <div class="clear"></div>
 

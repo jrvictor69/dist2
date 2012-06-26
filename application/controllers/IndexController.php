@@ -19,8 +19,15 @@ class IndexController extends App_Controller_Action {
 	}
 
     public function indexAction() {
-        // action body
-        echo "I am layout";
+		$this->_helper->redirector("home");
+    }
+
+	public function homeAction() {
+		$this->view->navigation()->getContainer()->findOneBy('id', 'home')->setActive(TRUE);
+		
+		$pictureMapper = new Model_PictureMapper();
+		$pictures = $pictureMapper->findByCriteria();
+		$this->view->pictures = $pictures;				        
     }
 
 	public function aboutAction() {
@@ -31,4 +38,3 @@ class IndexController extends App_Controller_Action {
 		
 	}
 }
-

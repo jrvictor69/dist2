@@ -4,78 +4,108 @@
     	<home>
 	   		<id>home</id>
 			<label>Home</label>
-			<module>guest</module>
-			<controller>index</controller>
-			<action>index</action>
-			<params>
-				<type>home</type>
-			</params>
+			<controller>Index</controller>
+			<action>home</action>
 			<pages>
-		    	<about>
-			   		<label>About</label>
-			   		<module>guest</module>
-			   		<controller>index</controller>
-			   		<action>about</action>
-			   		<params>
-						<type>home</type>
-					</params>
-		    	</about>
-		    	<contact>
-			   		<label>Contact</label>
-			   		<module>guest</module>
-			   		<controller>index</controller>
-			   		<action>contact</action>
-			   		<params>
-						<type>home</type>
-					</params>
-			    </contact>
+		    	<home>
+			   		<label>Home</label>
+			   		<controller>Index</controller>
+			   		<action>home</action>
+			   	</home>
 	   		</pages>   		
     	</home>
     	
-    	<who_we>
-	   		<label>Who We?</label>
-	   		<uri>#</uri>
-	   		
+    	<whowe>
+			<id>whowe</id>
+			<label>Who We?</label>
+			<uri>#</uri>
+<!--	   		<action>index</action>-->
+<!--			<controller>whowe</controller>-->
 	   		<pages>
 		    	<history>
-			   		<label>Our History</label>
+			   		<label>Our History</label>			   		
+			   		<controller>Whowe</controller>
 			   		<action>history</action>
-			   		<controller>whowe</controller>
 			   	</history>
 			   	<visionMission>
 			   		<label>Vision  Mission</label>
+			   		<controller>Whowe</controller>
 			   		<action>visionmission</action>
-			   		<controller>whowe</controller>  
 			    </visionMission>
 		    	<logo>
 			   		<label>Our Logo</label>
-			   		<action>logo</action>
-			   		<controller>whowe</controller>    	
+			   		<controller>Whowe</controller>
+			   		<action>logo</action>    	
 			    </logo>
 			    <belief>
-			   		<label>Our Belief</label>
-			   		<action>belief</action>
-			   		<controller>whowe</controller>    	
+			   		<label>Our Belief</label>		   		
+					<controller>Whowe</controller>
+					<action>belief</action>    	
 			    </belief>
 	   		</pages>    		
-    	</who_we>
+    	</whowe>
     	
     	<news>
-    		<label>News</label>
-	   		<action>index</action>
-			<controller>news</controller>
+    		<label>News</label>	   		
+			<controller>News</controller>
+			<action>index</action>
     		<pages>
      			<ja>
+     				<id>newsja</id>
 					<label>Young</label>
-					<action>ja</action>
-					<controller>news</controller>
+					<controller>News</controller>
+					<action>read</action>
 				</ja>
 				<guides>
 					<label>More Guides</label>
-					<action>guias</action>
-					<controller>news</controller>
+					<controller>News</controller>
+					<action>guides</action>
 				</guides>
 			</pages>
-    	</news>	
-   	</navigation>
+    	</news>
+    	
+    	<pathfinder>
+    		<id>pathfinder</id>
+    		<label>Conquistadores</label>	   		
+			<uri>#</uri>
+    		<pages>
+     			<alas>
+     				<id>alas</id>
+					<label>Alas de Orion</label>
+					<controller>Pathfinder</controller>
+					<action>alasorion</action>
+				</alas>
+				<estrella>
+					<id>estrella</id>
+					<label>Estrella de David</label>
+					<controller>Pathfinder</controller>
+					<action>estrelladavid</action>
+				</estrella>
+				<leon>
+					<id>leon</id>
+					<label>Leon de Juda</label>
+					<controller>Pathfinder</controller>
+					<action>leonjuda</action>
+				</leon>
+				<nuam>
+					<id>nuam</id>
+					<label>Nuevo Amanecer</label>
+					<controller>Pathfinder</controller>
+					<action>nuevoamanecer</action>
+				</nuam>
+				<nuori>
+					<id>nuori</id>
+					<label>Nuevo Oriente</label>
+					<controller>Pathfinder</controller>
+					<action>nuevooriente</action>
+				</nuori>
+				<orion>
+					<id>orion</id>
+					<label>Orion</label>
+					<controller>Pathfinder</controller>
+					<action>orion</action>
+				</orion>
+			</pages>
+    	</pathfinder>
+    </navigation>
 </config>

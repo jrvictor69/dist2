@@ -1,0 +1,47 @@
+<?php $this->headScript()->appendFile($this->baseUrl() . "/js/modules/member/Archive.js","text/javascript");?>
+
+<div style="margin:20px;">
+	<?php echo $this->tableHeader('filterHeader', _("Filter Archive"));?>
+	<div id="containerFormFilter">
+		<?php echo $this->formFilter; ?>
+	</div>
+	<br>
+	<?php echo $this->tableHeader('archiveHeader', _("Archives"));?>
+	<?php echo $this->tableList("tblMemberFile");?>	
+	<div class="buttons right">
+		<?php echo $this->buttonRemove("delete-memberFile", $this->translate('Remove'), $this->url(array('action'=>'delete')));?>
+		<?php echo $this->buttonAdd("create-memberFile", $this->translate('Add'), $this->url(array('action'=>'create')));?>
+	</div>
+
+	<div id="dialog"><!-- Loads ajax dialog form --></div>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+	var archive = new com.em.MemberFile();
+			
+	// network
+	archive.setUrl({
+		toTable : '<?php echo $this->url(array('action'=>'read-items'));?>',
+		toBase : '<?php echo $this->baseUrl(); ?>',
+		toUpdate : '<?php echo $this->url(array('action'=>'update')); ?>',
+		toDownload : '<?php echo $this->url(array('action'=>'download')); ?>'
+	});
+	
+	var headers = new Object();
+	headers.headerArray = new Array(
+		'<?php echo $this->translate('Name'); ?>',
+		'<?php echo $this->translate('Note'); ?>',
+		'<?php echo $this->translate('Download'); ?>',
+		'<?php echo $this->translate('Created'); ?>',
+		'<?php echo $this->translate('Changed'); ?>');
+	archive.setHeaders(headers);
+	// configuration of widgets
+	archive.configureTable('#tblMemberFile', true);
+	
+	// CRUD
+	archive.clickToAdd('#create-memberFile');
+	archive.clickToUpdate('#tblMemberFile[id^=update-memberFile-]');
+	archive.clickToDelete('#delete-memberFile');
+});
+</script>
