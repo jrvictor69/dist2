@@ -123,7 +123,7 @@ com.em.Pathfinder.prototype = {
 				"sEmptyTable": "No Catagory found."
 			},
 			"fnDrawCallback": function() {
-				clickToUpdate('#tblCategory a[id^=update-category-]');
+				clickToUpdate('#tblPathfinder a[id^=update-pathfinder-]');
 			},
 			
 			"fnServerData": function (sSource, aoData, fnCallback ) { 
