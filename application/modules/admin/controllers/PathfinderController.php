@@ -51,24 +51,29 @@ class Admin_PathfinderController extends App_Controller_Action {
 
 		$filterParams['name'] = $this->_getParam('filter_name', NULL);
 		$filters = $this->getFilters($filterParams);
-		
-		$start = $this->_getParam('iDisplayStart', 0);
-        $limit = $this->_getParam('iDisplayLength', 10);
-        $page = ($start + $limit) / $limit;
 
-		$categoryMapper = new Model_CategoryMapper();
-		$categories = $categoryMapper->findByCriteria($filters, $limit, $start, $sortCol, $sortDirection);
-		$total = $categoryMapper->getTotalCount($filters);
-		
+		$start = $this->_getParam('iDisplayStart', 0);
+		$limit = $this->_getParam('iDisplayLength', 10);
+		$page = ($start + $limit) / $limit;
+
+		$pathfinderRepo = $this->_entityManager->getRepository('Model\ClubPathfinder');
+		$pathfinders = $pathfinderRepo->findByCriteria($filters, $limit, $start);
+		$total = $pathfinderRepo->getTotalCount($filters);
+
 		$posRecord = $start+1;
 		$data = array();
-		foreach ($categories as $category) {
+		foreach ($pathfinders as $pathfinder) {
+			$changed = $pathfinder->getChanged();
+			if ($changed != NULL) {
+				$changed = $changed->format('d.m.Y');
+			}
+
 			$row = array();			
-			$row[] = $category->getId();
-			$row[] = $category->getName();
-			$row[] = $category->getDescription();
-			$row[] = $category->getCreated();
-			$row[] = $category->getChanged();
+			$row[] = $pathfinder->getId();
+			$row[] = $pathfinder->getName();
+			$row[] = $pathfinder->getTextbible();
+			$row[] = $pathfinder->getCreated()->format('d.m.Y');
+			$row[] = $changed;
 			$row[] = '[]';
 			$data[] = $row;
 			$posRecord++;

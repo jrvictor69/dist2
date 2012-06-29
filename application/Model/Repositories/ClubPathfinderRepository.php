@@ -16,8 +16,19 @@ class ClubPathfinderRepository extends EntityRepository {
 		$query = $this->_em->createQueryBuilder();
 
 		$query->select('pathfinders')
-				->from($this->_entityName, 'pathfinders');
+				->from($this->_entityName, 'pathfinders')
+				->setFirstResult($offset)
+				->setMaxResults($limit);
 
 		return $query->getQuery()->getResult();
+	}
+
+	public function getTotalCount($filters = array()) {
+		$query = $this->_em->createQueryBuilder();
+
+		$query->select('count(pathfinder.id)')
+				->from($this->_entityName, 'pathfinder');
+
+		return (int)$query->getQuery()->getSingleScalarResult();
 	}
 }
