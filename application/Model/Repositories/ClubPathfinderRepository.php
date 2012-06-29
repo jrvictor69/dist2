@@ -12,22 +12,55 @@ use Doctrine\ORM\EntityRepository;
  */
 class ClubPathfinderRepository extends EntityRepository {
 
-	public function findByCriteria($filters = array(), $limit = NULL, $offset = NULL) {
+	/**
+	 * 
+	 * Alias of the table
+	 * @var string
+	 */
+	private $_alias = 'pathfinder';
+
+	/**
+	 * 
+	 * Returns models according the filters
+	 * @param array $filters
+	 * @param int $limit
+	 * @param int $offset
+	 * @param int $sortColumn
+	 * @param string $sortDirection
+	 * @return Array Objects
+	 */
+	public function findByCriteria($filters = array(), $limit = NULL, $offset = NULL, $sortColumn = NULL, $sortDirection = NULL) {
 		$query = $this->_em->createQueryBuilder();
 
-		$query->select('pathfinders')
-				->from($this->_entityName, 'pathfinders')
+		$query->select($this->_alias)
+				->from($this->_entityName, $this->_alias)
 				->setFirstResult($offset)
 				->setMaxResults($limit);
+
+		foreach ($filters as $filter) {
+			$query->where("$this->_alias.".$filter['field'].' '.$filter['operator'].' :'.$filter['field']);
+			$query->setParameter($filter['field'], $filter['filter']);
+		}
 
 		return $query->getQuery()->getResult();
 	}
 
+	/**
+	 * 
+	 * Finds count of models according the filters
+	 * @param array $filters
+	 * @return int
+	 */
 	public function getTotalCount($filters = array()) {
 		$query = $this->_em->createQueryBuilder();
 
-		$query->select('count(pathfinder.id)')
-				->from($this->_entityName, 'pathfinder');
+		$query->select("count($this->_alias.id)")
+				->from($this->_entityName, $this->_alias);
+
+		foreach ($filters as $filter) {
+			$query->where("$this->_alias.".$filter['field'].' '.$filter['operator'].' :'.$filter['field']);
+			$query->setParameter($filter['field'], $filter['filter']);
+		}
 
 		return (int)$query->getQuery()->getSingleScalarResult();
 	}
