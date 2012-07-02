@@ -35,6 +35,9 @@ class Admin_PathfinderController extends App_Controller_Action {
 	 */
 	public function createAction() {
 		$this->_helper->layout()->disableLayout();
+
+		$form = new Admin_Form_ClubPathfinder();
+		$this->view->form = $form;
 	}
 	
 	/**
@@ -57,7 +60,7 @@ class Admin_PathfinderController extends App_Controller_Action {
 		$page = ($start + $limit) / $limit;
 
 		$pathfinderRepo = $this->_entityManager->getRepository('Model\ClubPathfinder');
-		$pathfinders = $pathfinderRepo->findByCriteria($filters, $limit, $start);
+		$pathfinders = $pathfinderRepo->findByCriteria($filters, $limit, $start, $sortCol, $sortDirection);
 		$total = $pathfinderRepo->getTotalCount($filters);
 
 		$posRecord = $start+1;
@@ -72,6 +75,7 @@ class Admin_PathfinderController extends App_Controller_Action {
 			$row[] = $pathfinder->getId();
 			$row[] = $pathfinder->getName();
 			$row[] = $pathfinder->getTextbible();
+			$row[] = $pathfinder->getAddress();
 			$row[] = $pathfinder->getCreated()->format('d.m.Y');
 			$row[] = $changed;
 			$row[] = '[]';
@@ -110,7 +114,7 @@ class Admin_PathfinderController extends App_Controller_Action {
 	
 	public function uploadAction() {
 		$this->_helper->layout()->disableLayout();
-		$this->_helper->viewRenderer->setNoRender(true);
+		$this->_helper->viewRenderer->setNoRender(TRUE);
 
 		$target_path = "image/upload/";
 		// Set the new path with the file name
@@ -123,5 +127,64 @@ class Admin_PathfinderController extends App_Controller_Action {
 			// Set default the image path if any error in upload.
     		echo "default.jpg";
 		}
+	}
+	
+	public function uploadlogoAction() {
+		$this->_helper->layout()->disableLayout();
+		$this->_helper->viewRenderer->setNoRender(TRUE);
+
+		$target_path = "image/upload/";
+		// Set the new path with the file name
+		$target_path = $target_path . basename( $_FILES['myfile']['name']); 
+		// Move the file to the upload folder
+//		if(move_uploaded_file($_FILES['myfile']['tmp_name'], $target_path)) {
+//			// print the new image path in the page, and this will recevie the javascripts 'response' variable
+//    		echo "/".$target_path;
+//		} else{
+//			// Set default the image path if any error in upload.
+//    		echo "default.jpg";
+//		}
+
+		$memberFileMapper = new Model_MemberFileMapper();
+		
+		$fh = fopen($_FILES['myfile']['tmp_name'], 'r');
+		$binary = fread($fh, filesize($_FILES['myfile']['tmp_name']));
+		fclose($fh);
+					
+		$mimeType = $_FILES['myfile']['type'];
+		$fileName = $_FILES['myfile']['name'];
+
+		$logo = new Model_ImageDataVault();
+		$logo->setFilename($fileName)->setMimeType($mimeType)->setBinary($binary);
+
+		$imageDataVaultMapper = new Model_ImageDataVaultMapper();
+		$imageDataVaultMapper->save($logo);
+	}
+	
+	public function downloadAction() {
+		$this->_helper->layout()->disableLayout();
+		$this->_helper->viewRenderer->setNoRender(TRUE);
+
+		$id = (int)$this->_getParam('id', 0);
+    	 
+		$archiveMapper = new Model_MemberFileMapper();
+		$archive = $archiveMapper->find($id);
+		
+   	 	$file = $archive->getFile();
+    	if ($file->getBinary()) {
+    		$this->_response
+    			//For downloading
+    			->setHeader('Content-type', $file->getMimeType())
+				->setHeader('Content-Disposition', sprintf('attachment; filename="%s"', $file->getFilename()))
+				->setHeader('Content-Transfer-Encoding', 'binary')
+				->setHeader('Content-Length', strlen($file->getBinary()))
+				// IE headers to make sure it will download it in https
+				->setHeader('Expires', '0', TRUE)
+				->setHeader('Cache-Control', 'private', TRUE)
+				->setHeader('Pragma', 'cache');
+    		echo $file->getBinary();
+    	} else {
+    		$this->_response->setHttpResponseCode(404);
+    	}
 	}
 }

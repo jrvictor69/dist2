@@ -31,16 +31,44 @@ class ClubPathfinderRepository extends EntityRepository {
 	 */
 	public function findByCriteria($filters = array(), $limit = NULL, $offset = NULL, $sortColumn = NULL, $sortDirection = NULL) {
 		$query = $this->_em->createQueryBuilder();
-
+ 
 		$query->select($this->_alias)
 				->from($this->_entityName, $this->_alias)
 				->setFirstResult($offset)
 				->setMaxResults($limit);
 
+
 		foreach ($filters as $filter) {
 			$query->where("$this->_alias.".$filter['field'].' '.$filter['operator'].' :'.$filter['field']);
 			$query->setParameter($filter['field'], $filter['filter']);
 		}
+
+		$sort = '';
+		switch ($sortColumn) {
+			case 1:
+				$sort = 'name';
+				break;
+
+			case 2:
+				$sort = 'textbible';
+				break;
+
+			case 3:
+				$sort = 'textbible';
+				break;
+
+			case 4:
+				$sort = 'created';
+				break;
+
+			case 5:
+				$sort = 'changed';
+				break;
+
+			default: $sort = 'name';
+		}
+
+		$query->orderBy("$this->_alias.$sort", $sortDirection);
 
 		return $query->getQuery()->getResult();
 	}
