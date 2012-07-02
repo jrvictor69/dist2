@@ -26,8 +26,16 @@ class Admin_PathfinderController extends App_Controller_Action {
     	$formFilter = new Admin_Form_SearchFilter();
 		$formFilter->getElement('nameFilter')->setLabel(_("Name category"));
 		$this->view->formFilter = $formFilter;
+
+		$id = 5;
+		$imageMapper = new Model_ImageDataVaultMapper();
+		$imageLogo = $imageMapper->find($id);
+
+		if ($imageLogo->getBinary()) {
+			$src = $this->_helper->url('profile-logo', NULL, NULL, array('id' => $imageLogo->getId(), 'timestamp' => time()));
+		}
 	}
-	
+
 	/**
 	 * 
 	 * This action shows a form in create mode
@@ -38,8 +46,18 @@ class Admin_PathfinderController extends App_Controller_Action {
 
 		$form = new Admin_Form_ClubPathfinder();
 		$this->view->form = $form;
+		
+		$id = 7;
+		$imageMapper = new Model_ImageDataVaultMapper();
+		$imageLogo = $imageMapper->find($id);
+
+		if ($imageLogo->getBinary()) {
+			$this->view->src = $this->_helper->url('profile-logo', NULL, NULL, array('id' => $imageLogo->getId(), 'timestamp' => time()));
+		} else {
+			$this->view->src = '/js/lib/ajax-upload/ep.jpg';
+		}
 	}
-	
+
 	/**
 	 * 
 	 * Outputs an XHR response containing all entries in categories.
@@ -128,63 +146,66 @@ class Admin_PathfinderController extends App_Controller_Action {
     		echo "default.jpg";
 		}
 	}
-	
-	public function uploadlogoAction() {
+
+	/**
+	 * 
+	 * Uploads the profile logo
+	 * @access public
+	 */
+	public function uploadLogoAction() {
 		$this->_helper->layout()->disableLayout();
 		$this->_helper->viewRenderer->setNoRender(TRUE);
 
-		$target_path = "image/upload/";
-		// Set the new path with the file name
-		$target_path = $target_path . basename( $_FILES['myfile']['name']); 
-		// Move the file to the upload folder
-//		if(move_uploaded_file($_FILES['myfile']['tmp_name'], $target_path)) {
-//			// print the new image path in the page, and this will recevie the javascripts 'response' variable
-//    		echo "/".$target_path;
-//		} else{
-//			// Set default the image path if any error in upload.
-//    		echo "default.jpg";
-//		}
-
 		$memberFileMapper = new Model_MemberFileMapper();
-		
+
 		$fh = fopen($_FILES['myfile']['tmp_name'], 'r');
 		$binary = fread($fh, filesize($_FILES['myfile']['tmp_name']));
 		fclose($fh);
-					
+
 		$mimeType = $_FILES['myfile']['type'];
 		$fileName = $_FILES['myfile']['name'];
 
-		$logo = new Model_ImageDataVault();
-		$logo->setFilename($fileName)->setMimeType($mimeType)->setBinary($binary);
+		$imageLogo = new Model_ImageDataVault();
+		$imageLogo->setFilename($fileName)->setMimeType($mimeType)->setBinary($binary);
 
 		$imageDataVaultMapper = new Model_ImageDataVaultMapper();
-		$imageDataVaultMapper->save($logo);
+		$imageDataVaultMapper->save($imageLogo);
+
+		if ($imageLogo->getBinary()) {
+			echo $this->_helper->url('profile-logo', NULL, NULL, array('id' => $imageLogo->getId(), 'timestamp' => time()));
+		} else {
+			echo "/js/lib/ajax-upload/ep.jpg";
+		}
 	}
-	
-	public function downloadAction() {
+
+	/**
+	 *
+	 * Sends the binary file vault to the user agent.
+	 * @return void
+	 */
+	public function profileLogoAction() {
 		$this->_helper->layout()->disableLayout();
 		$this->_helper->viewRenderer->setNoRender(TRUE);
 
 		$id = (int)$this->_getParam('id', 0);
-    	 
-		$archiveMapper = new Model_MemberFileMapper();
-		$archive = $archiveMapper->find($id);
-		
-   	 	$file = $archive->getFile();
-    	if ($file->getBinary()) {
-    		$this->_response
-    			//For downloading
-    			->setHeader('Content-type', $file->getMimeType())
-				->setHeader('Content-Disposition', sprintf('attachment; filename="%s"', $file->getFilename()))
+
+		$imageMapper = new Model_ImageDataVaultMapper();
+		$imageLogo = $imageMapper->find($id);
+
+		if ($imageLogo->getBinary()) {
+			$this->_response
+			//No caching
+				->setHeader('Pragma', 'public')
+				->setHeader('Expires', '0')
+				->setHeader('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
+				->setHeader('Cache-Control', 'private')
+				->setHeader('Content-type', $imageLogo->getMimeType())
 				->setHeader('Content-Transfer-Encoding', 'binary')
-				->setHeader('Content-Length', strlen($file->getBinary()))
-				// IE headers to make sure it will download it in https
-				->setHeader('Expires', '0', TRUE)
-				->setHeader('Cache-Control', 'private', TRUE)
-				->setHeader('Pragma', 'cache');
-    		echo $file->getBinary();
-    	} else {
-    		$this->_response->setHttpResponseCode(404);
-    	}
+				->setHeader('Content-Length', strlen($imageLogo->getBinary()));
+
+			echo $imageLogo->getBinary();
+		} else {
+			$this->_response->setHttpResponseCode(404);
+		}
 	}
 }

@@ -6,7 +6,7 @@
 		<img src="spinner_large.gif" border="0">
 	</div>
 		<!-- // Profile picture -->
-		<img src='/js/lib/ajax-upload/ep.jpg'  id="profile_img" />
+		<img src="<?php echo $this->src;?>" id="profile_img" />
 		<!-- // Button Container -->
 		<div class='change_button' id='change_button'>
 			<!-- // Button -->
@@ -35,7 +35,7 @@
 	});
 
 	new AjaxUpload(button,{
-		action: '<?php echo $this->url(array('action'=>'uploadlogo'));?>',
+		action: '<?php echo $this->url(array('action'=>'upload-logo'));?>',
 		name: 'myfile',
 		onSubmit : function(file, ext){
 			spinner.css('display', 'block');
