@@ -37,6 +37,11 @@ class Admin_Form_ClubPathfinder extends Zend_Form {
 				'filters' => array(
 					array('StringTrim')
 				)
+			))
+
+			->addElement('Select', 'church', array(
+				'label' => _('Church'),
+				'required'   => TRUE
 			));
 	}
 }

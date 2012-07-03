@@ -192,7 +192,7 @@ com.em.Pathfinder.prototype = {
 	configureDialogForm: function(selector) {with (this) {
 		dialogForm = $(selector).dialog({
 			autoOpen: false,
-			height: 165,
+			height: 320,
 			width: 350,
 			modal: false,
 			close: function(event, ui) {

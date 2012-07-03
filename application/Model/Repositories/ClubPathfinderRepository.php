@@ -1,5 +1,14 @@
 <?php
-
+/**
+ * Repository for Dist 2.
+ *
+ * @category Dist
+ * @package Model
+ * @subpackage Repository
+ * @author Victor Villca <victor.villca@people-trust.com>
+ * @copyright Copyright (c) 2012 Gisof A/S
+ * @license Proprietary
+ */
 namespace Model\Repositories;
 
 use Doctrine\ORM\EntityRepository;
@@ -91,5 +100,26 @@ class ClubPathfinderRepository extends EntityRepository {
 		}
 
 		return (int)$query->getQuery()->getSingleScalarResult();
+	}
+
+	/**
+	 * 
+	 * Verifies if the name Club pathfinder already exist it.
+	 * @param string $name
+	 * @return boolean
+	 */
+	public function verifyExistName($name) {
+		$query = $this->_em->createQueryBuilder();
+
+		$query->select($this->_alias)
+				->from($this->_entityName, $this->_alias)
+				->where("$this->_alias.name = :name")
+				->setParameter('name', $name);
+		$result = $query->getQuery()->getResult();
+		if (count($result) > 0) {
+			return TRUE;
+		} else {
+			return FALSE;
+		}
 	}
 }

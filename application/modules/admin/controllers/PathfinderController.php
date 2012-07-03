@@ -34,6 +34,12 @@ class Admin_PathfinderController extends App_Controller_Action {
 		if ($imageLogo->getBinary()) {
 			$src = $this->_helper->url('profile-logo', NULL, NULL, array('id' => $imageLogo->getId(), 'timestamp' => time()));
 		}
+		
+		
+//		$churches = $churchRepo->getChurches();
+		echo "<pre>";
+//		var_dump($churchRepo->findAll());
+		echo "</pre>";
 	}
 
 	/**
@@ -45,7 +51,7 @@ class Admin_PathfinderController extends App_Controller_Action {
 		$this->_helper->layout()->disableLayout();
 
 		$form = new Admin_Form_ClubPathfinder();
-		$this->view->form = $form;
+		
 		
 		$id = 7;
 		$imageMapper = new Model_ImageDataVaultMapper();
@@ -56,6 +62,58 @@ class Admin_PathfinderController extends App_Controller_Action {
 		} else {
 			$this->view->src = '/js/lib/ajax-upload/ep.jpg';
 		}
+
+		$churchRepo = $this->_entityManager->getRepository('Model\Church');
+		$form->getElement('church')->setMultiOptions($churchRepo->findAllName());
+
+		$this->view->form = $form;
+	}
+
+	/**
+	 * 
+	 * Creates a new Position
+	 * @access public
+	 */
+	public function createSaveAction() {
+		$this->_helper->viewRenderer->setNoRender(TRUE);
+
+		$form = new Admin_Form_ClubPathfinder();
+
+		$formData = $this->getRequest()->getPost();
+		if ($form->isValid($formData)) {
+
+			$pathfinderRepo = $this->_entityManager->getRepository('Model\ClubPathfinder');
+//			var_dump($pa)
+//			verifyExistName
+//			$positionMapper = new Model_PositionMapper();
+			if (!$pathfinderRepo->verifyExistName($formData['name'])) {
+				
+//				$position = new Model_Position($formData);
+				$position = new Model\ClubPathfinder();
+				$position->setName($formData['name'])
+					->setTextbible($formData['textbible'])
+					->setAddress($formData['address'])
+					->setCreated(new DateTime('now'))
+					->setChangedBy(Zend_Auth::getInstance()->getIdentity()->id);
+				
+				$this->_entityManager->persist($position);
+				$this->_entityManager->flush();
+//				$position->setCreatedBy(Zend_Auth::getInstance()->getIdentity()->id);
+//				$positionMapper->save($position);
+				$this->stdResponse->success = TRUE;
+				$this->stdResponse->message = _("Club Pathfinder saved");	
+			} else {
+				$this->stdResponse->success = FALSE;
+				$this->stdResponse->name_duplicate = TRUE;
+				$this->stdResponse->message = _("The Club Pathfinder already exists");
+			}
+    	} else {
+			$this->stdResponse->success = FALSE;
+			$this->stdResponse->messageArray = $form->getMessages();
+			$this->stdResponse->message = _("The form contains error and is not saved");
+		}
+		// sends response to client
+		$this->_helper->json($this->stdResponse);
 	}
 
 	/**
