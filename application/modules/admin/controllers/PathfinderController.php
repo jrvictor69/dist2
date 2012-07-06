@@ -78,28 +78,26 @@ class Admin_PathfinderController extends App_Controller_Action {
 		$this->_helper->viewRenderer->setNoRender(TRUE);
 
 		$form = new Admin_Form_ClubPathfinder();
+		$churchRepo = $this->_entityManager->getRepository('Model\Church');
+		$form->getElement('church')->setMultiOptions($churchRepo->findAllName());
 
 		$formData = $this->getRequest()->getPost();
 		if ($form->isValid($formData)) {
-
 			$pathfinderRepo = $this->_entityManager->getRepository('Model\ClubPathfinder');
-//			var_dump($pa)
-//			verifyExistName
-//			$positionMapper = new Model_PositionMapper();
 			if (!$pathfinderRepo->verifyExistName($formData['name'])) {
-				
-//				$position = new Model_Position($formData);
-				$position = new Model\ClubPathfinder();
-				$position->setName($formData['name'])
+				$church = $this->_entityManager->find('Model\Church', (int)$formData['church']);
+
+				$club = new Model\ClubPathfinder();
+				$club->setName($formData['name'])
 					->setTextbible($formData['textbible'])
 					->setAddress($formData['address'])
 					->setCreated(new DateTime('now'))
-					->setChangedBy(Zend_Auth::getInstance()->getIdentity()->id);
-				
-				$this->_entityManager->persist($position);
+					->setChangedBy(Zend_Auth::getInstance()->getIdentity()->id)
+					->setChurch($church);
+
+				$this->_entityManager->persist($club);
 				$this->_entityManager->flush();
-//				$position->setCreatedBy(Zend_Auth::getInstance()->getIdentity()->id);
-//				$positionMapper->save($position);
+
 				$this->stdResponse->success = TRUE;
 				$this->stdResponse->message = _("Club Pathfinder saved");	
 			} else {
@@ -107,13 +105,40 @@ class Admin_PathfinderController extends App_Controller_Action {
 				$this->stdResponse->name_duplicate = TRUE;
 				$this->stdResponse->message = _("The Club Pathfinder already exists");
 			}
-    	} else {
+		} else {
 			$this->stdResponse->success = FALSE;
 			$this->stdResponse->messageArray = $form->getMessages();
 			$this->stdResponse->message = _("The form contains error and is not saved");
 		}
 		// sends response to client
 		$this->_helper->json($this->stdResponse);
+	}
+
+	/**
+	 * 
+	 * This action shows the form in update mode for Club Pathfinder.
+	 * @access public
+	 */
+	public function updateAction() {
+		$this->_helper->layout()->disableLayout();
+		$form = new Admin_Form_ClubPathfinder();
+		$churchRepo = $this->_entityManager->getRepository('Model\Church');
+		$form->getElement('church')->setMultiOptions($churchRepo->findAllName());
+
+		$id = $this->_getParam('id', 0);
+		$club = $this->_entityManager->find('Model\ClubPathfinder', $id);
+		if ($club != NULL) {
+			$form->getElement('name')->setValue($club->getName());
+			$form->getElement('textbible')->setValue($club->getTextbible());
+			$form->getElement('address')->setValue($club->getAddress());
+			$form->getElement('church')->setValue($club->getChurch()->getId());
+		} else {
+			$this->stdResponse->success = FALSE;
+			$this->stdResponse->message = _("The requested record was not found.");
+			$this->_helper->json($this->stdResponse);
+		}
+
+		$this->view->form = $form;
 	}
 
 	/**
