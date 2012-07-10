@@ -160,7 +160,47 @@
 				</position>
 			</pages>
 		</pathfinder>
-		
+
+		<picture>
+			<id>picture</id>
+			<label>Pictures</label>
+			<module>admin</module>
+			<controller>Picture</controller>
+			<action>read</action>
+			<params>
+				<type>picture</type>
+			</params>
+			<pages>
+				<picture>
+					<label>Pictures</label>
+					<module>admin</module>
+					<controller>Picture</controller>
+					<action>read</action>
+					<params>
+						<type>picture</type>
+					</params>
+				</picture>
+				<pictureType>
+					<label>Picture Type</label>
+					<module>admin</module>
+					<controller>PictureType</controller>
+					<action>read</action>
+					<params>
+						<type>picture</type>
+					</params>
+				</pictureType>
+				<pictureCategory>
+					<label>Picture Category</label>
+					<module>admin</module>
+					<controller>PictureCategory</controller>
+					<action>read</action>
+					<params>
+						<type>picture</type>
+					</params>
+				</pictureCategory>
+			</pages>
+		</picture>
+
 		<security>
 			<id>security</id>
 			<label>Security</label>
