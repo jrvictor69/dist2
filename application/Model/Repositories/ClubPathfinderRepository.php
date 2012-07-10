@@ -40,7 +40,7 @@ class ClubPathfinderRepository extends EntityRepository {
 	 */
 	public function findByCriteria($filters = array(), $limit = NULL, $offset = NULL, $sortColumn = NULL, $sortDirection = NULL) {
 		$query = $this->_em->createQueryBuilder();
- 
+
 		$query->select($this->_alias)
 				->from($this->_entityName, $this->_alias)
 				->setFirstResult($offset)
@@ -109,17 +109,26 @@ class ClubPathfinderRepository extends EntityRepository {
 	 * @return boolean
 	 */
 	public function verifyExistName($name) {
-		$query = $this->_em->createQueryBuilder();
+		$object = $this->findOneBy(array('name' => $name, 'state' => TRUE));
+		return $object != NULL? TRUE : FALSE;
+	}
 
-		$query->select($this->_alias)
-				->from($this->_entityName, $this->_alias)
-				->where("$this->_alias.name = :name")
-				->setParameter('name', $name);
-		$result = $query->getQuery()->getResult();
-		if (count($result) > 0) {
-			return TRUE;
-		} else {
-			return FALSE;
-		}
+	/**
+	 * 
+	 * Verifies if the id and name Club pathfinder already exist it.
+	 * @param int $id
+	 * @param string $name
+	 */
+	public function verifyExistIdAndName($id, $name) {
+		$object = $this->findOneBy(array('id' => $id, 'name' => $name, 'state' => TRUE));
+		return $object != NULL? TRUE : FALSE;
+	}
+
+	/**
+	 * (non-PHPdoc)
+	 * @see Doctrine\ORM.EntityRepository::find()
+	 */
+	public function find($id) {
+		return $this->findOneBy(array('id' => $id, 'state' => TRUE));
 	}
 }

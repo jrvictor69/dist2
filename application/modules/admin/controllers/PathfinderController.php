@@ -9,7 +9,7 @@
  */
 
 class Admin_PathfinderController extends App_Controller_Action {
-		
+
 	/**
 	 * (non-PHPdoc)
 	 * @see App_Controller_Action::init()
@@ -17,29 +17,24 @@ class Admin_PathfinderController extends App_Controller_Action {
 	public function init() {
 		parent::init();
 	}
-	
-    public function indexAction() {
+
+	/**
+	 *
+	 * In case no action redirects the action read will be executed
+	 * @access public
+	 */
+	public function indexAction() {
 		$this->_helper->redirector('read');
-    }
-    
-    public function readAction() {
-    	$formFilter = new Admin_Form_SearchFilter();
-		$formFilter->getElement('nameFilter')->setLabel(_("Name category"));
+	}
+
+	/**
+	 *
+	 * This action shows a paginated list of club pathfinders
+	 */
+	public function readAction() {
+		$formFilter = new Admin_Form_SearchFilter();
+		$formFilter->getElement('nameFilter')->setLabel(_("Name Club Pathfinder"));
 		$this->view->formFilter = $formFilter;
-
-		$id = 5;
-		$imageMapper = new Model_ImageDataVaultMapper();
-		$imageLogo = $imageMapper->find($id);
-
-		if ($imageLogo->getBinary()) {
-			$src = $this->_helper->url('profile-logo', NULL, NULL, array('id' => $imageLogo->getId(), 'timestamp' => time()));
-		}
-		
-		
-//		$churches = $churchRepo->getChurches();
-		echo "<pre>";
-//		var_dump($churchRepo->findAll());
-		echo "</pre>";
 	}
 
 	/**
@@ -51,35 +46,22 @@ class Admin_PathfinderController extends App_Controller_Action {
 		$this->_helper->layout()->disableLayout();
 
 		$form = new Admin_Form_ClubPathfinder();
-		
-		
-		$id = 7;
-		$imageMapper = new Model_ImageDataVaultMapper();
-		$imageLogo = $imageMapper->find($id);
+		$form->getElement('church')->setMultiOptions($this->getChurches());
 
-		if ($imageLogo->getBinary()) {
-			$this->view->src = $this->_helper->url('profile-logo', NULL, NULL, array('id' => $imageLogo->getId(), 'timestamp' => time()));
-		} else {
-			$this->view->src = '/js/lib/ajax-upload/ep.jpg';
-		}
-
-		$churchRepo = $this->_entityManager->getRepository('Model\Church');
-		$form->getElement('church')->setMultiOptions($churchRepo->findAllName());
-
+		$this->view->src = '/js/lib/ajax-upload/ep.jpg';
 		$this->view->form = $form;
 	}
 
 	/**
-	 * 
-	 * Creates a new Position
+	 *
+	 * Creates a new Club Pathfinder
 	 * @access public
 	 */
 	public function createSaveAction() {
 		$this->_helper->viewRenderer->setNoRender(TRUE);
 
 		$form = new Admin_Form_ClubPathfinder();
-		$churchRepo = $this->_entityManager->getRepository('Model\Church');
-		$form->getElement('church')->setMultiOptions($churchRepo->findAllName());
+		$form->getElement('church')->setMultiOptions($this->getChurches());
 
 		$formData = $this->getRequest()->getPost();
 		if ($form->isValid($formData)) {
@@ -115,15 +97,14 @@ class Admin_PathfinderController extends App_Controller_Action {
 	}
 
 	/**
-	 * 
+	 *
 	 * This action shows the form in update mode for Club Pathfinder.
 	 * @access public
 	 */
 	public function updateAction() {
 		$this->_helper->layout()->disableLayout();
 		$form = new Admin_Form_ClubPathfinder();
-		$churchRepo = $this->_entityManager->getRepository('Model\Church');
-		$form->getElement('church')->setMultiOptions($churchRepo->findAllName());
+		$form->getElement('church')->setMultiOptions($this->getChurches());
 
 		$id = $this->_getParam('id', 0);
 		$club = $this->_entityManager->find('Model\ClubPathfinder', $id);
@@ -132,6 +113,15 @@ class Admin_PathfinderController extends App_Controller_Action {
 			$form->getElement('textbible')->setValue($club->getTextbible());
 			$form->getElement('address')->setValue($club->getAddress());
 			$form->getElement('church')->setValue($club->getChurch()->getId());
+
+			$imageMapper = new Model_ImageDataVaultMapper();
+			$imageLogo = $imageMapper->find($club->getLogoId());
+
+			if ($imageLogo != NULL && $imageLogo->getBinary()) {
+				$this->view->src = $this->_helper->url('profile-logo', NULL, NULL, array('id' => $imageLogo->getId(), 'timestamp' => time()));
+			} else {
+				$this->view->src = '/js/lib/ajax-upload/ep.jpg';
+			}
 		} else {
 			$this->stdResponse->success = FALSE;
 			$this->stdResponse->message = _("The requested record was not found.");
@@ -142,8 +132,62 @@ class Admin_PathfinderController extends App_Controller_Action {
 	}
 
 	/**
+	 *
+	 * Updates a Club Pathfinder
+	 * @access public
+	 * 1) Gets the record to edit
+	 * 2) Validates the record was no deleted
+	 * 3) Validates the existance of another Club Pathfinder with the same name.
+	 * 4) Saves the changes.
+	 */
+	public function updateSaveAction() {
+		$this->_helper->viewRenderer->setNoRender(TRUE);
+
+		$form = new Admin_Form_ClubPathfinder();
+		$form->getElement('church')->setMultiOptions($this->getChurches());
+		
+		$formData = $this->getRequest()->getPost();
+		if ($form->isValid($formData)) {
+			$id = $this->_getParam('id', 0);
+			$club = $this->_entityManager->find('Model\ClubPathfinder', $id);
+			$pathfinderRepo = $this->_entityManager->getRepository('Model\ClubPathfinder');
+			if ($club != NULL) {
+				if (!$pathfinderRepo->verifyExistName($formData['name']) || $pathfinderRepo->verifyExistIdAndName($id, $formData['name'])) {
+					$church = $this->_entityManager->find('Model\Church', (int)$formData['church']);
+
+					$club->setName($formData['name'])
+						->setTextbible($formData['textbible'])
+						->setAddress($formData['address'])
+						->setChanged(new DateTime('now'))
+						->setChangedBy(Zend_Auth::getInstance()->getIdentity()->id)
+						->setChurch($church);
+
+					$this->_entityManager->persist($club);
+					$this->_entityManager->flush();
+
+					$this->stdResponse->success = TRUE;
+					$this->stdResponse->message = _("Club Pathfinder updated");
+				} else {
+					$this->stdResponse->success = FALSE;
+					$this->stdResponse->name_duplicate = TRUE;
+					$this->stdResponse->message = _("The Club Pathfinder already exists");
+				}
+			} else {
+				$this->stdResponse->success = FALSE;
+				$this->stdResponse->message = _("The Club Pathfinder does not exists");
+			}
+		} else {
+			$this->stdResponse->success = FALSE;
+			$this->stdResponse->messageArray = $form->getMessages();
+			$this->stdResponse->message = _("The form contains error and is not saved");
+		}
+		// sends response to client
+		$this->_helper->json($this->stdResponse);
+	}
+
+	/**
 	 * 
-	 * Outputs an XHR response containing all entries in categories.
+	 * Outputs an XHR response containing all entries in club pathfinders.
 	 * This action serves as a datasource for the read/index view
 	 * @xhrParam int filter_name
 	 * @xhrParam int iDisplayStart
@@ -189,7 +233,7 @@ class Admin_PathfinderController extends App_Controller_Action {
 		$this->stdResponse->aaData = $data;
 		$this->_helper->json($this->stdResponse);
 	}
-	
+
 	/**
 	 * 
 	 * Returns an associative array where:
@@ -209,10 +253,10 @@ class Admin_PathfinderController extends App_Controller_Action {
 		if (!empty($filterParams['name'])) {
 			$filters[] = array('field' => 'name', 'filter' => '%'.$filterParams['name'].'%', 'operator' => 'LIKE');
 		}
-				
+
 		return $filters;
 	}
-	
+
 	public function uploadAction() {
 		$this->_helper->layout()->disableLayout();
 		$this->_helper->viewRenderer->setNoRender(TRUE);
@@ -231,7 +275,7 @@ class Admin_PathfinderController extends App_Controller_Action {
 	}
 
 	/**
-	 * 
+	 *
 	 * Uploads the profile logo
 	 * @access public
 	 */
@@ -290,5 +334,15 @@ class Admin_PathfinderController extends App_Controller_Action {
 		} else {
 			$this->_response->setHttpResponseCode(404);
 		}
+	}
+
+	/**
+	 *
+	 * Returns the ids and names of churches
+	 * @return array
+	 */
+	private function getChurches() {
+		$churchRepo = $this->_entityManager->getRepository('Model\Church');
+		return $churchRepo->findAllName();
 	}
 }

@@ -1,4 +1,17 @@
 <div id="dialog-form" title="<?php echo $this->translate('Edit Position'); ?>" class="header" style="display: none;">
+	<div class='profile_pic'>
+	<!-- // Spinner -->
+	<div id="spinner" style="display:none">
+		<img src="spinner_large.gif" border="0">
+	</div>
+		<!-- // Profile picture -->
+		<img src="<?php echo $this->src;?>" id="profile_img" style="width: 127px; height: 127px;" />
+		<!-- // Button Container -->
+		<div class='change_button' id='change_button'>
+			<!-- // Button -->
+			<div class='change_button_text'>Change my logo</div>
+		</div>
+	</div>
 	<?php echo $this->form;?>
 </div>
 
