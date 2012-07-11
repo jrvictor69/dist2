@@ -161,7 +161,7 @@
 			</pages>
 		</pathfinder>
 
-		<picture>
+		<gallery>
 			<id>picture</id>
 			<label>Pictures</label>
 			<module>admin</module>
@@ -183,7 +183,7 @@
 				<pictureType>
 					<label>Picture Type</label>
 					<module>admin</module>
-					<controller>PictureType</controller>
+					<controller>Picturetype</controller>
 					<action>read</action>
 					<params>
 						<type>picture</type>
@@ -199,7 +199,7 @@
 					</params>
 				</pictureCategory>
 			</pages>
-		</picture>
+		</gallery>
 
 		<security>
 			<id>security</id>

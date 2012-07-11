@@ -9,13 +9,13 @@
  */
 
 class Admin_Form_Picture extends Zend_Form {
-	
+
 	public function init() {
 		$this
 			->setAttrib('id', 'formId')
 			->setMethod('post')
-       		->setAttrib('enctype', 'multipart/form-data');
-															
+			->setAttrib('enctype', 'multipart/form-data');
+
 		$title = new Zend_Form_Element_Text('title');
 		$title->setLabel(_('Title'))
 			->setRequired(TRUE)
@@ -26,13 +26,13 @@ class Admin_Form_Picture extends Zend_Form {
 				->setAttrib("cols", 40)
 				->setAttrib("rows", 4)
 				->addFilter('StringTrim');
-              
+
 		$file = new Zend_Form_Element_File('file');
 		$file->setLabel(_('File'))
 				->setRequired(TRUE)
 				->setDestination(APPLICATION_PATH.'/../public/image/upload/galleryview/photos')
 				->addValidator('Extension', false, 'jpg, png, gif');
-				
+
 		$filecrop = new Zend_Form_Element_File('filecrop');
 		$filecrop->setLabel(_('Crop file'))
 				->setRequired(TRUE)

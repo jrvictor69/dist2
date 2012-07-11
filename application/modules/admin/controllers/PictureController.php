@@ -3,7 +3,7 @@
  * Controller for DIST 2.
  *
  * @category Dist
- * @author Victor Villca <victor.villca@people-t.com>
+ * @author Victor Villca <victor.villca@people-trust.com>
  * @copyright Copyright (c) 2012 Gisof A/S
  * @license Proprietary
  */
@@ -28,9 +28,9 @@ class Admin_PictureController extends App_Controller_Action {
 	public function indexAction() {
 		$this->_helper->redirector('read');
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * This action shows a paginated list of pictures
 	 * @access public
 	 */
@@ -39,20 +39,20 @@ class Admin_PictureController extends App_Controller_Action {
 		$formFilter->getElement('nameFilter')->setLabel(_("Title picture"));
 		$this->view->formFilter = $formFilter;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * This action shows a form in create mode
 	 * @access public
 	 */
 	public function createAction() {
 		$this->_helper->layout()->disableLayout();
-		
+
 		$form = new Admin_Form_Picture();
 		$form->setAction($this->_helper->url("save"));
 		$this->view->form = $form;
 	}
-	
+
 	/**
 	 * 
 	 * Creates a new Picture
@@ -63,47 +63,47 @@ class Admin_PictureController extends App_Controller_Action {
 			$form = new Admin_Form_Picture();
 			$formData = $this->getRequest()->getPost();
 			if ($form->isValid($formData)) {
-				$pictureMapper = new Model_PictureMapper();
-				if (!$pictureMapper->verifyExistTitle($formData['title'])) {
+				$pictureRepo = $this->_entityManager->getRepository('Model\Picture');
+				if (!$pictureRepo->verifyExistTitle($formData['title'])) {
 					$imageFile = $form->getElement('file');
-            		$imageFilecrop = $form->getElement('filecrop');
-            		
+					$imageFilecrop = $form->getElement('filecrop');
+
 					try {
 						$imageFile->receive();
 						$imageFilecrop->receive();
 					} catch (Zend_File_Transfer_Exception $e) {
 						$e->getMessage();
 					}
-					
-//					$fh = fopen($_FILES['file']['tmp_name'], 'r');
-//					$binary = fread($fh, filesize($_FILES['file']['tmp_name']));
-//					fclose($fh);
-					
+
 					$mimeType = $_FILES['file']['type'];
-					$fileName = $_FILES['file']['name'];
+					$filename = $_FILES['file']['name'];
 
-					$dataVault = new Model_ImageDataVault();
-					$dataVault->setFilename($fileName)->setMimeType($mimeType)->setBinary("");
+					$mimeTypeCrop = $_FILES['filecrop']['type'];
+					$filenameCrop = $_FILES['filecrop']['name'];
 
-					$picture = new Model_Picture();
-					$picture->setFile($dataVault)
-							->setCreatedBy(1)
+					$picture = new Model\Picture();
+					$picture->setTitle($formData['title'])
 							->setDescription($formData['description'])
 							->setSrc(self::SRC_PICTURE)
-							->setSrcCrops(self::SRC_CROP_PICTURE)
-							->setTitle($formData['title']);
+							->setFilename($filename)
+							->setMimeType($mimeType)
+							->setSrcCrop(self::SRC_CROP_PICTURE)
+							->setFilenameCrop($filenameCrop)
+							->setMimeTypeCrop($mimeTypeCrop)
+							->setCreated(new DateTime('now'));
 
-					$pictureMapper->save($picture);
+					$this->_entityManager->persist($picture);
+					$this->_entityManager->flush();
 
 					$this->_helper->flashMessenger(array('success' => _("Picture saved")));
-					$this->_helper->redirector('read', 'Picture', 'admin', array('type'=>'information'));								            
+					$this->_helper->redirector('read', 'Picture', 'admin', array('type'=>'information'));
 				}
 			}
 		} else {
 			$this->_helper->redirector('read', 'Picture', 'admin', array('type'=>'information'));
 		}
 	}
-	
+
 	/**
 	 * 
 	 * This action shows the form in update the title and description for Picture.
@@ -237,7 +237,7 @@ class Admin_PictureController extends App_Controller_Action {
         // sends response to client
         $this->_helper->json($this->stdResponse);
 	}
-	
+
 	/**
 	 * 
 	 * Outputs an XHR response containing all entries in pictures.
@@ -254,30 +254,28 @@ class Admin_PictureController extends App_Controller_Action {
 		$filters = $this->getFilters($filterParams);
 		
 		$start = $this->_getParam('iDisplayStart', 0);
-        $limit = $this->_getParam('iDisplayLength', 10);
-        $page = ($start + $limit) / $limit;
+		$limit = $this->_getParam('iDisplayLength', 10);
+		$page = ($start + $limit) / $limit;
 
-		$pictureMapper = new Model_PictureMapper();
-		$pictures = $pictureMapper->findByCriteria($filters, $limit, $start, $sortCol, $sortDirection);
-		$total = $pictureMapper->getTotalCount($filters);
+		$pictureRepo = $this->_entityManager->getRepository('Model\Picture');
+		$pictures = $pictureRepo->findByCriteria($filters, $limit, $start, $sortCol, $sortDirection);
+		$total = $pictureRepo->getTotalCount($filters);
 		
 		$posRecord = $start+1;
 		$data = array();
 		foreach ($pictures as $picture) {
-			$created = new Zend_Date($picture->getCreated());
 			$changed = $picture->getChanged();
 			if ($changed != NULL) {
-				$changed = new Zend_Date($picture->getChanged());
-				$changed = $changed->toString("dd.MM.YYYY");
+				$changed = $changed->format('d.m.Y');
 			}
-			
+
 			$row = array();
 			$row[] = $picture->getId();
 			$row[] = $picture->getTitle();
 			$row[] = $picture->getDescription();
-			$row[] = $picture->getFile()->getFilename();
-			$row[] = $picture->getCategory()->getName();
-			$row[] = $created->toString("dd.MM.YYYY");
+			$row[] = $picture->getFilename();
+			$row[] = "";
+			$row[] = $picture->getCreated()->format('d.m.Y');
 			$row[] = $changed;
 			$row[] = '[]';
 			$data[] = $row;
@@ -289,9 +287,9 @@ class Admin_PictureController extends App_Controller_Action {
 		$this->stdResponse->aaData = $data;
 		$this->_helper->json($this->stdResponse);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * Returns an associative array where:
 	 * field: title of the table field
 	 * filter: value to match
@@ -300,20 +298,15 @@ class Admin_PictureController extends App_Controller_Action {
 	 * @return array(field, filter, operator)
 	 */
 	private function getFilters($filterParams) {
-		if (empty($filterParams)) {
-			return array();
-		}
-		
-		foreach ($filterParams as $field => $filter) {
-			$filterParams[$field] = trim($filter);
-		}
-		
 		$filters = array ();
+		if (empty($filterParams)) {
+			return $filters;
+		}
 		
 		if (!empty($filterParams['title'])) {
 			$filters[] = array('field' => 'title', 'filter' => '%'.$filterParams['title'].'%', 'operator' => 'LIKE');
 		}
-				
+
 		return $filters;
 	}
 	
