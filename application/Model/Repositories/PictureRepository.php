@@ -94,4 +94,33 @@ class PictureRepository extends EntityRepository {
 		$object = $this->findOneBy(array('title' => $title, 'state' => TRUE));
 		return $object != NULL? TRUE : FALSE;
 	}
+
+	/**
+	 *
+	 * Verifies if the id and title of the category already exist.
+	 * @param int $id
+	 * @param string $title
+	 */
+	public function verifyExistIdAndTitle($id, $title) {
+		$object = $this->findOneBy(array('id' => $id, 'title' => $title, 'state' => TRUE));
+		return $object != NULL? TRUE : FALSE;
+	}
+
+	/**
+	 *
+	 * Finds only titles by criteria
+	 * @param array $filters
+	 */
+	public function findByCriteriaOnlyTitle($filters = array()) {
+		$query = $this->_em->createQueryBuilder();
+		$query->select($this->_alias)
+				->from($this->_entityName, $this->_alias);
+
+		foreach ($filters as $filter) {
+			$query->where("$this->_alias.".$filter['field'].' '.$filter['operator'].' :'.$filter['field']);
+			$query->setParameter($filter['field'], $filter['filter']);
+		}
+		
+		return $query->getQuery()->getResult();
+	}
 }

@@ -106,19 +106,18 @@ class Admin_PictureController extends App_Controller_Action {
 
 	/**
 	 * 
-	 * This action shows the form in update the title and description for Picture.
+	 * This action shows the form in update mode.
 	 * @access public
 	 */
 	public function updateAction() {
 		$this->_helper->layout()->disableLayout();
-		
+
 		$form = new Admin_Form_Picture();
-        $form->removeElement('file');
-        $form->removeElement('filecrop');
+		$form->removeElement('file');
+		$form->removeElement('filecrop');
 
 		$id = $this->_getParam('id', 0);
-		$pictureMapper = new Model_PictureMapper();
-		$picture = $pictureMapper->find($id);
+		$picture = $this->_entityManager->find('Model\Picture', $id);
 		if ($picture != NULL) {//security
 			$form->getElement('title')->setValue($picture->getTitle());
 			$form->getElement('description')->setValue($picture->getDescription());
@@ -141,24 +140,27 @@ class Admin_PictureController extends App_Controller_Action {
 	 */
 	public function updateSaveAction() {
 		$this->_helper->viewRenderer->setNoRender(TRUE);
-		
+
 		$form = new Admin_Form_Picture();
 		$form->removeElement('file');
-        $form->removeElement('filecrop');
-		
+		$form->removeElement('filecrop');
+
 		$formData = $this->getRequest()->getPost();
-     	if ($form->isValid($formData)) {
+		if ($form->isValid($formData)) {
 			$id = $this->_getParam('id', 0);
-                	
-			$pictureMapper = new Model_PictureMapper();
-			$picture = $pictureMapper->find($id);
+			$picture = $$this->_entityManager->find('Model\Picture', $id);
 			if ($picture != NULL) {
-				if (!$pictureMapper->verifyExistTitle($formData['title']) || $pictureMapper->verifyExistIdAndTitle($id, $formData['title'])) {
+				$pictureRepo = $this->_entityManager->getRepository('Model\Picture');
+				if (!$pictureRepo->verifyExistTitle($formData['title']) || $pictureRepo->verifyExistIdAndTitle($id, $formData['title'])) {
 					$picture->setTitle($formData['title'])
-						->setDescription($formData['description'])
-						->setChangedBy(Zend_Auth::getInstance()->getIdentity()->id);
-					
-					$pictureMapper->update($id, $picture);
+							->setDescription($formData['description'])
+							->setSrc(self::SRC_PICTURE)
+							->setFilename("filenamechanged")
+							->setMimeType("mimetype changed")
+							->setSrcCrop(self::SRC_CROP_PICTURE)
+							->setFilenameCrop("file name crop")
+							->setMimeTypeCrop("mimetyope crop")
+							->setChanged(new DateTime('now'));
 
 					$this->stdResponse->success = TRUE;
 					$this->stdResponse->message = _("Picture updated");
@@ -171,15 +173,15 @@ class Admin_PictureController extends App_Controller_Action {
 				$this->stdResponse->success = FALSE;
 				$this->stdResponse->message = _("The Picture does not exists");
 			}
-      	} else {
+		} else {
 			$this->stdResponse->success = FALSE;
 			$this->stdResponse->messageArray = $form->getMessages();
 			$this->stdResponse->message = _("The form contains error and is not saved");
-      	}
-        // sends response to client
-        $this->_helper->json($this->stdResponse);
+		}
+		// sends response to client
+		$this->_helper->json($this->stdResponse);
 	}
-	
+
 	/**
 	 * 
 	 * Downloads Picture
@@ -190,12 +192,12 @@ class Admin_PictureController extends App_Controller_Action {
 		$this->_helper->viewRenderer->setNoRender(true);
 
 		$id = (int)$this->_getParam('id', 0);
-    			
+
 		$pictureMapper = new Model_PictureMapper();
 		$picture = $pictureMapper->find($id);
-		
-   	 	$file = $picture->getFile();
-   		$this->_response
+
+		$file = $picture->getFile();
+		$this->_response
 				->setHeader('Content-type', $file->getMimeType())
 				->setHeader('Content-Disposition', sprintf('attachment; filename="%s"', $file->getFilename()));
 
@@ -206,9 +208,9 @@ class Admin_PictureController extends App_Controller_Action {
 		
 		readfile(sprintf('%s//%s%s%s', $protocol, $_SERVER['SERVER_NAME'], $picture->getSrc(), $file->getFilename()));
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * Deletes pictures
 	 * @access public
 	 * @internal
@@ -218,13 +220,16 @@ class Admin_PictureController extends App_Controller_Action {
 	 */
 	public function deleteAction() {
 		$this->_helper->viewRenderer->setNoRender(TRUE);
-		
+
 		$itemIds = $this->_getParam('itemIds', array());
 		if (!empty($itemIds) ) {
 			$removeCount = 0;
 			foreach ($itemIds as $id) {
-				$pictureMapper = new Model_PictureMapper();
-				$pictureMapper->delete($id);
+				$picture = $this->_entityManager->find('Model\Picture', $id);
+				$picture->setState(FALSE);
+				
+				$this->_entityManager->persist($picture);
+				$this->_entityManager->flush();
 				$removeCount++;
 			}
 			$message = sprintf(ngettext('%d picture removed.', '%d pictures removed.', $removeCount), $removeCount);            	
@@ -233,9 +238,9 @@ class Admin_PictureController extends App_Controller_Action {
 		} else {
 			$this->stdResponse->success = FALSE;
 			$this->stdResponse->message = _("Data submitted is empty.");
-		}      	
-        // sends response to client
-        $this->_helper->json($this->stdResponse);
+		}
+		// sends response to client
+		$this->_helper->json($this->stdResponse);
 	}
 
 	/**
@@ -294,7 +299,7 @@ class Admin_PictureController extends App_Controller_Action {
 	 * field: title of the table field
 	 * filter: value to match
 	 * operator: the sql operator.
-	 * @param array $filterParams contains the values selected by the user.
+	 * @param array $filterParams
 	 * @return array(field, filter, operator)
 	 */
 	private function getFilters($filterParams) {
@@ -302,22 +307,24 @@ class Admin_PictureController extends App_Controller_Action {
 		if (empty($filterParams)) {
 			return $filters;
 		}
-		
+
 		if (!empty($filterParams['title'])) {
 			$filters[] = array('field' => 'title', 'filter' => '%'.$filterParams['title'].'%', 'operator' => 'LIKE');
 		}
 
 		return $filters;
 	}
-	
+
 	/**
 	 * 
 	 * Outputs an XHR response, loads the titles of the pictures. 
 	 */
 	public function autocompleteAction() {
-		$titleAuto = $this->_getParam('title_auto', NULL);
-
-		$this->stdResponse->items = array('one', 'javascript', 'java');
+		$filterParams['title'] = $this->_getParam('title_auto', NULL);
+		$filters = $this->getFilters($filterParams);
+		
+		$pictureRepo = $this->_entityManager->getRepository('Model\Picture');
+		$this->stdResponse->items = $pictureRepo->findByCriteriaOnlyTitle($filters);
 		$this->_helper->json($this->stdResponse);		
 	}
 }

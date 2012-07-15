@@ -59,7 +59,7 @@ CREATE  TABLE IF NOT EXISTS `tblPicture` (
 	FOREIGN KEY (`clubId`)
 	REFERENCES `tblClubPathfinder` (`id`)
 	ON UPDATE CASCADE,
-	CONSTRAINT `fk_tblPicture_pictureTypeId`
+  CONSTRAINT `fk_tblPicture_pictureTypeId`
 	FOREIGN KEY (`pictureTypeId`)
 	REFERENCES `tblPictureType` (`id`)ON UPDATE CASCADE,
   CONSTRAINT `fk_tblPicture_pictureCategoryId`
