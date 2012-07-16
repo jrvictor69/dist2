@@ -42,6 +42,42 @@ class Directive extends \Model\Directive implements \Doctrine\ORM\Proxy\Proxy
     }
 
     
+    public function getEmail()
+    {
+        $this->__load();
+        return parent::getEmail();
+    }
+
+    public function setEmail($email)
+    {
+        $this->__load();
+        return parent::setEmail($email);
+    }
+
+    public function getNote()
+    {
+        $this->__load();
+        return parent::getNote();
+    }
+
+    public function setNote($note)
+    {
+        $this->__load();
+        return parent::setNote($note);
+    }
+
+    public function getClub()
+    {
+        $this->__load();
+        return parent::getClub();
+    }
+
+    public function setClub($club)
+    {
+        $this->__load();
+        return parent::setClub($club);
+    }
+
     public function getIdentityCard()
     {
         $this->__load();
@@ -124,6 +160,18 @@ class Directive extends \Model\Directive implements \Doctrine\ORM\Proxy\Proxy
     {
         $this->__load();
         return parent::setPhonemobil($phonemobil);
+    }
+
+    public function getSex()
+    {
+        $this->__load();
+        return parent::getSex();
+    }
+
+    public function setSex($sex)
+    {
+        $this->__load();
+        return parent::setSex($sex);
     }
 
     public function getProfilePictureId()
@@ -210,7 +258,7 @@ class Directive extends \Model\Directive implements \Doctrine\ORM\Proxy\Proxy
 
     public function __sleep()
     {
-        return array('__isInitialized__', 'identityCard', 'firstName', 'lastName', 'dateOfBirth', 'phone', 'phonework', 'phonemobil', 'profilePictureId', 'id', 'created', 'changed', 'createdBy', 'changedBy', 'state');
+        return array('__isInitialized__', 'identityCard', 'firstName', 'lastName', 'dateOfBirth', 'phone', 'phonework', 'phonemobil', 'sex', 'profilePictureId', 'id', 'created', 'changed', 'createdBy', 'changedBy', 'state', 'email', 'note', 'clubId', 'club');
     }
 
     public function __clone()

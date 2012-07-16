@@ -126,6 +126,18 @@ class Person extends \Model\Person implements \Doctrine\ORM\Proxy\Proxy
         return parent::setPhonemobil($phonemobil);
     }
 
+    public function getSex()
+    {
+        $this->__load();
+        return parent::getSex();
+    }
+
+    public function setSex($sex)
+    {
+        $this->__load();
+        return parent::setSex($sex);
+    }
+
     public function getProfilePictureId()
     {
         $this->__load();
@@ -210,7 +222,7 @@ class Person extends \Model\Person implements \Doctrine\ORM\Proxy\Proxy
 
     public function __sleep()
     {
-        return array('__isInitialized__', 'identityCard', 'firstName', 'lastName', 'dateOfBirth', 'phone', 'phonework', 'phonemobil', 'profilePictureId', 'id', 'created', 'changed', 'createdBy', 'changedBy', 'state');
+        return array('__isInitialized__', 'identityCard', 'firstName', 'lastName', 'dateOfBirth', 'phone', 'phonework', 'phonemobil', 'sex', 'profilePictureId', 'id', 'created', 'changed', 'createdBy', 'changedBy', 'state');
     }
 
     public function __clone()

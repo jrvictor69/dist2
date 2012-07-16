@@ -14,7 +14,7 @@ namespace Model;
 /**
  * @Entity(repositoryClass="Model\Repositories\PersonRepository")
  * @Table(name="Person")
- * @InheritanceType("SINGLE_TABLE")
+ * @InheritanceType("JOINED")
  * @DiscriminatorColumn(name="type", type="string")
  * @DiscriminatorMap({"person"="Person", "guest"="Guest", "directive"="Directive"})
  */
@@ -61,6 +61,12 @@ class Person extends DomainObject {
 	 * @var int
 	 */
 	private $phonemobil;
+
+	/**
+	 * @Column(type="integer")
+	 * @var int
+	 */
+	private $sex;
 
 	/**
 	 * @Column(type="integer")
@@ -178,6 +184,22 @@ class Person extends DomainObject {
 	 */
 	public function setPhonemobil($phonemobil) {
 		$this->phonemobil = $phonemobil;
+		return $this;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getSex() {
+		return $this->sex;
+	}
+
+	/**
+	 * @param int $sex
+	 * @return Person
+	 */
+	public function setSex($sex) {
+		$this->sex = $sex;
 		return $this;
 	}
 
