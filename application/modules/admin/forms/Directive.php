@@ -8,7 +8,7 @@
  * @license Proprietary
  */
 
-class Admin_Form_Managerial extends Zend_Form {
+class Admin_Form_Directive extends Zend_Form {
 
 	public function init() {
 		$this
@@ -64,16 +64,14 @@ class Admin_Form_Managerial extends Zend_Form {
 				)
 			))
 
-			->addElement('Text', 'phonework', array(
-				'label' => _('Phone work'),
-				'filters' => array(
-					array('StringTrim')
-				)
-			))
-
 			->addElement('Select', 'club', array(
 				'label' => _('Club'),
 				'required' => TRUE
+			))
+
+			->addElement('Select', 'position', array(
+					'label' => _('Position'),
+					'required' => TRUE
 			))
 			;
 	}

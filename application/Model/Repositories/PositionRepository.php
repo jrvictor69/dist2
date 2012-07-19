@@ -21,4 +21,12 @@ class PositionRepository extends EntityRepository {
 
 		return $query->getQuery()->getResult();
 	}
+
+	/**
+	 * (non-PHPdoc)
+	 * @see Doctrine\ORM.EntityRepository::findAll()
+	 */
+	public function findAll() {
+		return $this->findBy(array('state' => 1));
+	}
 }

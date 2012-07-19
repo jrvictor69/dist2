@@ -103,6 +103,14 @@ class ClubPathfinderRepository extends EntityRepository {
 	}
 
 	/**
+	 * (non-PHPdoc)
+	 * @see Doctrine\ORM.EntityRepository::findAll()
+	 */
+	public function findAll() {
+		return $this->findBy(array('state' => 1));
+	}
+
+	/**
 	 * 
 	 * Verifies if the name Club pathfinder already exist it.
 	 * @param string $name
