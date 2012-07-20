@@ -159,8 +159,11 @@ com.em.Directive.prototype = {
 				return '<a id="update-directive-'+oObj.aData[0]+'" href="'+url.toUpdate+'/id/'+oObj.aData[0]+'">'+oObj.aData[1]+'</a>';
 				}
 			});
-		columns.push({"sWidth": "20%"});
-		columns.push({"sWidth": "43%"});
+		columns.push({"sWidth": "13%"});
+		columns.push({"sWidth": "13%"});
+		columns.push({"sWidth": "10%"});
+		columns.push({"sWidth": "13%"});
+		columns.push({"sWidth": "14%"});
 		columns.push({"sWidth": "10%"});
 		columns.push({"sWidth": "10%"});
 		columns.push({
@@ -194,7 +197,7 @@ com.em.Directive.prototype = {
 			autoOpen: false,
 			height: 320,
 			width: 350,
-			modal: false,
+			modal: true,
 			close: function(event, ui) {
 				$(this).remove();
 			}
@@ -390,10 +393,21 @@ com.em.Directive.prototype = {
 	setValidatorForm : function(selector) {
 		validator = $(selector).validate({
 			rules:{
-				'name':{
+				'firstName':{
 					required: true,
-					maxlength: 100
-				}
+					maxlength: 45
+				},
+				'lastName':{
+					required: true,
+					maxlength: 45
+				},
+				'sex':{
+					required: true
+				},
+				'phonemobil':{
+					required: true,
+					number: true
+				},
 			}
 		});
 	},

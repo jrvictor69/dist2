@@ -21,6 +21,21 @@ class Directive extends Person {
 	private $note;
 
 	/**
+	 * Id of the Position this model is associated with.
+	 * @Column(type="integer")
+	 * @var int
+	 */
+	private $positionId;
+
+	/**
+	 * Position this model is associated with.
+	 * @ManyToOne(targetEntity="Position")
+	 * @JoinColumn(name="positionId", referencedColumnName="id")
+	 * @var Position
+	 */
+	private $position;
+
+	/**
 	 * Id of the ClubPathfinder this model is associated with.
 	 * @Column(type="integer")
 	 * @var int
@@ -80,6 +95,22 @@ class Directive extends Person {
 	 */
 	public function setClub($club) {
 		$this->club = $club;
+		return $this;
+	}
+
+	/**
+	 * @return Position
+	 */
+	public function getPosition() {
+		return $this->position;
+	}
+
+	/**
+	 * @param Position $position
+	 * @return Directive
+	 */
+	public function setPosition($position) {
+		$this->position = $position;
 		return $this;
 	}
 }

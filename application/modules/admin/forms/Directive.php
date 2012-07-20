@@ -37,19 +37,11 @@ class Admin_Form_Directive extends Zend_Form {
 
 			->addElement('Text', 'email', array(
 				'label' => _('Email'),
-				'required' => TRUE,
 				'filters' => array(
 					array('StringTrim')
 				),
 				'validators' => array(
 					'EmailAddress'
-				)
-			))
-
-			->addElement('Text', 'phone', array(
-				'label' => _('Phone'),
-				'filters' => array(
-					array('StringTrim')
 				)
 			))
 
@@ -62,6 +54,13 @@ class Admin_Form_Directive extends Zend_Form {
 				'validators' => array(
 					array('Digits', false)
 				)
+			))
+
+			->addElement('Text', 'phone', array(
+					'label' => _('Phone'),
+					'filters' => array(
+							array('StringTrim')
+					)
 			))
 
 			->addElement('Select', 'club', array(

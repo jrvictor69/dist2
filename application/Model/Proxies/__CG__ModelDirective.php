@@ -78,6 +78,18 @@ class Directive extends \Model\Directive implements \Doctrine\ORM\Proxy\Proxy
         return parent::setClub($club);
     }
 
+    public function getPosition()
+    {
+        $this->__load();
+        return parent::getPosition();
+    }
+
+    public function setPosition($position)
+    {
+        $this->__load();
+        return parent::setPosition($position);
+    }
+
     public function getIdentityCard()
     {
         $this->__load();
@@ -258,7 +270,7 @@ class Directive extends \Model\Directive implements \Doctrine\ORM\Proxy\Proxy
 
     public function __sleep()
     {
-        return array('__isInitialized__', 'identityCard', 'firstName', 'lastName', 'dateOfBirth', 'phone', 'phonework', 'phonemobil', 'sex', 'profilePictureId', 'id', 'created', 'changed', 'createdBy', 'changedBy', 'state', 'email', 'note', 'clubId', 'club');
+        return array('__isInitialized__', 'identityCard', 'firstName', 'lastName', 'dateOfBirth', 'phone', 'phonework', 'phonemobil', 'sex', 'profilePictureId', 'id', 'created', 'changed', 'createdBy', 'changedBy', 'state', 'email', 'note', 'positionId', 'clubId', 'position', 'club');
     }
 
     public function __clone()

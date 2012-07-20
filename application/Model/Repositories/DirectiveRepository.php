@@ -39,22 +39,38 @@ class DirectiveRepository extends EntityRepository {
 				break;
 
 			case 2:
-				$sort = 'description';
+				$sort = 'positionId';
 				break;
 
 			case 3:
-				$sort = 'filename';
+				$sort = 'phonemobil';
 				break;
 
 			case 4:
-				$sort = 'created';
+				$sort = 'phone';
 				break;
 
 			case 5:
 				$sort = 'changed';
 				break;
 
-			default: $sort = 'firstName';
+			case 5:
+				$sort = 'email';
+				break;
+
+			case 6:
+				$sort = 'clubId';
+				break;
+
+			case 7:
+				$sort = 'changed';
+				break;
+
+			case 8:
+				$sort = 'created';
+				break;
+
+			default: $sort = 'id'; $sortDirection = 'desc';
 		}
 
 		$entries = $this->findBy($filters, array($sort => $sortDirection), $limit, $offset);
