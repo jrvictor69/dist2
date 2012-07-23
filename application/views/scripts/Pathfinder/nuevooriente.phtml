@@ -1,4 +1,49 @@
+<?php $this->headScript()->appendFile($this->baseUrl() . "/js/lib/blueimp-Load-Image/load-image.min.js","text/javascript"); ?>
 <div id="page-title">
 	<span class="title">Club Nuevo Oriente</span>
 	<span class="subtitle">Club de Conquistadores de la Congregacion "Nuevo Oriente".</span>
 </div>
+
+<div class="container">
+<div class="page-header">
+	<h1>JavaScript Load Image Demo</h1>
+		</div>
+	<blockquote>
+		<p><a href="https://developer.mozilla.org/en/JavaScript/">JavaScript</a> Load Image is a function to load images provided as <a href="https://developer.mozilla.org/en/DOM/File">File</a> or <a href="https://developer.mozilla.org/en/DOM/Blob">Blob</a> objects or via URL.<br>
+		It returns an optionally scaled HTML <strong>img</strong> or <strong>canvas</strong> element.</p>
+		</blockquote>
+	<br>
+	<div class="row">
+		<div class="span5">
+			<h2>Select an image file</h2>
+			<p><input type="file" id="file-input"></p>
+			<p><span class="label label-info">Notice</span> Or <strong>drag &amp; drop</strong> an image file onto this webpage.</p>
+		</div>
+		<div class="span7">
+			<h2>Result</h2>
+			<div class="well" id="result"><p><span class="label label-warning">Notice</span> This demo works only in browsers with support for the <a href="https://developer.mozilla.org/en/DOM/window.URL">URL</a> or <a href="https://developer.mozilla.org/en/DOM/FileReader">FileReader</a> API.</p></div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		var result = $('#result'),
+			load = function (e) {
+			e = e.originalEvent;
+			e.preventDefault();
+			window.loadImage(
+				(e.dataTransfer || e.target).files[0],
+				function (img) {
+					result.children().replaceWith(img);
+				},
+				{
+				maxWidth: result.children().outerWidth(),
+				canvas: true
+				}
+			);
+		};
+
+		$('#file-input').change(load);
+	});
+</script>
