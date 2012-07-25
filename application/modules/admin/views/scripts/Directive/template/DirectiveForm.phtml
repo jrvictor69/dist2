@@ -1,0 +1,48 @@
+<form id="<?php echo $this->element->getAttrib('id')?>" action="<?php echo $this->element->getAction()?>" method="post" enctype="multipart/form-data">
+	<div class="row">
+		<div class="span7">
+			<label>Picture profile</label>
+			<div class="well" id="result"><p><span class="label label-warning">Your</span> logo</p></div>
+		</div>
+	</div>
+	<table>
+		<tbody>
+			<tr class="odd">
+				<td><label><?php echo _('Image picture') ?></label></td>
+				<td><input type="file" id="file-input"></td>
+			</tr>
+			<tr class="even">
+				<td><?php echo $this->element->getElement('firstName')->renderLabel() ?></td>
+				<td><?php echo $this->element->getElement('firstName')->renderViewHelper() ?></td>
+			</tr>
+			<tr class="odd">
+				<td><?php echo $this->element->getElement('lastName')->renderLabel() ?></td>
+				<td><?php echo $this->element->getElement('lastName')->renderViewHelper() ?></td>
+			</tr>
+			<tr class="even">
+				<td><?php echo $this->element->getElement('sex')->renderLabel() ?></td>
+				<td><?php echo $this->element->getElement('sex')->renderViewHelper() ?></td>
+			</tr>
+			<tr class="odd">
+				<td><?php echo $this->element->getElement('email')->renderLabel() ?></td>
+				<td><?php echo $this->element->getElement('email')->renderViewHelper() ?></td>
+			</tr>
+			<tr class="even">
+				<td><?php echo $this->element->getElement('phonemobil')->renderLabel() ?></td>
+				<td><?php echo $this->element->getElement('phonemobil')->renderViewHelper() ?></td>
+			</tr>
+			<tr class="odd">
+				<td><?php echo $this->element->getElement('phone')->renderLabel() ?></td>
+				<td><?php echo $this->element->getElement('phone')->renderViewHelper() ?></td>
+			</tr>
+			<tr class="even">
+				<td><?php echo $this->element->getElement('club')->renderLabel() ?></td>
+				<td><?php echo $this->element->getElement('club')->renderViewHelper() ?></td>
+			</tr>
+			<tr class="odd">
+				<td><?php echo $this->element->getElement('position')->renderLabel() ?></td>
+				<td><?php echo $this->element->getElement('position')->renderViewHelper() ?></td>
+			</tr>
+		</tbody>
+	</table>
+</form>

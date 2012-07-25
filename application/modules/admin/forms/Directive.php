@@ -13,6 +13,8 @@ class Admin_Form_Directive extends Zend_Form {
 	public function init() {
 		$this
 			->setAttrib('id', 'formId')
+			->setMethod('post')
+			->setAttrib('enctype', 'multipart/form-data')
 
 			->addElement('Text', 'firstName', array(
 				'label' => _('Firstname'),
@@ -73,5 +75,15 @@ class Admin_Form_Directive extends Zend_Form {
 					'required' => TRUE
 			))
 			;
+	}
+
+	public function loadDefaultDecorators() {
+		$this->setDecorators(
+			array(
+				new \Zend_Form_Decorator_PrepareElements(),
+				'ViewScript'
+			)
+		);
+		$this->getDecorator('ViewScript')->setOption('viewScript', '/Directive/template/DirectiveForm.phtml');
 	}
 }

@@ -3,49 +3,33 @@
 </div>
 
 <script type="text/javascript">
-	com.em.Directive.prototype.dialogButtons = {
-		'<?php echo $this->translate('Save'); ?>': function() {
-			$.ajax({
-				url: '<?php echo $this->url(array('module'=>'admin', 'controller'=>'Directive', 'action'=>'create-save'));?>',
-				type: "POST",
-				dataType: 'json',
-				data: $('#formId').serialize(),
-				beforeSend: function(XMLHttpRequest) {
-					validator.form();
-					if (!validator.valid()) {
-						com.em.Directive.prototype.flashError('<?php echo _("The form contains error and is not saved");?>', {header: com.em.FlashMessage.ERROR});
-						return false;
-					}
-
-					com.em.Directive.prototype.processingDisplay(true);
-					return true;
-				},
-
-				success: function(data, textStatus, XMLHttpRequest) {
-					if (textStatus == 'success') {
-						if (data.success) {
-							dialogForm.dialog('close');
-							table.fnDraw();
-							com.em.Directive.prototype.flashSuccess(data.message, {header: com.em.FlashMessage.SUCCESS});
-						} else {
-							com.em.Directive.prototype.flashError(data.message, {header: com.em.FlashMessage.ERROR});
-						}
-					}
-				},
-
-				complete: function(jqXHR, textStatus) {
-					com.em.Directive.prototype.processingDisplay(false);
-				},
-
-				error: function(jqXHR, textStatus, errorThrown) {
-					dialogForm.dialog('close');
-					com.em.Directive.prototype.flashError(errorThrown,{header: com.em.FlashMessage.ERROR});
-				}
-			});
-		},
-
-		'<?php echo $this->translate('Cancel'); ?>': function() {
-			$(this).dialog("close");
-		}
+$(document).ready(function() {
+	var result = $('#result'),
+		load = function (e) {
+		e = e.originalEvent;
+		e.preventDefault();
+		window.loadImage(
+			(e.dataTransfer || e.target).files[0],
+			function (img) {
+				result.children().replaceWith(img);
+			},
+			{
+			maxWidth: result.children().outerWidth(),
+			canvas: true
+			}
+		);
 	};
+
+	$('#file-input').change(load);
+});
+
+com.em.Directive.prototype.dialogButtons = {
+	'<?php echo $this->translate('Save'); ?>': function() {
+		$('#formId').submit();
+	},
+
+	'<?php echo $this->translate('Cancel'); ?>': function() {
+		$(this).dialog("close");
+	}
+};
 </script>

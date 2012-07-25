@@ -49,7 +49,7 @@ class Admin_DirectiveController extends App_Controller_Action {
 		$form->getElement('sex')->setMultiOptions($this->getGenders());
 		$form->getElement('club')->setMultiOptions($this->getClubPathfinders());
 		$form->getElement('position')->setMultiOptions($this->getPositions());
-
+		$form->setAction($this->_helper->url('save'));
 		$this->view->form = $form;
 	}
 
@@ -58,21 +58,78 @@ class Admin_DirectiveController extends App_Controller_Action {
 	 * Creates a new Directive
 	 * @access public
 	 */
-	public function createSaveAction() {
-		$this->_helper->viewRenderer->setNoRender(TRUE);
+// 	public function createSaveAction() {
+// 		$this->_helper->viewRenderer->setNoRender(TRUE);
 
-		$form = new Admin_Form_Directive();
-		$form->getElement('sex')->setMultiOptions($this->getGenders());
-		$form->getElement('club')->setMultiOptions($this->getClubPathfinders());
-		$form->getElement('position')->setMultiOptions($this->getPositions());
+// 		$form = new Admin_Form_Directive();
+// 		$form->getElement('sex')->setMultiOptions($this->getGenders());
+// 		$form->getElement('club')->setMultiOptions($this->getClubPathfinders());
+// 		$form->getElement('position')->setMultiOptions($this->getPositions());
 
-		$formData = $this->getRequest()->getPost();
-		if ($form->isValid($formData)) {
-			$club = $this->_entityManager->find('Model\ClubPathfinder', (int)$formData['club']);
-			$position = $this->_entityManager->find('Model\Position', (int)$formData['position']);
+// 		$formData = $this->getRequest()->getPost();
+// 		if ($form->isValid($formData)) {
+// 			$club = $this->_entityManager->find('Model\ClubPathfinder', (int)$formData['club']);
+// 			$position = $this->_entityManager->find('Model\Position', (int)$formData['position']);
 
-			$directive = new Model\Directive();
-			$directive->setIdentityCard(3)
+// 			$directive = new Model\Directive();
+// 			$directive->setIdentityCard(3)
+// 					->setFirstName($formData['firstName'])
+// 					->setLastName($formData['lastName'])
+// 					->setEmail($formData['email'])
+// 					->setPhone($formData['phone'])
+// 					->setPhonemobil($formData['phonemobil'])
+// 					->setSex((int)$formData['sex'])
+// 					->setClub($club)
+// 					->setPosition($position)
+// 					->setCreated(new \DateTime('now'));
+
+// 			$this->_entityManager->persist($directive);
+// 			$this->_entityManager->flush();
+
+// 			$this->stdResponse->success = TRUE;
+// 			$this->stdResponse->message = _("Directive saved");
+
+// 		} else {
+// 			$this->stdResponse->success = FALSE;
+// 			$this->stdResponse->messageArray = $form->getMessages();
+// 			$this->stdResponse->message = _("The form contains error and is not saved");
+// 		}
+// 		// sends response to client
+// 		$this->_helper->json($this->stdResponse);
+// 	}
+
+	/**
+	 *
+	 * Creates a new Directive
+	 * @access public
+	 */
+	public function saveAction() {
+		if ($this->_request->isPost()) {
+			$form = new Admin_Form_Directive();
+			$form->getElement('sex')->setMultiOptions($this->getGenders());
+			$form->getElement('club')->setMultiOptions($this->getClubPathfinders());
+			$form->getElement('position')->setMultiOptions($this->getPositions());
+
+			$formData = $this->getRequest()->getPost();
+
+			if ($form->isValid($formData)) {
+// 				$fh = fopen($_FILES['file-input']['tmp_name'], 'r');
+// 				$binary = fread($fh, filesize($_FILES['file-input']['tmp_name']));
+// 				fclose($fh);
+
+// 				$mimeType = $_FILES['file-input']['type'];
+// 				$fileName = $_FILES['file-input']['name'];
+
+// 				$dataVaultMapper = new Model_DataVaultMapper();
+// 				$dataVault = new Model_DataVault();
+// 				$dataVault->setFilename($fileName)->setMimeType($mimeType)->setBinary($binary);
+// 				$dataVaultMapper->save($dataVault);
+
+				$club = $this->_entityManager->find('Model\ClubPathfinder', (int)$formData['club']);
+				$position = $this->_entityManager->find('Model\Position', (int)$formData['position']);
+
+				$directive = new Model\Directive();
+				$directive->setIdentityCard(3)
 					->setFirstName($formData['firstName'])
 					->setLastName($formData['lastName'])
 					->setEmail($formData['email'])
@@ -82,20 +139,17 @@ class Admin_DirectiveController extends App_Controller_Action {
 					->setClub($club)
 					->setPosition($position)
 					->setCreated(new \DateTime('now'));
+// 					->setProfilePictureId($dataVault->getId());
 
-			$this->_entityManager->persist($directive);
-			$this->_entityManager->flush();
+				$this->_entityManager->persist($directive);
+				$this->_entityManager->flush();
 
-			$this->stdResponse->success = TRUE;
-			$this->stdResponse->message = _("Directive saved");
-
+				$this->_helper->flashMessenger(array('success' => _("Archive saved")));
+				$this->_helper->redirector('read', 'Directive', 'admin', array('type'=>'pathfinder'));
+			}
 		} else {
-			$this->stdResponse->success = FALSE;
-			$this->stdResponse->messageArray = $form->getMessages();
-			$this->stdResponse->message = _("The form contains error and is not saved");
+			$this->_helper->redirector('read', 'Directive', 'admin', array('type'=>'pathfinder'));
 		}
-		// sends response to client
-		$this->_helper->json($this->stdResponse);
 	}
 
 	/**
