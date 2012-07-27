@@ -113,17 +113,17 @@ class Admin_DirectiveController extends App_Controller_Action {
 			$formData = $this->getRequest()->getPost();
 
 			if ($form->isValid($formData)) {
-// 				$fh = fopen($_FILES['file-input']['tmp_name'], 'r');
-// 				$binary = fread($fh, filesize($_FILES['file-input']['tmp_name']));
-// 				fclose($fh);
+				$fh = fopen($_FILES['file']['tmp_name'], 'r');
+				$binary = fread($fh, filesize($_FILES['file']['tmp_name']));
+				fclose($fh);
 
-// 				$mimeType = $_FILES['file-input']['type'];
-// 				$fileName = $_FILES['file-input']['name'];
+				$mimeType = $_FILES['file']['type'];
+				$fileName = $_FILES['file']['name'];
 
-// 				$dataVaultMapper = new Model_DataVaultMapper();
-// 				$dataVault = new Model_DataVault();
-// 				$dataVault->setFilename($fileName)->setMimeType($mimeType)->setBinary($binary);
-// 				$dataVaultMapper->save($dataVault);
+				$dataVaultMapper = new Model_DataVaultMapper();
+				$dataVault = new Model_DataVault();
+				$dataVault->setFilename($fileName)->setMimeType($mimeType)->setBinary($binary);
+				$dataVaultMapper->save($dataVault);
 
 				$club = $this->_entityManager->find('Model\ClubPathfinder', (int)$formData['club']);
 				$position = $this->_entityManager->find('Model\Position', (int)$formData['position']);
@@ -138,8 +138,8 @@ class Admin_DirectiveController extends App_Controller_Action {
 					->setSex((int)$formData['sex'])
 					->setClub($club)
 					->setPosition($position)
-					->setCreated(new \DateTime('now'));
-// 					->setProfilePictureId($dataVault->getId());
+					->setCreated(new \DateTime('now'))
+					->setProfilePictureId($dataVault->getId());
 
 				$this->_entityManager->persist($directive);
 				$this->_entityManager->flush();

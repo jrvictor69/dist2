@@ -9,7 +9,10 @@
 		<tbody>
 			<tr class="odd">
 				<td><label><?php echo _('Image picture') ?></label></td>
-				<td><input type="file" id="file-input"></td>
+				<td>
+					<input id="MAX_FILE_SIZE" type="hidden" value="8388608" name="MAX_FILE_SIZE">
+					<input type="file" id="file-input" name="file" class="valid">
+				</td>
 			</tr>
 			<tr class="even">
 				<td><?php echo $this->element->getElement('firstName')->renderLabel() ?></td>
