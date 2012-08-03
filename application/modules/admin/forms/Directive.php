@@ -10,6 +10,11 @@
 
 class Admin_Form_Directive extends Zend_Form {
 
+	/**
+	 * @var string
+	 */
+	private $source;
+
 	public function init() {
 		$this
 			->setAttrib('id', 'formId')
@@ -85,5 +90,21 @@ class Admin_Form_Directive extends Zend_Form {
 			)
 		);
 		$this->getDecorator('ViewScript')->setOption('viewScript', '/Directive/template/DirectiveForm.phtml');
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getSource() {
+		return $this->source;
+	}
+
+	/**
+	 * @param string $source
+	 * @return Zend_Form
+	 */
+	public function setSource($source) {
+		$this->source = $source;
+		return $this;
 	}
 }

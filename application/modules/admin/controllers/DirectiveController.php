@@ -50,6 +50,10 @@ class Admin_DirectiveController extends App_Controller_Action {
 		$form->getElement('club')->setMultiOptions($this->getClubPathfinders());
 		$form->getElement('position')->setMultiOptions($this->getPositions());
 		$form->setAction($this->_helper->url('save'));
+
+		$src = '/js/lib/ajax-upload/ep.jpg';
+		$form->setSource($src);
+
 		$this->view->form = $form;
 	}
 
@@ -176,6 +180,17 @@ class Admin_DirectiveController extends App_Controller_Action {
 			$form->getElement('phone')->setValue($directive->getPhone());
 			$form->getElement('club')->setValue($directive->getClub()->getId());
 			$form->getElement('position')->setValue($directive->getPosition()->getId());
+
+			$imageDataVaultMapper = new Model_ImageDataVaultMapper();
+			$imagePicture = $imageDataVaultMapper->find($directive->getProfilePictureId());
+
+			if ($imagePicture != NULL && $imagePicture->getBinary()) {
+				$src = $this->_helper->url('profile-picture', NULL, NULL, array('id' => $imagePicture->getId(), 'timestamp' => time()));
+				$form->setSource($src);
+			} else {
+				$src = '/js/lib/ajax-upload/ep.jpg';
+				$form->setSource($src);
+			}
 		} else {
 			$this->stdResponse->success = FALSE;
 			$this->stdResponse->message = _("The requested record was not found.");
@@ -272,6 +287,36 @@ class Admin_DirectiveController extends App_Controller_Action {
 		}
 		// sends response to client
 		$this->_helper->json($this->stdResponse);
+	}
+
+	/**
+	 * Sends the binary file vault to the user agent.
+	 * @return void
+	 */
+	public function profilePictureAction() {
+		$this->_helper->layout()->disableLayout();
+		$this->_helper->viewRenderer->setNoRender(TRUE);
+
+		$id = (int)$this->_getParam('id', 0);
+
+		$imageMapper = new Model_ImageDataVaultMapper();
+		$imageLogo = $imageMapper->find($id);
+
+		if ($imageLogo->getBinary()) {
+			$this->_response
+			//No caching
+				->setHeader('Pragma', 'public')
+				->setHeader('Expires', '0')
+				->setHeader('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
+				->setHeader('Cache-Control', 'private')
+				->setHeader('Content-type', $imageLogo->getMimeType())
+				->setHeader('Content-Transfer-Encoding', 'binary')
+				->setHeader('Content-Length', strlen($imageLogo->getBinary()));
+
+			echo $imageLogo->getBinary();
+		} else {
+			$this->_response->setHttpResponseCode(404);
+		}
 	}
 
 	/**
