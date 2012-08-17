@@ -11,7 +11,7 @@
 
 use Doctrine\DBAL\DriverManager;
 class PathfinderController extends App_Controller_Action {
-	
+
 	/**
 	 * (non-PHPdoc)
 	 * @see App_Controller_Action::init()
@@ -23,46 +23,25 @@ class PathfinderController extends App_Controller_Action {
     public function indexAction() {
 		$this->_helper->redirector('read');
     }
-        
-	public function readAction() { 
+
+	public function readAction() {
     }
-    
+
 	public function alasorionAction() {
 		$pictureMapper = new Model_PictureMapper();
 		$pictures = $pictureMapper->findByCriteria();
 		$this->view->pictures = $pictures;
 	}
-	
+
 	public function estrelladavidAction() {
 	}
 
 	public function leonjudaAction() {
-		$position = new Model\Position();
-
-
-		$now = new \DateTime('now');
-		$position->setName("new name doctrine")
-				->setDescription("description docrtine")
-				->setCreated($now)
-				->setState(1)
-				;
-
-		$this->_entityManager->persist($position);
-		$this->_entityManager->flush();
-
-		$p = $this->_entityManager->find('Model\Position', 2);
-		$p->setName("changed doctrine sadas2 sadsd")
-			->setDescription("changed doctrine 2dsd")
-			->setChanged(new \DateTime("now"));
-			;
-		$this->_entityManager->persist($p);
-		$this->_entityManager->flush();
-
-		var_dump($p);
-
-		echo "dave";
+		$pictureRepo = $this->_entityManager->getRepository('Model\Picture');
+		$pictures = $pictureRepo->findAll();
+		$this->view->pictures = $pictures;
 	}
-	
+
 	public function nuevoamanecerAction() {
 		$position = $this->_entityManager->find('Model\Position', 1);
 		var_dump($position->getCreated()->format('Y.m'));
@@ -79,7 +58,7 @@ class PathfinderController extends App_Controller_Action {
 
 	public function nuevoorienteAction() {
 	}
-	
+
 	public function orionAction() {
 		$connectionParams = array(
 			'dbname' => 'dbch',
@@ -94,14 +73,14 @@ class PathfinderController extends App_Controller_Action {
 		var_dump($users);
 		echo "</pre>";
 	}
-	
+
 	public function uploadAction() {
 		$this->_helper->layout()->disableLayout();
 		$this->_helper->viewRenderer->setNoRender(true);
 
 		$target_path = "image/upload/";
 		// Set the new path with the file name
-		$target_path = $target_path . basename( $_FILES['myfile']['name']); 
+		$target_path = $target_path . basename( $_FILES['myfile']['name']);
 		// Move the file to the upload folder
 		if(move_uploaded_file($_FILES['myfile']['tmp_name'], $target_path)) {
 			// print the new image path in the page, and this will recevie the javascripts 'response' variable

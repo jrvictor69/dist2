@@ -3,7 +3,7 @@
  * Form for DIST 2.
  *
  * @category Dist
- * @author Victor Villca <victor.villca@people-t.com>
+ * @author Victor Villca <victor.villca@people-trust.com>
  * @copyright Copyright (c) 2012 Gisof A/S
  * @license Proprietary
  */
@@ -31,14 +31,23 @@ class Admin_Form_Picture extends Zend_Form {
 		$file->setLabel(_('File'))
 				->setRequired(TRUE)
 				->setDestination(APPLICATION_PATH.'/../public/image/upload/galleryview/photos')
-				->addValidator('Extension', false, 'jpg, png, gif');
+				->addValidator('Extension', FALSE, 'jpg, png, gif');
 
 		$filecrop = new Zend_Form_Element_File('filecrop');
 		$filecrop->setLabel(_('Crop file'))
 				->setRequired(TRUE)
 				->setDestination(APPLICATION_PATH.'/../public/image/upload/galleryview/photos/crops')
-				->addValidator('Extension', false, 'jpg, png, gif');
+				->addValidator('Extension', FALSE, 'jpg, png, gif');
 
-		$this->addElements(array($title, $description, $file, $filecrop));
+		$club = new Zend_Form_Element_Select('club');
+		$club->setRequired(TRUE);
+
+		$pictureCategory = new Zend_Form_Element_Select('pictureCategory');
+		$pictureCategory->setRequired(TRUE);
+
+		$pictureType = new Zend_Form_Element_Select('pictureType');
+		$pictureType->setRequired(TRUE);
+
+		$this->addElements(array($title, $description, $file, $filecrop, $club, $pictureCategory, $pictureType));
 	}
 }

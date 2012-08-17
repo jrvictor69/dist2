@@ -1,4 +1,32 @@
+<?php $this->headScript()->appendFile($this->baseUrl() . "/js/lib/galleryView/js/jquery.timers-1.2.js","text/javascript");?>
+<?php $this->headScript()->appendFile($this->baseUrl() . "/js/lib/galleryView/js/jquery.easing.1.3.js","text/javascript");?>
+<?php $this->headScript()->appendFile($this->baseUrl() . "/js/lib/galleryView/js/jquery.galleryview-3.0-dev.js","text/javascript");?>
+<?php $this->headLink()->appendStylesheet($this->baseUrl() . "/js/lib/galleryView/css/jquery.galleryview-3.0-dev.css");?>
+
+<?php $this->headScript()->appendFile($this->baseUrl() . "/js/lib/nivo-slider/jquery.nivo.slider.js","text/javascript");?>
+<?php $this->headLink()->appendStylesheet($this->baseUrl() . "/js/lib/nivo-slider/themes/default/default.css");?>
+<?php $this->headLink()->appendStylesheet($this->baseUrl() . "/js/lib/nivo-slider/nivo-slider.css");?>
 <div id="page-title">
 	<span class="title">Club Estrella de David</span>
 	<span class="subtitle">Club de Conquistadores de la Iglesia "La Colorada".</span>
 </div>
+
+<div id="posts">
+<div class="slider-wrapper theme-default">
+	<div id="slider" class="nivoSlider">
+		<img src="/js/lib/nivo-slider/demo/images/toystory.jpg" data-thumb="/js/lib/nivo-slider/demo/images/toystory.jpg" alt="" />
+			<a href="http://dev7studios.com"><img src="/js/lib/nivo-slider/demo/images/up.jpg" data-thumb="/js/lib/nivo-slider/demo/images/up.jpg" alt="" title="This is an example of a caption pa" /></a>
+		<img src="/js/lib/nivo-slider/demo/images/walle.jpg" data-thumb="/js/lib/nivo-slider/demo/images/wall.jpg" alt="" data-transition="slideInLeft" />
+		<img src="/js/lib/nivo-slider/demo/images/nemo.jpg" data-thumb="/js/lib/nivo-slider/demo/images/nemo.jpg" alt="" title="#htmlcaption sadsad" />
+	</div>
+	<div id="htmlcaption" class="nivo-html-caption">
+		<strong>This</strong> is an example of a <em>HTML</em> caption with <a href="#">a link dsadsadsad</a>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$(window).load(function() {
+		$('#slider').nivoSlider();
+	});
+</script>

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Controller for DIST 2.
  *
@@ -11,7 +12,7 @@
 class Admin_PictureController extends App_Controller_Action {
 	const SRC_PICTURE = "/image/upload/galleryview/photos/";
 	const SRC_CROP_PICTURE = "/image/upload/galleryview/photos/crops/";
-	 
+
 	/**
 	 * (non-PHPdoc)
 	 * @see App_Controller_Action::init()
@@ -19,9 +20,9 @@ class Admin_PictureController extends App_Controller_Action {
 	public function init() {
 		parent::init();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * In case no action redirects the action read will be executed
 	 * @access public
 	 */
@@ -50,17 +51,24 @@ class Admin_PictureController extends App_Controller_Action {
 
 		$form = new Admin_Form_Picture();
 		$form->setAction($this->_helper->url("save"));
+		$form->getElement('club')->setMultiOptions($this->getClubPathfinders());
+		$form->getElement('pictureCategory')->setMultiOptions($this->getPictureCategories());
+		$form->getElement('pictureType')->setMultiOptions($this->getPictureTypes());
 		$this->view->form = $form;
 	}
 
 	/**
-	 * 
+	 *
 	 * Creates a new Picture
 	 * @access public
 	 */
 	public function saveAction() {
 		if ($this->_request->isPost()) {
 			$form = new Admin_Form_Picture();
+			$form->getElement('club')->setMultiOptions($this->getClubPathfinders());
+			$form->getElement('pictureCategory')->setMultiOptions($this->getPictureCategories());
+			$form->getElement('pictureType')->setMultiOptions($this->getPictureTypes());
+
 			$formData = $this->getRequest()->getPost();
 			if ($form->isValid($formData)) {
 				$pictureRepo = $this->_entityManager->getRepository('Model\Picture');
@@ -81,6 +89,10 @@ class Admin_PictureController extends App_Controller_Action {
 					$mimeTypeCrop = $_FILES['filecrop']['type'];
 					$filenameCrop = $_FILES['filecrop']['name'];
 
+					$club = $this->_entityManager->find('Model\ClubPathfinder', (int)$formData['club']);
+					$pictureType = $this->_entityManager->find('Model\PictureType', (int)$formData['pictureType']);
+					$pictureCategory = $this->_entityManager->find('Model\PictureCategory', (int)$formData['pictureCategory']);
+
 					$picture = new Model\Picture();
 					$picture->setTitle($formData['title'])
 							->setDescription($formData['description'])
@@ -89,7 +101,10 @@ class Admin_PictureController extends App_Controller_Action {
 							->setMimeType($mimeType)
 							->setSrcCrop(self::SRC_CROP_PICTURE)
 							->setFilenameCrop($filenameCrop)
-							->setMimeTypeCrop($mimeTypeCrop)
+							->setMimeTypeCrop(self::SRC_CROP_PICTURE)
+							->setClub($club)
+							->setPictureType($pictureType)
+							->setPictureCategory($pictureCategory)
 							->setCreated(new DateTime('now'));
 
 					$this->_entityManager->persist($picture);
@@ -97,7 +112,12 @@ class Admin_PictureController extends App_Controller_Action {
 
 					$this->_helper->flashMessenger(array('success' => _("Picture saved")));
 					$this->_helper->redirector('read', 'Picture', 'admin', array('type'=>'information'));
+				} else {
+					$this->_helper->flashMessenger(array('success' => _("erro saved")));
+					$this->_helper->redirector('read', 'Picture', 'admin', array('type'=>'information'));
 				}
+			} else {
+				$this->_helper->redirector('read', 'Picture', 'admin', array('type'=>'information'));
 			}
 		} else {
 			$this->_helper->redirector('read', 'Picture', 'admin', array('type'=>'information'));
@@ -105,7 +125,7 @@ class Admin_PictureController extends App_Controller_Action {
 	}
 
 	/**
-	 * 
+	 *
 	 * This action shows the form in update mode.
 	 * @access public
 	 */
@@ -128,9 +148,9 @@ class Admin_PictureController extends App_Controller_Action {
 		}
 		$this->view->form = $form;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * Updates the title and description of a Picture
 	 * @access public
 	 * 1) Get the record to edit
@@ -183,7 +203,7 @@ class Admin_PictureController extends App_Controller_Action {
 	}
 
 	/**
-	 * 
+	 *
 	 * Downloads Picture
 	 * @access public
 	 */
@@ -205,7 +225,7 @@ class Admin_PictureController extends App_Controller_Action {
 		if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ) {
 			$protocol = 'https:';
 		}
-		
+
 		readfile(sprintf('%s//%s%s%s', $protocol, $_SERVER['SERVER_NAME'], $picture->getSrc(), $file->getFilename()));
 	}
 
@@ -216,7 +236,7 @@ class Admin_PictureController extends App_Controller_Action {
 	 * @internal
 	 * 1) Gets the model Picture
 	 * 2) Validate the existance of dependencies
-	 * 3) Change the state field or records to delete 
+	 * 3) Change the state field or records to delete
 	 */
 	public function deleteAction() {
 		$this->_helper->viewRenderer->setNoRender(TRUE);
@@ -227,12 +247,12 @@ class Admin_PictureController extends App_Controller_Action {
 			foreach ($itemIds as $id) {
 				$picture = $this->_entityManager->find('Model\Picture', $id);
 				$picture->setState(FALSE);
-				
+
 				$this->_entityManager->persist($picture);
 				$this->_entityManager->flush();
 				$removeCount++;
 			}
-			$message = sprintf(ngettext('%d picture removed.', '%d pictures removed.', $removeCount), $removeCount);            	
+			$message = sprintf(ngettext('%d picture removed.', '%d pictures removed.', $removeCount), $removeCount);
 			$this->stdResponse->success = TRUE;
 			$this->stdResponse->message = _($message);
 		} else {
@@ -244,7 +264,7 @@ class Admin_PictureController extends App_Controller_Action {
 	}
 
 	/**
-	 * 
+	 *
 	 * Outputs an XHR response containing all entries in pictures.
 	 * This action serves as a datasource for the read/index view
 	 * @xhrParam int filter_title
@@ -257,7 +277,7 @@ class Admin_PictureController extends App_Controller_Action {
 
 		$filterParams['title'] = $this->_getParam('filter_title', NULL);
 		$filters = $this->getFilters($filterParams);
-		
+
 		$start = $this->_getParam('iDisplayStart', 0);
 		$limit = $this->_getParam('iDisplayLength', 10);
 		$page = ($start + $limit) / $limit;
@@ -265,7 +285,7 @@ class Admin_PictureController extends App_Controller_Action {
 		$pictureRepo = $this->_entityManager->getRepository('Model\Picture');
 		$pictures = $pictureRepo->findByCriteria($filters, $limit, $start, $sortCol, $sortDirection);
 		$total = $pictureRepo->getTotalCount($filters);
-		
+
 		$posRecord = $start+1;
 		$data = array();
 		foreach ($pictures as $picture) {
@@ -316,15 +336,63 @@ class Admin_PictureController extends App_Controller_Action {
 	}
 
 	/**
-	 * 
-	 * Outputs an XHR response, loads the titles of the pictures. 
+	 *
+	 * Outputs an XHR response, loads the titles of the pictures.
 	 */
 	public function autocompleteAction() {
 		$filterParams['title'] = $this->_getParam('title_auto', NULL);
 		$filters = $this->getFilters($filterParams);
-		
+
 		$pictureRepo = $this->_entityManager->getRepository('Model\Picture');
 		$this->stdResponse->items = $pictureRepo->findByCriteriaOnlyTitle($filters);
-		$this->_helper->json($this->stdResponse);		
+		$this->_helper->json($this->stdResponse);
+	}
+
+	/**
+	 * Returns all club pathfinders
+	 * @return array
+	 */
+	public function getClubPathfinders() {
+		$clubRepo = $this->_entityManager->getRepository('Model\ClubPathfinder');
+		$clubs = $clubRepo->findAll();
+
+		$clubPathfinderArray = array();
+		foreach ($clubs as $club) {
+			$clubPathfinderArray[$club->getId()] = $club->getName();
+		}
+
+		return $clubPathfinderArray;
+	}
+
+	/**
+	 * Returns all picture categories
+	 * @return array
+	 */
+	public function getPictureCategories() {
+		$pictureCategoryRepo = $this->_entityManager->getRepository('Model\PictureCategory');
+		$pictureCategories = $pictureCategoryRepo->findAll();
+
+		$pictureCategoryArray = array();
+		foreach ($pictureCategories as $pictureCategory) {
+			$pictureCategoryArray[$pictureCategory->getId()] = $pictureCategory->getName();
+		}
+
+		return $pictureCategoryArray;
+	}
+
+	/**
+	 * Returns all picture types
+	 * @return array
+	 */
+	public function getPictureTypes() {
+		$pictureTypeRepo = $this->_entityManager->getRepository('Model\PictureType');
+		$pictureTypes = $pictureTypeRepo->findAll();
+
+		$pictureTypeArray = array();
+		foreach ($pictureTypes as $pictureType) {
+			$pictureTypeArray[$pictureType->getId()] = $pictureType->getName();
+		}
+
+		return $pictureTypeArray;
 	}
 }

@@ -120,7 +120,15 @@ class PictureRepository extends EntityRepository {
 			$query->where("$this->_alias.".$filter['field'].' '.$filter['operator'].' :'.$filter['field']);
 			$query->setParameter($filter['field'], $filter['filter']);
 		}
-		
+
 		return $query->getQuery()->getResult();
+	}
+
+	/**
+	 * (non-PHPdoc)
+	 * @see Doctrine\ORM.EntityRepository::findAll()
+	 */
+	public function findAll() {
+		return $this->findBy(array('state' => TRUE));
 	}
 }
