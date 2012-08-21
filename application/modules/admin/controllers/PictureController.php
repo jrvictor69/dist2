@@ -13,6 +13,8 @@ class Admin_PictureController extends App_Controller_Action {
 	const SRC_PICTURE = "/image/upload/galleryview/photos/";
 	const SRC_CROP_PICTURE = "/image/upload/galleryview/photos/crops/";
 
+	const SRC_PICTURE_NIVO_SLIDER = "/image/upload/nivoslider/";
+
 	/**
 	 * (non-PHPdoc)
 	 * @see App_Controller_Action::init()

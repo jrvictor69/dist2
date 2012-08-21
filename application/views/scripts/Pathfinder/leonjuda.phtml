@@ -6,8 +6,6 @@
 <?php $this->headScript()->appendFile($this->baseUrl() . "/js/lib/nivo-slider/jquery.nivo.slider.js","text/javascript");?>
 <?php $this->headLink()->appendStylesheet($this->baseUrl() . "/js/lib/nivo-slider/themes/default/default.css");?>
 <?php $this->headLink()->appendStylesheet($this->baseUrl() . "/js/lib/nivo-slider/nivo-slider.css");?>
-<?php $this->headLink()->appendStylesheet($this->baseUrl() . "/js/lib/demo/style.css");?>
-
 <div id="page-title">
 	<span class="title">Club Leon de Juda</span>
 	<span class="subtitle">Club de Conquistadores de la Iglesia "El Fuerte".</span>
@@ -15,9 +13,142 @@
 
 <ul id="myGallery">
 <?php foreach ($this->pictures as $picture) {?>
-	<li><img data-frame="<?php echo $picture->getSrcCrop() . $picture->getFilename();?>" src="<?php echo $picture->getSrc() . $picture->getFilename();?>" title="<?php echo $picture->getTitle();?>" data-description="<?php echo $picture->getDescription();?>"/></li>
+	<?php $srcCrop = sprintf('%s%s', $picture->getSrcCrop(), $picture->getFilenameCrop()); $src = sprintf('%s%s', $picture->getSrc(), $picture->getFilename());?>
+	<li><img data-frame="<?php echo $srcCrop;?>" src="<?php echo $src;?>" title="<?php echo $picture->getTitle();?>" data-description="<?php echo $picture->getDescription();?>"/></li>
 <?php }?>
 </ul>
+<br>
+
+<!-- 1/4 cols -->
+<div class="three-fourth ">
+	<h6 class="line-divider">Three fourths</h6>
+	<div id="posts">
+		<div class="slider-wrapper theme-default">
+			<div id="slider" class="nivoSlider">
+			<?php foreach ($this->pictures as $picture) {?>
+				<?php $src = sprintf('%s%s', $picture->getSrc(), $picture->getFilename());?>
+				<img src="<?php echo $src;?>" data-thumb="<?php echo $src;?>" alt="" title="<?php echo $picture->getTitle();?>"/>
+			<?php }?>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="one-fourth last">
+	<h6 class="line-divider">One fourth </h6>
+	<!-- sidebar -->
+	<ul id="sidebar">
+		<!-- init sidebar -->
+		<li>
+			<h6>Categories</h6>
+			<ul>
+				<li class="cat-item"><a href="#" title="View all posts">Pellentesque habitant morbi</a></li>
+				<li class="cat-item"><a href="#" title="View all posts">Pellentesque habitant morbi</a></li>
+				<li class="cat-item"><a href="#" title="View all posts">Pellentesque habitant morbi</a></li>
+			</ul>
+		</li>
+
+		<li>
+			<h6>Archives</h6>
+			<ul>
+				<li class="cat-item"><a href="#" title="View all posts">Pellentesque habitant morbi</a></li>
+				<li class="cat-item"><a href="#" title="View all posts">Pellentesque habitant morbi</a></li>
+				<li class="cat-item"><a href="#" title="View all posts">Pellentesque habitant morbi</a></li>
+			</ul>
+		</li>
+		<!-- ENDS init sidebar -->
+	</ul>
+	<!-- ENDS sidebar -->
+</div>
+<div class="clear "></div>
+<!-- ENDS 1/4 cols -->
+
+<!-- TABS -->
+<!-- the tabs -->
+<ul class="tabs">
+	<li><a href="#"><span>Featured Pages</span></a></li>
+	<li><a href="#"><span>Information</span></a></li>
+	<li><a href="#"><span>Recent posts</span></a></li>
+</ul>
+
+<!-- tab "panes" -->
+<div class="panes">
+
+	<!-- Posts -->
+	<div>
+		<ul class="blocks-thumbs thumbs-rollover">
+			<li>
+				<a href="single.html" class="thumb" title="An image"><img src="img/dummies/282x150.gif" alt="Post" /></a>
+				<div class="excerpt">
+					<a href="single.html" class="header">Lorem ipsum dolor</a>
+					Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra.
+				</div>
+				<a href="single.html" class="link-button"><span>Read more &#8594;</span></a>
+			</li>
+			<li>
+				<a href="single.html" class="thumb" title="An image"><img src="img/dummies/282x150.gif" alt="Post" /></a>
+				<div class="excerpt">
+					<a href="single.html" class="header">Lorem ipsum dolor</a>
+					Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra.
+				</div>
+				<a href="single.html" class="link-button"><span>Read more &#8594;</span></a>
+			</li>
+			<li>
+				<a href="single.html" class="thumb" title="An image"><img src="img/dummies/282x150.gif" alt="Post" /></a>
+				<div class="excerpt">
+					<a href="single.html" class="header">Lorem ipsum dolor</a>
+					Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra.
+				</div>
+				<a href="single.html" class="link-button"><span>Read more &#8594;</span></a>
+			</li>
+		</ul>
+	</div>
+	<!-- ENDS posts -->
+
+	<!-- Information  -->
+	<div>
+		<div class="plain-text">
+			<h6>Pellentesque habitant morbi tristique senectus et netus et malesuada.</h6>
+			<p>Fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Cursus faucibus, tortor neque egestas augue, eu vulputate magna eros eu erat. Aliquam erat volutpat. Nam dui mi, tincidunt quis, accumsan porttitor, facilisis luctus, metus. </p>
+			<p>Fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Cursus faucibus, tortor neque egestas augue, eu vulputate magna eros eu erat. Aliquam erat volutpat. Nam dui mi, tincidunt quis, accumsan porttitor, facilisis luctus, metus.Fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper <a href="single.html">This is a link</a>. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Cursus faucibus, tortor neque egestas augue, eu vulputate magna eros eu erat. Aliquam erat volutpat. Nam dui mi, tincidunt quis, accumsan porttitor, facilisis luctus, metus. </p>
+			<a href="single.html" class="link-button"><span>Read more &#8594;</span></a>
+		</div>
+	</div>
+	<!-- ENDS Information -->
+
+	<!-- Posts -->
+	<div>
+		<ul class="blocks-thumbs thumbs-rollover">
+			<li>
+				<a href="single.html" class="thumb" title="An image"><img src="img/dummies/282x150.gif" alt="Post" /></a>
+				<div class="excerpt">
+					<a href="single.html" class="header">Lorem ipsum dolor</a>
+					Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra.
+				</div>
+				<a href="single.html" class="link-button"><span>Read more &#8594;</span></a>
+			</li>
+			<li>
+				<a href="single.html" class="thumb" title="An image"><img src="img/dummies/282x150.gif" alt="Post" /></a>
+				<div class="excerpt">
+					<a href="single.html" class="header">Lorem ipsum dolor</a>
+					Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra.
+				</div>
+				<a href="single.html" class="link-button"><span>Read more &#8594;</span></a>
+			</li>
+			<li>
+				<a href="single.html" class="thumb" title="An image"><img src="img/dummies/282x150.gif" alt="Post" /></a>
+				<div class="excerpt">
+					<a href="single.html" class="header">Lorem ipsum dolor</a>
+					Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra.
+				</div>
+				<a href="single.html" class="link-button"><span>Read more &#8594;</span></a>
+			</li>
+		</ul>
+	</div>
+	<!-- ENDS posts -->
+
+
+</div>
+<!-- ENDS TABS -->
 
 <script type="text/javascript">
 	$('#myGallery').galleryView({
@@ -52,5 +183,9 @@
 		frame_gap: 5,
 		show_infobar: true,
 		infobar_opacity: 1
+	});
+
+	$(window).load(function() {
+		$('#slider').nivoSlider();
 	});
 </script>

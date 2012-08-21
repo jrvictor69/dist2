@@ -40,13 +40,13 @@ class Admin_Form_Picture extends Zend_Form {
 				->addValidator('Extension', FALSE, 'jpg, png, gif');
 
 		$club = new Zend_Form_Element_Select('club');
-		$club->setRequired(TRUE);
+		$club->setRequired(TRUE)->setLabel(_('Club pathfinder'));
 
 		$pictureCategory = new Zend_Form_Element_Select('pictureCategory');
-		$pictureCategory->setRequired(TRUE);
+		$pictureCategory->setRequired(TRUE)->setLabel(_('Category'));
 
 		$pictureType = new Zend_Form_Element_Select('pictureType');
-		$pictureType->setRequired(TRUE);
+		$pictureType->setRequired(TRUE)->setLabel(_('Type'));
 
 		$this->addElements(array($title, $description, $file, $filecrop, $club, $pictureCategory, $pictureType));
 	}
