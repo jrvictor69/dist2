@@ -6,26 +6,26 @@
 	</div>
 	<br>
 	<?php echo $this->tableHeader('privilegeHeader', _("Privileges"));?>
-	<?php echo $this->tableList("tblPrivilege");?>	
+	<?php echo $this->tableList("tblPrivilege");?>
 	<div class="buttons right">
 		<?php echo $this->buttonRemove("delete-privilege", $this->translate('Remove'), $this->url(array('action'=>'delete')));?>
 		<?php echo $this->buttonAdd("create-privilege", $this->translate('Add'), $this->url(array('action'=>'create')));?>
 	</div>
-		
+
 	<div id="dialog"><!-- Loads ajax dialog form --></div>
 </div>
 
 <script type="text/javascript">
 	$(document).ready(function() {
 	var privilege = new com.em.Privilege();
-			
+
 	// network
 	privilege.setUrl({
 		toTable : '<?php echo $this->url(array('action'=>'read-items'));?>',
 		toBase : '<?php echo $this->baseUrl(); ?>',
 		toUpdate : '<?php echo $this->url(array('action'=>'update')); ?>'
 	});
-	
+
 	var headers = new Object();
 	headers.headerArray = new Array(
 		'<?php echo $this->translate('Name'); ?>',
@@ -38,7 +38,7 @@
 	privilege.setHeaders(headers);
 	// configuration of widgets
 	privilege.configureTable('#tblPrivilege', true);
-	
+
 	// CRUD
 	privilege.clickToAdd('#create-privilege');
 	privilege.clickToUpdate('#tblPrivilege a[id^=update-privilege-]');

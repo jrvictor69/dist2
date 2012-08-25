@@ -9,11 +9,11 @@
  */
 
 class Admin_Form_Privilege extends Zend_Form {
-	
+
 	public function init() {
 		$this
 			->setAttrib('id', 'formId')
-									
+
 			->addElement('Text', 'name', array(
 				'label' => _('Name'),
 				'required'   => TRUE,
@@ -21,16 +21,16 @@ class Admin_Form_Privilege extends Zend_Form {
 					array('StringTrim')
 				)
 			))
-			
+
 			->addElement('TextArea', 'description', array(
 				'label' => _('Description'),
 				'cols' =>'40',
-        		'rows' =>'4',
+				'rows' =>'4',
 				'filters' => array(
 					array('StringTrim')
 				)
 			))
-			
+
 			->addElement('Text', 'module', array(
 				'label' => _('Module'),
 				'required'   => TRUE,
@@ -38,7 +38,7 @@ class Admin_Form_Privilege extends Zend_Form {
 					array('StringTrim')
 				)
 			))
-			
+
 			->addElement('Text', 'controller', array(
 				'label' => _('Controller'),
 				'required'   => TRUE,
@@ -46,7 +46,7 @@ class Admin_Form_Privilege extends Zend_Form {
 					array('StringTrim')
 				)
 			))
-			
+
 			->addElement('Text', 'action', array(
 				'label' => _('Action'),
 				'required'   => TRUE,
@@ -56,14 +56,14 @@ class Admin_Form_Privilege extends Zend_Form {
 			))
 			;
 	}
-	
+
 	public function loadDefaultDecorators() {
 		$this->setDecorators(
 			array(
 				new \Zend_Form_Decorator_PrepareElements(),
 				'ViewScript'
 			)
-		);	
+		);
 		$this->getDecorator('ViewScript')->setOption('viewScript', '/Privilege/template/PrivilegeForm.phtml');
 	}
 }

@@ -20,7 +20,7 @@
 					com.em.Privilege.prototype.processingDisplay(true);
 					return true;
 				},
-				
+
 				success: function(data, textStatus, XMLHttpRequest) {
 					if (textStatus == 'success') {
 						if (data.success) {
@@ -36,7 +36,7 @@
 								var module = data.messageArray.module;
 								var controller = data.messageArray.controller;
 								var action = data.messageArray.action;
-								
+
 								if (name != undefined) {
 									$('#name').parent().find('.error').remove();
 									$('#name').parent().append('<label class="error" for="name" generated="true">'+name.isEmpty+'</label>');
@@ -61,18 +61,18 @@
 						}
 					}
 				},
-				
+
 				complete: function(jqXHR, textStatus) {
 					com.em.Privilege.prototype.processingDisplay(false);
 				},
-				
+
 				error: function(jqXHR, textStatus, errorThrown) {
 					dialogForm.dialog('close');
 					com.em.Privilege.prototype.flashError(errorThrown, {header: com.em.Alert.ERROR});
 				}
 			});
 		},
-		
+
 		'<?php echo $this->translate('Cancel'); ?>': function() {
 			$(this).dialog("close");
 		}
