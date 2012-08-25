@@ -19,25 +19,25 @@ com.em = com.em ||{};
 		// urls
 		this.url = {};
 		this.validator;
-		
+
 		this.initFlashMessage();
 		this.initEvents();
-		
+
 		this.dtHeaders = undefined;
 		this.actionSort = undefined;
 	};
 com.em.Category.prototype = {
-	
+
 	/**
-	 * 
+	 *
 	 * Initializes JQuery flash message component
 	 */	
 	initFlashMessage: function() {
 		this.alert = new com.em.Alert();
 	},
-	
+
 	/**
-	 * 
+	 *
 	 * Initializes all the events for items on page
 	 */
 	initEvents: function() {with(this) {
@@ -47,21 +47,21 @@ com.em.Category.prototype = {
 				table.oApi._fnAjaxUpdate(table.fnSettings());
 			}
 		});
-		
+
 		$("#searchButton").bind('click', function() {
 			initDisplayStart();
 			table.oApi._fnAjaxUpdate(table.fnSettings());
 		});
-		
+
 		$("#resetButton").bind('click', function() {
 			$('#nameFilter').attr('value', '');
 			initDisplayStart();
 			table.oApi._fnAjaxUpdate(table.fnSettings());
 		});
 	}},
-	
+
 	/**
-	 * 
+	 *
 	 * Initializes Display start of datatable
 	 */
 	initDisplayStart: function() {with(this) {
@@ -70,9 +70,9 @@ com.em.Category.prototype = {
 		//rows by page
 //		oSettings._iDisplayLength = 3;
 	}},
-	
+
 	/**
-	 * 
+	 *
 	 * Sets headers of datatable
 	 * @param pheaders
 	 */
@@ -82,18 +82,18 @@ com.em.Category.prototype = {
 		if (typeof dtHeaders === 'undefined') {
 			dtHeaders = pheaders;
 		}
-		
+
 		var headers = pheaders['headerArray'];
-		
+
 		$("#datatable-headers").empty();
-		
+
 		for ( var i = 0; i < headers.length; i++) {
 			$("#datatable-headers").append('<th>'+headers[i]+'</th>');
 		}
-		
+
 		$("#datatable-headers").append('<th><input type="checkbox" id="check-master" value="0"></th>');
 		$("#datatable-headers").prepend('<th >Id</th>');
-		
+
 		//Adding the event to check-master because it was removed
 		$("#check-master").bind('click', function() {
 			var checked = $("#check-master").attr('checked');
@@ -104,49 +104,49 @@ com.em.Category.prototype = {
 			}
 		});		
 	}},
-	
+
 	/**
-	 * 
+	 *
 	 * Configures the table and elements
 	 * @param selector
 	 */
 	configureTable: function(selector, pdestroy) { with (this) {
 		table = $(selector).dataTable({
-			"bProcessing"   : true,
-			"bFilter"       : false,
-			"bSort"         : true,
-			"bInfo"         : true, 
+			"bProcessing"	: true,
+			"bFilter"		: false,
+			"bSort"			: true,
+			"bInfo"			: true, 
 			"bLengthChange" : false,
-			"bServerSide"   : true,
-			"sAjaxSource"   : url.toTable,
-			"aoColumns"     : getColumns(),
-		    "sPaginationType" : "full_numbers",
+			"bServerSide"	: true,
+			"sAjaxSource"	: url.toTable,
+			"aoColumns"		: getColumns(),
+			"sPaginationType" : "full_numbers",
 			"oLanguage": {
 				"sEmptyTable": "No Catagory found."
 			},
 			"fnDrawCallback": function() {
 				clickToUpdate('#tblCategory a[id^=update-category-]');
 			},
-			
+
 			"fnServerData": function (sSource, aoData, fnCallback ) { 
 				//applying filter_name
 				var position = getPosition(aoData, 'filter_name');
-				
+
 				if (position == -1)
 					aoData.push({"name": "filter_name","value": $('#nameFilter').attr('value')});				
 				else
 					aoData[position].value=$('#nameFilter').attr('value');
-				
-	            $.getJSON(sSource, aoData, function (json) {
-	                fnCallback(json);       
-	            } );
+
+				$.getJSON(sSource, aoData, function (json) {
+					fnCallback(json);       
+				} );
 			}
 		});
 		$(selector).width("100%");
 	}},
-	
+
 	/**
-	 * 
+	 *
 	 * Gets columns configuration for datatable
 	 * @return Array
 	 */
@@ -172,10 +172,10 @@ com.em.Category.prototype = {
 			   return '<input type="checkbox" name="itemIds[]" id="check-slave-'+oObj.aData[0]+'" value="'+oObj.aData[0]+'">';
 			}
 		});
-		
+	
 		return columns;
 	}},
-	
+
 	/**
 	 * Shows proccessing display for data table
 	 * @param bShow boolean
@@ -184,7 +184,7 @@ com.em.Category.prototype = {
 		var settings = table.fnSettings();
 		settings.oApi._fnProcessingDisplay(settings, bShow);
 	},
-	
+
 //	processingDisplay : function(bShow) {
 //		if(bShow)
 //			$.blockUI({ css:{ 
@@ -199,9 +199,9 @@ com.em.Category.prototype = {
 //		else
 //			$.unblockUI();
 //	},
-	
+
 	/**
-	 * 
+	 *
 	 * Configures the form
 	 * @param selector (dialog of form)	 
 	 * */
@@ -214,16 +214,16 @@ com.em.Category.prototype = {
 			close: function(event, ui) {
 				$(this).remove();
 			}
-		});				
-		
+		});
+
 //		$('#formId').submit(function() {
 //			return false;
 //		});
-		
+
 		// Configs font-size for header dialog and buttons
 		$(selector).parent().css('font-size','0.7em');
 	}},
-	
+
 	/**
 	 * 
 	 * Opens dialog and manages the creation of new register
@@ -241,7 +241,7 @@ com.em.Category.prototype = {
 				beforeSend : function(XMLHttpRequest) {
 					processingDisplay(true);
 				},
-				
+
 				success: function(data, textStatus, XMLHttpRequest) {
 					if (textStatus == 'success') {
 						var contentType = XMLHttpRequest.getResponseHeader('Content-Type');
@@ -261,11 +261,11 @@ com.em.Category.prototype = {
 						}
 					} 
 				},
-				
+
 				complete: function(jqXHR, textStatus) {
 					processingDisplay(false);
 				},
-				
+
 				error: function(jqXHR, textStatus, errorThrown) {
 					dialogForm.dialog('close');
 					alert.flashError(errorThrown,{header : com.em.Alert.ERROR});
@@ -273,9 +273,9 @@ com.em.Category.prototype = {
 			});
 		});
 	}},
-	
+
 	/**
-	 * 
+	 *
 	 * Opens dialog and manages the update of register
 	 * @param selector
 	 */
@@ -291,7 +291,7 @@ com.em.Category.prototype = {
 				beforeSend: function(XMLHttpRequest) {
 					processingDisplay(true);
 				},
-				
+
 				success: function(data, textStatus, XMLHttpRequest) {
 					if (textStatus == 'success') {
 						var contentType = XMLHttpRequest.getResponseHeader('Content-Type');
@@ -311,11 +311,11 @@ com.em.Category.prototype = {
 						}
 					} 
 				},
-				
+
 				complete: function(jqXHR, textStatus) {
 					processingDisplay(false);
 				},
-				
+
 				error: function(jqXHR, textStatus, errorThrown) {
 					dialogForm.dialog('close');
 					alert.flashError(errorThrown,{header: com.em.Alert.ERROR});
@@ -323,9 +323,9 @@ com.em.Category.prototype = {
 			});
 		});
 	}},
-	
+
 	/**
-	 * 
+	 *
 	 * Deletes n items
 	 * @param selector
 	 */
@@ -340,10 +340,10 @@ com.em.Category.prototype = {
 				return;
 			}
 			var action = $(this).attr('href');
-			
+
 			jConfirm('Are you sure to delete?', 'Delete Category', function(r) {			    
-			    if (r) {
-			    	$.ajax({
+				if (r) {
+					$.ajax({
 						dataType: 'json', 
 						type: "POST", 
 						url: action,
@@ -352,7 +352,7 @@ com.em.Category.prototype = {
 						beforeSend : function(XMLHttpRequest) {
 							processingDisplay(true);
 						},
-						
+
 						success: function(data, textStatus, XMLHttpRequest) {
 							if (textStatus == 'success') {
 								if (data.success) {
@@ -363,11 +363,11 @@ com.em.Category.prototype = {
 								}
 							}
 						},
-						
+
 						complete: function(jqXHR, textStatus) {
 							processingDisplay(false);
 						},
-						
+
 						error: function(jqXHR, textStatus, errorThrown) {
 							alert.flashError(errorThrown,{header: com.em.Alert.ERROR});
 						}
@@ -378,9 +378,9 @@ com.em.Category.prototype = {
 			});
 		});
 	}},
-	
+
 	/**
-	 * 
+	 *
 	 * Configures the name autocomplete of the filter
 	 * @param selector
 	 */
@@ -402,7 +402,7 @@ com.em.Category.prototype = {
 			}
 		});
 	}},
-	
+
 	/**
 	 *
 	 * Validates category form
@@ -410,26 +410,26 @@ com.em.Category.prototype = {
 	 */
 	setValidatorForm : function(selector) {
 		validator = $(selector).validate({
-	        rules:{
-	        	'name':{
+			rules:{
+				'name':{
 					required: true,
 					maxlength: 100
 				}
-	        }
-	    });
+			}
+		});
 	},
-	
+
 	/**
-	 * 
+	 *
 	 * Sets url for action side server
 	 * @param url json
 	 */
 	setUrl: function(url) {
 		this.url = url;
 	},
-	
+
 	/**
-	 * 
+	 *
 	 * Gets number position of name in array data
 	 * @param array containing sub-arrays with the structure name->valname, value->valvalue
 	 * @param name is the string we are looking for and must match with valname
@@ -443,9 +443,9 @@ com.em.Category.prototype = {
 		}
 		return pos;
 	},
-	
+
 	/**
-	 * 
+	 *
 	 * Shows alert if it exists, if not create a new instance of alert and show it
 	 * @param message to show
 	 * @param header of the message
@@ -456,9 +456,9 @@ com.em.Category.prototype = {
 		}
 		alert.show(message, header);
 	}},
-	
+
 	/**
-	 * 
+	 *
 	 * Shows flash message success if it exists, if not creates a new instance of flash message success and shows it.
 	 * @param message string
 	 * @param header string
@@ -469,9 +469,9 @@ com.em.Category.prototype = {
 		}
 		alert.flashSuccess(message, header);
 	}},
-	
+
 	/**
-	 * 
+	 *
 	 * Shows flash message error if it exists, if not creates a new instance of flash message error and shows it.
 	 * @param message string
 	 * @param header string

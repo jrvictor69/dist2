@@ -1,5 +1,5 @@
 <div id="dialog-form" title="<?php echo $this->translate('Add Category'); ?>" class="header" style="display: none;">
-	<?php echo $this->form; ?>	
+	<?php echo $this->form; ?>
 </div>
 
 <script type="text/javascript">
@@ -7,7 +7,7 @@
 		'<?php echo $this->translate('Save'); ?>': function() {
 			$.ajax({
 				url: '<?php echo $this->url(array('module'=>'admin', 'controller'=>'category', 'action'=>'create-save'));?>',
-				type: "POST", 
+				type: "POST",
 				dataType: 'json',
 				data: $('#formId').serialize(),
 				beforeSend: function(XMLHttpRequest) {
@@ -16,11 +16,11 @@
 						com.em.Category.prototype.flashError('<?php echo _("The form contains error and is not saved");?>', {header: com.em.Alert.ERROR});
 						return false;
 					}
-					
+
 					com.em.Category.prototype.processingDisplay(true);
 					return true;
 				},
-				
+
 				success: function(data, textStatus, XMLHttpRequest) {
 					if (textStatus == 'success') {
 						if (data.success) {
@@ -33,7 +33,7 @@
 								$("#name").parent().append('<label class="error" for="name" generated="true">'+data.message+'</label>');
 							} else {
 								var name = data.messageArray.name;
-								
+
 								if (name != undefined) {
 									$('#name').parent().find('.error').remove();
 									$('#name').parent().append('<label class="error" for="name" generated="true">'+name.isEmpty+'</label>');
@@ -43,18 +43,18 @@
 						}
 					}
 				},
-				
+
 				complete: function(jqXHR, textStatus) {
 					com.em.Category.prototype.processingDisplay(false);
 				},
-				
+
 				error: function(jqXHR, textStatus, errorThrown) {
 					dialogForm.dialog('close');
 					com.em.Category.prototype.flashError(errorThrown,{header: com.em.Alert.ERROR});
 				}
 			});
 		},
-		
+
 		'<?php echo $this->translate('Cancel'); ?>': function() {
 			$(this).dialog("close");
 		}

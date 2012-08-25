@@ -6,19 +6,19 @@
 	</div>
 	<br>
 	<?php echo $this->tableHeader('categoryHeader', _("Categories"));?>
-	<?php echo $this->tableList("tblCategory");?>	
+	<?php echo $this->tableList("tblCategory");?>
 	<div class="buttons right">
 		<?php echo $this->buttonRemove("delete-category", $this->translate('Remove'), $this->url(array('action'=>'delete')));?>
 		<?php echo $this->buttonAdd("create-category", $this->translate('Add'), $this->url(array('action'=>'create')));?>
 	</div>
-		
+
 	<div id="dialog"><!-- Loads ajax dialog form --></div>
 </div>
 
 <script type="text/javascript">
 	$(document).ready(function() {
 	var category = new com.em.Category();
-			
+
 	// network
 	category.setUrl({
 		toTable : '<?php echo $this->url(array('action'=>'read-items'));?>',
@@ -26,7 +26,7 @@
 		toUpdate : '<?php echo $this->url(array('action'=>'update')); ?>',
 		toAutocomplete : '<?php echo $this->url(array('action'=>'autocomplete'));?>'
 	});
-	
+
 	var headers = new Object();
 	headers.headerArray = new Array(
 		'<?php echo $this->translate('Name'); ?>',
@@ -36,7 +36,7 @@
 	category.setHeaders(headers);
 	// configuration of widgets
 	category.configureTable('#tblCategory', true);
-	
+
 	// CRUD
 	category.clickToAdd('#create-category');
 	category.clickToUpdate('#tblCategory a[id^=update-category-]');
