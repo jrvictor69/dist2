@@ -53,23 +53,19 @@ class Admin_CategoryController extends App_Controller_Action {
 
 		$formData = $this->getRequest()->getPost();
 		if ($form->isValid($formData)) {
-			try {
-				$categoryMapper = new Model_CategoryMapper();
-				if (!$categoryMapper->verifyExistName($formData['name'])) {
-					$category = new Model_Category($formData);
-					$category->setCreatedBy(Zend_Auth::getInstance()->getIdentity()->id);
+			$categoryMapper = new Model_CategoryMapper();
+			if (!$categoryMapper->verifyExistName($formData['name'])) {
+				$category = new Model_Category($formData);
+				$category->setCreatedBy(Zend_Auth::getInstance()->getIdentity()->id);
 
-					$categoryMapper->save($category);
+				$categoryMapper->save($category);
 
-					$this->stdResponse->success = TRUE;
-					$this->stdResponse->message = _("Category saved");
-				} else {
-					$this->stdResponse->success = FALSE;
-					$this->stdResponse->name_duplicate = TRUE;
-					$this->stdResponse->message = _("The Category already exists");
-				}
-			} catch (Exception $e) {
-				$this->exception($this->view, $e);
+				$this->stdResponse->success = TRUE;
+				$this->stdResponse->message = _("Category saved");
+			} else {
+				$this->stdResponse->success = FALSE;
+				$this->stdResponse->name_duplicate = TRUE;
+				$this->stdResponse->message = _("The Category already exists");
 			}
 		} else {
 			$this->stdResponse->success = FALSE;
@@ -89,21 +85,16 @@ class Admin_CategoryController extends App_Controller_Action {
 		$this->_helper->layout()->disableLayout();
 		$form = new Admin_Form_Category();
 
-		try {
-			$id = $this->_getParam('id', 0);
-			$categoryMapper = new Model_CategoryMapper();
-			$category = $categoryMapper->find($id);
-			if ($category != NULL) {//security
-				$form->getElement('name')->setValue($category->getName());
-				$form->getElement('description')->setValue($category->getDescription());
-			} else {
-				// response to client
-				$this->stdResponse->success = FALSE;
-				$this->stdResponse->message = _("The requested record was not found.");
-				$this->_helper->json($this->stdResponse);
-			}
-		} catch (Exception $e) {
-			$this->exception($this->view, $e);
+		$id = $this->_getParam('id', 0);
+		$categoryMapper = new Model_CategoryMapper();
+		$category = $categoryMapper->find($id);
+		if ($category != NULL) {//security
+			$form->getElement('name')->setValue($category->getName());
+			$form->getElement('description')->setValue($category->getDescription());
+		} else {
+			// response to client
+			$this->stdResponse->success = FALSE;
+			$this->stdResponse->message = _("The requested record was not found.");
 			$this->_helper->json($this->stdResponse);
 		}
 
@@ -126,32 +117,28 @@ class Admin_CategoryController extends App_Controller_Action {
 
 		$formData = $this->getRequest()->getPost();
 		if ($form->isValid($formData)) {
-			try {
-				$id = $this->_getParam('id', 0);
+			$id = $this->_getParam('id', 0);
 
-				$categoryMapper = new Model_CategoryMapper();
-				$category = $categoryMapper->find($id);
-				if ($category != NULL) {
-					if (!$categoryMapper->verifyExistName($formData['name']) || $categoryMapper->verifyExistIdAndName($id, $formData['name'])) {
-						$category->setName($formData['name'])
-								->setDescription($formData['description'])
-								->setChangedBy(Zend_Auth::getInstance()->getIdentity()->id);
+			$categoryMapper = new Model_CategoryMapper();
+			$category = $categoryMapper->find($id);
+			if ($category != NULL) {
+				if (!$categoryMapper->verifyExistName($formData['name']) || $categoryMapper->verifyExistIdAndName($id, $formData['name'])) {
+					$category->setName($formData['name'])
+							->setDescription($formData['description'])
+							->setChangedBy(Zend_Auth::getInstance()->getIdentity()->id);
 
-					$categoryMapper->update($id, $category);
+				$categoryMapper->update($id, $category);
 
-						$this->stdResponse->success = TRUE;
-						$this->stdResponse->message = _("Category updated");
-					} else {
-						$this->stdResponse->success = FALSE;
-						$this->stdResponse->name_duplicate = TRUE;
-						$this->stdResponse->message = _("The Category already exists");
-					}
+					$this->stdResponse->success = TRUE;
+					$this->stdResponse->message = _("Category updated");
 				} else {
 					$this->stdResponse->success = FALSE;
-					$this->stdResponse->message = _("The Category does not exists");
+					$this->stdResponse->name_duplicate = TRUE;
+					$this->stdResponse->message = _("The Category already exists");
 				}
-			} catch (Exception $e) {
-				$this->exception($this->view, $e);
+			} else {
+				$this->stdResponse->success = FALSE;
+				$this->stdResponse->message = _("The Category does not exists");
 			}
 		} else {
 			$this->stdResponse->success = FALSE;
@@ -176,20 +163,16 @@ class Admin_CategoryController extends App_Controller_Action {
 
 		$itemIds = $this->_getParam('itemIds', array());
 		if (!empty($itemIds) ) {
-			try {
-				$removeCount = 0;
-				foreach ($itemIds as $id) {
-					$categoryMapper = new Model_CategoryMapper();
-					$categoryMapper->delete($id);
-					$removeCount++;
-				}
-				$message = sprintf(ngettext('%d category removed.', '%d categories removed.', $removeCount), $removeCount);
-
-				$this->stdResponse->success = TRUE;
-				$this->stdResponse->message = _($message);
-			} catch (Exception $e) {
-				$this->exception($this->view, $e);
+			$removeCount = 0;
+			foreach ($itemIds as $id) {
+				$categoryMapper = new Model_CategoryMapper();
+				$categoryMapper->delete($id);
+				$removeCount++;
 			}
+			$message = sprintf(ngettext('%d category removed.', '%d categories removed.', $removeCount), $removeCount);
+
+			$this->stdResponse->success = TRUE;
+			$this->stdResponse->message = _($message);
 		} else {
 			$this->stdResponse->success = FALSE;
 			$this->stdResponse->message = _("Data submitted is empty.");
@@ -262,25 +245,6 @@ class Admin_CategoryController extends App_Controller_Action {
 		}
 
 		return $filters;
-	}
-
-	/**
-	 *
-	 * Verifies if it exist some error with the application
-	 * @param Zend_View $view
-	 * @param Exception $e
-	 */
-	private function exception(Zend_View $view, Exception $e) {
-		$this->_logger->err($e->getMessage());
-		// response to client
-		$view->success = FALSE;
-		if ($e->getCode() == Model_EnumErrorType::APPLICATION)
-			$this->_messenger->addError($e->getMessage());
-		elseif ($e->getCode() == Model_EnumErrorType::DUP_NAME)
-			$this->_messenger->addError('name_warning');
-		else
-			$this->_messenger->addError(_("An error occurred while processing the data. <br/> Please Try again."));
-		$view->message = $view->seeMessages();
 	}
 
 	/**
