@@ -5,7 +5,7 @@
 <script type="text/javascript">
 //	$("#privilege").multiselect();
 	$("#privilege").multiselect().multiselectfilter();
-	
+
 	com.em.UserGroup.prototype.dialogButtons = {
 			'<?php echo $this->translate('Update'); ?>': function() {
 			$.ajax({
@@ -23,7 +23,7 @@
 					com.em.UserGroup.prototype.processingDisplay(true);
 					return true;
 				},
-				
+
 				success: function(data, textStatus, XMLHttpRequest) {
 					if (textStatus == 'success') {
 						if (data.success) {
@@ -37,7 +37,7 @@
 							} else {
 								var name = data.messageArray.name;
 								var privilege = data.messageArray.privilege;
-								
+
 								if (name != undefined) {
 									$('#name').parent().find('.error').remove();
 									$('#name').parent().append('<label class="error" for="name" generated="true">'+name.isEmpty+'</label>');
@@ -52,18 +52,18 @@
 						}
 					}
 				},
-				
+
 				complete: function(jqXHR, textStatus) {
 					com.em.UserGroup.prototype.processingDisplay(false);
 				},
-				
+
 				error: function(jqXHR, textStatus, errorThrown) {
 					dialogForm.dialog('close');
 					com.em.UserGroup.prototype.flashError(errorThrown, {header: com.em.Alert.ERROR});
 				}
 			});
 		},
-		
+
 		'<?php echo $this->translate('Cancel'); ?>': function() {
 			$(this).dialog("close");
 		}
