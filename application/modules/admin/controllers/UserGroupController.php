@@ -64,41 +64,37 @@ class Admin_UserGroupController extends App_Controller_Action {
 
 		$formData = $this->_request->getPost();
 		if ($form->isValid($formData)) {
-			try {
-				$userGroupMapper = new Model_UserGroupMapper();
-				if (!$userGroupMapper->verifyExistName($formData['name'])) {
-					$userGroup = new Model_UserGroup($formData);
+			$userGroupMapper = new Model_UserGroupMapper();
+			if (!$userGroupMapper->verifyExistName($formData['name'])) {
+				$userGroup = new Model_UserGroup($formData);
 
-					$privilegeIds = $formData['privilege'];
-					if (!empty($privilegeIds)) {
-						$privilegeMapper = new Model_PrivilegeMapper();
-						$privileges = array();
-						foreach ($privilegeIds as $privilegeId) {
-							$privilege = $privilegeMapper->find($privilegeId);
-							if ($privilege != NULL) {
-								$privileges[] = $privilege;
-							} else {
-								//id not is valid
-							}
+				$privilegeIds = $formData['privilege'];
+				if (!empty($privilegeIds)) {
+					$privilegeMapper = new Model_PrivilegeMapper();
+					$privileges = array();
+					foreach ($privilegeIds as $privilegeId) {
+						$privilege = $privilegeMapper->find($privilegeId);
+						if ($privilege != NULL) {
+							$privileges[] = $privilege;
+						} else {
+							//id not is valid
 						}
 					}
-
-					$userGroup->setPrivileges($privileges);
-					$userGroup->setCreatedBy(Zend_Auth::getInstance()->getIdentity()->id);
-
-					$userGroupMapper->save($userGroup);
-
-					$this->stdResponse->success = TRUE;
-					$this->_messenger->addSuccess(_("User group saved"));
-					$this->stdResponse->message = $this->view->seeMessages();
-				} else {
-					$this->stdResponse->success = FALSE;
-					$this->stdResponse->name_duplicate = TRUE;
-					$this->_messenger->addError(_("The User group already exists"));
-					$this->stdResponse->message = $this->view->seeMessages();
 				}
-			} catch (Exception $e) {
-				$this->exception($this->view, $e);
+
+				$userGroup->setPrivileges($privileges);
+				$userGroup->setCreatedBy(Zend_Auth::getInstance()->getIdentity()->id);
+
+				$userGroupMapper->save($userGroup);
+
+				$this->stdResponse->success = TRUE;
+				$this->_messenger->addSuccess(_("User group saved"));
+				$this->stdResponse->message = $this->view->seeMessages();
+			} else {
+				$this->stdResponse->success = FALSE;
+				$this->stdResponse->name_duplicate = TRUE;
+				$this->_messenger->addError(_("The User group already exists"));
+				$this->stdResponse->message = $this->view->seeMessages();
 			}
 		} else {
 			$this->stdResponse->success = FALSE;
@@ -119,31 +115,26 @@ class Admin_UserGroupController extends App_Controller_Action {
 		$this->_helper->layout()->disableLayout();
 		$form = new Admin_Form_UserGroup();
 
-		try {
-			$id = $this->_getParam('id', 0);
-			$userGroupMapper = new Model_UserGroupMapper();
-			$userGroup = $userGroupMapper->find($id);
-			if ($userGroup != NULL) {//security
-				$form->getElement('name')->setValue($userGroup->getName());
-				$form->getElement('description')->setValue($userGroup->getDescription());
-				$form->getElement('privilege')->setMultiOptions($this->getPrivileges());
+		$id = $this->_getParam('id', 0);
+		$userGroupMapper = new Model_UserGroupMapper();
+		$userGroup = $userGroupMapper->find($id);
+		if ($userGroup != NULL) {//security
+			$form->getElement('name')->setValue($userGroup->getName());
+			$form->getElement('description')->setValue($userGroup->getDescription());
+			$form->getElement('privilege')->setMultiOptions($this->getPrivileges());
 
-				$privelegeIds = array();
-				$privileges = $userGroup->getPrivileges();
-				foreach ($privileges as $privilege) {
-					$privelegeIds[] = $privilege->getId();
-				}
-				$form->getElement('privilege')->setValue($privelegeIds);
-			} else {
-				//response to client
-				$this->stdResponse->success = FALSE;
-				$this->_messenger->addSuccess(_("The requested record was not found."));
-				$this->stdResponse->message = $this->view->seeMessages();
-				$this->_helper->json($this->stdResponse);
+			$privelegeIds = array();
+			$privileges = $userGroup->getPrivileges();
+			foreach ($privileges as $privilege) {
+				$privelegeIds[] = $privilege->getId();
 			}
-		} catch (Exception $e) {
-			$this->exception($this->view, $e);
-			$this->_helper->json($this->view);
+			$form->getElement('privilege')->setValue($privelegeIds);
+		} else {
+			//response to client
+			$this->stdResponse->success = FALSE;
+			$this->_messenger->addSuccess(_("The requested record was not found."));
+			$this->stdResponse->message = $this->view->seeMessages();
+			$this->_helper->json($this->stdResponse);
 		}
 
 		$this->view->form = $form;
@@ -167,50 +158,46 @@ class Admin_UserGroupController extends App_Controller_Action {
 		$formData = $this->_request->getPost();
 
 		if ($form->isValid($formData)) {
-			try {
-				$id = $this->_getParam('id', 0);
+			$id = $this->_getParam('id', 0);
 
-				$userGroupMapper = new Model_UserGroupMapper();
-				$userGroup = $userGroupMapper->find($id);
-				if ($userGroup != NULL) {
-					if (!$userGroupMapper->verifyExistName($formData['name']) || $userGroupMapper->verifyExistIdAndName($id, $formData['name'])) {
-						$privilegeIds = $formData['privilege'];
-						if (!empty($privilegeIds)) {
-							$privilegeMapper = new Model_PrivilegeMapper();
-							$privileges = array();
-							foreach ($privilegeIds as $privilegeId) {
-								$privilege = $privilegeMapper->find($privilegeId);
-								if ($privilege != NULL) {
-									$privileges[] = $privilege;
-								} else {
-									//id not is valid
-								}
+			$userGroupMapper = new Model_UserGroupMapper();
+			$userGroup = $userGroupMapper->find($id);
+			if ($userGroup != NULL) {
+				if (!$userGroupMapper->verifyExistName($formData['name']) || $userGroupMapper->verifyExistIdAndName($id, $formData['name'])) {
+					$privilegeIds = $formData['privilege'];
+					if (!empty($privilegeIds)) {
+						$privilegeMapper = new Model_PrivilegeMapper();
+						$privileges = array();
+						foreach ($privilegeIds as $privilegeId) {
+							$privilege = $privilegeMapper->find($privilegeId);
+							if ($privilege != NULL) {
+								$privileges[] = $privilege;
+							} else {
+								//id not is valid
 							}
 						}
-
-						$userGroup->setName($formData['name'])
-								->setDescription($formData['description'])
-								->setChangedBy(Zend_Auth::getInstance()->getIdentity()->id)
-								->setPrivileges($privileges);
-
-						$userGroupMapper->update($id, $userGroup);
-
-						$this->stdResponse->success = TRUE;
-						$this->_messenger->addSuccess(_("User group updated"));
-						$this->stdResponse->message = $this->view->seeMessages();
-					} else {
-						$this->stdResponse->success = FALSE;
-						$this->stdResponse->name_duplicate = TRUE;
-						$this->_messenger->addError(_("The User group already exists"));
-						$this->stdResponse->message = $this->view->seeMessages();
 					}
+
+					$userGroup->setName($formData['name'])
+							->setDescription($formData['description'])
+							->setChangedBy(Zend_Auth::getInstance()->getIdentity()->id)
+							->setPrivileges($privileges);
+
+					$userGroupMapper->update($id, $userGroup);
+
+					$this->stdResponse->success = TRUE;
+					$this->_messenger->addSuccess(_("User group updated"));
+					$this->stdResponse->message = $this->view->seeMessages();
 				} else {
 					$this->stdResponse->success = FALSE;
-					$this->_messenger->addError(_("The User group does not exists"));
+					$this->stdResponse->name_duplicate = TRUE;
+					$this->_messenger->addError(_("The User group already exists"));
 					$this->stdResponse->message = $this->view->seeMessages();
 				}
-			} catch (Exception $e) {
-				$this->exception($this->view, $e);
+			} else {
+				$this->stdResponse->success = FALSE;
+				$this->_messenger->addError(_("The User group does not exists"));
+				$this->stdResponse->message = $this->view->seeMessages();
 			}
 		} else {
 			$this->stdResponse->success = FALSE;
@@ -236,21 +223,17 @@ class Admin_UserGroupController extends App_Controller_Action {
 
 		$itemIds = $this->_getParam('itemIds', array());
 		if (!empty($itemIds) ) {
-			try {
-				$userGroupMapper = new Model_UserGroupMapper();
-				$removeCount = 0;
-				foreach ($itemIds as $id) {
-					$userGroupMapper->delete($id);
-					$removeCount++;
-				}
-				$message = sprintf(ngettext('%d user group removed.', '%d user groups removed.', $removeCount), $removeCount);
-
-				$this->stdResponse->success = TRUE;
-				$this->_messenger->addSuccess(_($message));
-				$this->stdResponse->message = $this->view->seeMessages();
-			} catch (Exception $e) {
-				$this->exception($this->view, $e);
+			$userGroupMapper = new Model_UserGroupMapper();
+			$removeCount = 0;
+			foreach ($itemIds as $id) {
+				$userGroupMapper->delete($id);
+				$removeCount++;
 			}
+			$message = sprintf(ngettext('%d user group removed.', '%d user groups removed.', $removeCount), $removeCount);
+
+			$this->stdResponse->success = TRUE;
+			$this->_messenger->addSuccess(_($message));
+			$this->stdResponse->message = $this->view->seeMessages();
 		} else {
 			$this->stdResponse->success = FALSE;
 			$this->_messenger->addNotice(_("Data submitted is empty."));
@@ -332,25 +315,6 @@ class Admin_UserGroupController extends App_Controller_Action {
 		}
 
 		return $filters;
-	}
-
-	/**
-	 *
-	 * Verifies if it exist some error with the application
-	 * @param Zend_View $view
-	 * @param Exception $e
-	 */
-	private function exception(Zend_View $view, Exception $e) {
-		$this->_logger->err($e->getMessage());
-		// response to client
-		$view->success = FALSE;
-		if ($e->getCode() == Model_EnumErrorType::APPLICATION)
-			$this->_messenger->addError($e->getMessage());
-		elseif ($e->getCode() == Model_EnumErrorType::DUP_NAME)
-			$this->_messenger->addError('name_warning');
-		else
-			$this->_messenger->addError(_("An error occurred while processing the data. <br/> Please Try again."));
-		$view->message = $view->seeMessages();
 	}
 
 	/**
