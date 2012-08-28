@@ -8,6 +8,7 @@
 <?php $this->headLink()->appendStylesheet($this->baseUrl() . "/js/lib/nivo-slider/nivo-slider.css");?>
 <div id="page-title">
 	<span class="title">Club Leon de Juda</span>
+	<span class="title"><?php echo _('Club');?> <?php echo $this->nameClub;?></span>
 	<span class="subtitle">Club de Conquistadores de la Iglesia "El Fuerte".</span>
 </div>
 
@@ -34,25 +35,23 @@
 	</div>
 </div>
 <div class="one-fourth last">
-	<h6 class="line-divider">One fourth </h6>
 	<!-- sidebar -->
 	<ul id="sidebar">
 		<!-- init sidebar -->
 		<li>
 			<h6>Categories</h6>
 			<ul>
-				<li class="cat-item"><a href="#" title="View all posts">Pellentesque habitant morbi</a></li>
-				<li class="cat-item"><a href="#" title="View all posts">Pellentesque habitant morbi</a></li>
-				<li class="cat-item"><a href="#" title="View all posts">Pellentesque habitant morbi</a></li>
+				<li class="cat-item"><a href="<?php echo $this->url(array('action'=>'profile', 'pageId'=>'leon'));?>" title="<?php echo _('Club Profile')?>"><?php echo _('Club Profile')?></a></li>
+				<li class="cat-item"><a href="<?php echo $this->url(array('action'=>'gallerypicture', 'pageId'=>'leon'));?>" title="<?php echo _('Gallery Pictures')?>"><?php echo _('Gallery Pictures')?></a></li>
+				<li class="cat-item"><a href="<?php echo $this->url(array('action'=>'galleryvideo', 'pageId'=>'leon'));?>" title="<?php echo _('Gallery Videos')?>"><?php echo _('Gallery Videos')?></a></li>
 			</ul>
 		</li>
 
 		<li>
-			<h6>Archives</h6>
+			<h6><?php echo _('Members')?></h6>
 			<ul>
-				<li class="cat-item"><a href="#" title="View all posts">Pellentesque habitant morbi</a></li>
-				<li class="cat-item"><a href="#" title="View all posts">Pellentesque habitant morbi</a></li>
-				<li class="cat-item"><a href="#" title="View all posts">Pellentesque habitant morbi</a></li>
+				<li class="cat-item"><a href="<?php echo $this->url(array('action'=>'directive', 'pageId'=>'leon'));?>" title="<?php echo _('Directive Club Leon de Juda')?>"><?php echo _('Directive Club Leon de Juda')?></a></li>
+				<li class="cat-item"><a href="<?php echo $this->url(array('action'=>'member', 'pageId'=>'leon'));?>" title="<?php echo _('Members Club Leon de Juda')?>"><?php echo _('Members Club Leon de Juda')?></a></li>
 			</ul>
 		</li>
 		<!-- ENDS init sidebar -->
@@ -185,7 +184,7 @@
 		infobar_opacity: 1
 	});
 
-	$(window).load(function() {
-		$('#slider').nivoSlider();
-	});
+	$('#slider').nivoSlider();
+
+	$("ul.tabs").tabs("div.panes > div", {effect: 'fade'});
 </script>

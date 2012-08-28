@@ -1,0 +1,43 @@
+<?php $this->headScript()->appendFile($this->baseUrl() . "/js/DirectiveGuest.js","text/javascript");?>
+
+<div id="page-title">
+	<span class="title"><?php echo $this->title;?></span>
+	<span class="subtitle"><?php echo $this->subTitle;?></span>
+</div>
+
+<div style="margin:20px;">
+	<?php echo $this->tableHeader('directiveHeader', _("Directives"));?>
+	<?php echo $this->tableList("tblDirective");?>
+	<div id="dialog"><!-- Loads ajax dialog form --></div>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+	var directive = new com.em.DirectiveGuest();
+
+	// network
+	directive.setUrl({
+		toTable : '<?php echo $this->url(array('action'=>'read-items'));?>',
+		toBase : '<?php echo $this->baseUrl(); ?>',
+		toUpdate : '<?php echo $this->url(array('action'=>'update')); ?>',
+		toAutocomplete : '<?php echo $this->url(array('action'=>'autocomplete'));?>'
+	});
+
+	var headers = new Object();
+	headers.headerArray = new Array(
+		'<?php echo $this->translate('Name'); ?>',
+		'<?php echo $this->translate('Position'); ?>',
+		'<?php echo $this->translate('Mobil'); ?>',
+		'<?php echo $this->translate('Phone'); ?>',
+		'<?php echo $this->translate('Email'); ?>',
+		'<?php echo $this->translate('Club Pathfinder'); ?>');
+	directive.setHeaders(headers);
+	// configuration of widgets
+	directive.configureTable('#tblDirective', true);
+
+	// CRUD
+	directive.clickToAdd('#create-directive');
+	directive.clickToUpdate('#tblDirective a[id^=update-directive-]');
+	directive.clickToDelete('#delete-directive');
+});
+</script>
