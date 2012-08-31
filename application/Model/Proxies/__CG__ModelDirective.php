@@ -198,6 +198,12 @@ class Directive extends \Model\Directive implements \Doctrine\ORM\Proxy\Proxy
         return parent::setProfilePictureId($profilePictureId);
     }
 
+    public function getName()
+    {
+        $this->__load();
+        return parent::getName();
+    }
+
     public function getId()
     {
         if ($this->__isInitialized__ === false) {

@@ -1,0 +1,15 @@
+<div style="margin:20px;">
+	<?php echo $this->tableHeader('filterHeader', _("Filter Unity Club"));?>
+	<div id="containerFormFilter">
+		<?php echo $this->formFilter; ?>
+	</div>
+	<br>
+	<?php echo $this->tableHeader('departmentHeader', _("Unities Club"));?>
+	<?php echo $this->tableList("tblDepartment");?>
+	<div class="buttons right">
+		<?php echo $this->buttonRemove("delete-department", $this->translate('Remove'), $this->url(array('action'=>'delete')));?>
+		<?php echo $this->buttonAdd("create-department", $this->translate('Add'), $this->url(array('action'=>'create')));?>
+	</div>
+
+	<div id="dialog"><!-- Loads ajax dialog form --></div>
+</div>
