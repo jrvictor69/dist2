@@ -19,6 +19,8 @@ namespace Model;
  * @DiscriminatorMap({"person"="Person", "guest"="Guest", "directive"="Directive"})
  */
 class Person extends DomainObject {
+	const SEX_MALE		= 1;
+	const SEX_FEMALE	= 2;
 
 	/**
 	 * @Column(type="integer")
@@ -121,7 +123,7 @@ class Person extends DomainObject {
 		$this->lastName = $lastName;
 		return $this;
 	}
-	
+
 
 	/**
 	 * @return datetime

@@ -134,6 +134,86 @@ class PathfinderController extends App_Controller_Action {
 
 	/**
 	 *
+	 * This action shows the form to view the profile of the Directive.
+	 * @access public
+	 */
+	public function profiledirectiveAction() {
+		$this->_helper->layout()->disableLayout();
+
+		$form = new Form_DirectiveViewProfile();
+
+		$id = $this->_getParam('id', 0);
+		$directive = $this->_entityManager->find('Model\Directive', $id);
+		if ($directive != NULL) {
+			if ($directive->getSex() == Model\Person::SEX_MALE) {
+				$gender = _('Male');
+			} elseif ($directive->getSex() == Model\Person::SEX_FEMALE) {
+				$gender = _('Female');
+			}
+
+			$form->getElement('firstName')->setValue($directive->getFirstName());
+			$form->getElement('lastName')->setValue($directive->getLastName());
+			$form->getElement('sex')->setValue($gender);
+			$form->getElement('email')->setValue($directive->getEmail());
+			$form->getElement('phonemobil')->setValue($directive->getPhonemobil());
+			$form->getElement('phone')->setValue($directive->getPhone());
+			$form->getElement('club')->setValue($directive->getClub()->getName());
+			$form->getElement('position')->setValue($directive->getPosition()->getName());
+
+			$imageDataVaultMapper = new Model_ImageDataVaultMapper();
+			$imagePicture = $imageDataVaultMapper->find($directive->getProfilePictureId());
+
+			if ($imagePicture != NULL && $imagePicture->getBinary()) {
+				$src = $this->_helper->url('profile-picture', NULL, NULL, array('id' => $imagePicture->getId(), 'timestamp' => time()));
+			} else {
+				if ($directive->getSex() == Model\Person::SEX_MALE) {
+					$src = '/image/profile/male_default.jpg';
+				} elseif ($directive->getSex() == Model\Person::SEX_FEMALE) {
+					$src = '/image/profile/female_default.jpg';
+				}
+			}
+			$form->setSource($src);
+		} else {
+			$this->stdResponse->success = FALSE;
+			$this->stdResponse->message = _("The requested record was not found.");
+			$this->_helper->json($this->stdResponse);
+		}
+
+		$this->view->form = $form;
+	}
+
+	/**
+	 * Sends the binary file vault to the user agent.
+	 * @return void
+	 */
+	public function profilePictureAction() {
+		$this->_helper->layout()->disableLayout();
+		$this->_helper->viewRenderer->setNoRender(TRUE);
+
+		$id = (int)$this->_getParam('id', 0);
+
+		$imageMapper = new Model_ImageDataVaultMapper();
+		$imageLogo = $imageMapper->find($id);
+
+		if ($imageLogo->getBinary()) {
+			$this->_response
+			//No caching
+			->setHeader('Pragma', 'public')
+			->setHeader('Expires', '0')
+			->setHeader('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
+			->setHeader('Cache-Control', 'private')
+			->setHeader('Content-type', $imageLogo->getMimeType())
+			->setHeader('Content-Transfer-Encoding', 'binary')
+			->setHeader('Content-Length', strlen($imageLogo->getBinary()));
+
+			echo $imageLogo->getBinary();
+		} else {
+			$this->_response->setHttpResponseCode(404);
+		}
+	}
+
+	/**
+	 *
 	 * Outputs an XHR response containing all entries in directives.
 	 * This action serves as a datasource for the read/index view
 	 * @xhrParam int filter_name

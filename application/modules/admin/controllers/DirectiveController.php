@@ -51,7 +51,7 @@ class Admin_DirectiveController extends App_Controller_Action {
 		$form->getElement('position')->setMultiOptions($this->getPositions());
 		$form->setAction($this->_helper->url('save'));
 
-		$src = '/js/lib/ajax-upload/ep.jpg';
+		$src = '/image/profile/female_or_male_default.jpg';
 		$form->setSource($src);
 
 		$this->view->form = $form;
@@ -117,18 +117,6 @@ class Admin_DirectiveController extends App_Controller_Action {
 			$formData = $this->getRequest()->getPost();
 
 			if ($form->isValid($formData)) {
-				$fh = fopen($_FILES['file']['tmp_name'], 'r');
-				$binary = fread($fh, filesize($_FILES['file']['tmp_name']));
-				fclose($fh);
-
-				$mimeType = $_FILES['file']['type'];
-				$fileName = $_FILES['file']['name'];
-
-				$dataVaultMapper = new Model_DataVaultMapper();
-				$dataVault = new Model_DataVault();
-				$dataVault->setFilename($fileName)->setMimeType($mimeType)->setBinary($binary);
-				$dataVaultMapper->save($dataVault);
-
 				$club = $this->_entityManager->find('Model\ClubPathfinder', (int)$formData['club']);
 				$position = $this->_entityManager->find('Model\Position', (int)$formData['position']);
 
@@ -142,8 +130,25 @@ class Admin_DirectiveController extends App_Controller_Action {
 					->setSex((int)$formData['sex'])
 					->setClub($club)
 					->setPosition($position)
-					->setCreated(new \DateTime('now'))
-					->setProfilePictureId($dataVault->getId());
+					->setCreated(new \DateTime('now'));
+
+				if ($_FILES['file']['error'] !== UPLOAD_ERR_NO_FILE) {
+					if ($_FILES['file']['error'] == UPLOAD_ERR_OK) {
+						$fh = fopen($_FILES['file']['tmp_name'], 'r');
+						$binary = fread($fh, filesize($_FILES['file']['tmp_name']));
+						fclose($fh);
+
+						$mimeType = $_FILES['file']['type'];
+						$fileName = $_FILES['file']['name'];
+
+						$dataVaultMapper = new Model_DataVaultMapper();
+						$dataVault = new Model_DataVault();
+						$dataVault->setFilename($fileName)->setMimeType($mimeType)->setBinary($binary);
+						$dataVaultMapper->save($dataVault);
+
+						$directive->setProfilePictureId($dataVault->getId());
+					}
+				}
 
 				$this->_entityManager->persist($directive);
 				$this->_entityManager->flush();
@@ -186,11 +191,14 @@ class Admin_DirectiveController extends App_Controller_Action {
 
 			if ($imagePicture != NULL && $imagePicture->getBinary()) {
 				$src = $this->_helper->url('profile-picture', NULL, NULL, array('id' => $imagePicture->getId(), 'timestamp' => time()));
-				$form->setSource($src);
 			} else {
-				$src = '/js/lib/ajax-upload/ep.jpg';
-				$form->setSource($src);
+				if ($directive->getSex() == Model\Person::SEX_MALE) {
+					$src = '/image/profile/male_default.jpg';
+				} elseif ($directive->getSex() == Model\Person::SEX_FEMALE) {
+					$src = '/image/profile/female_default.jpg';
+				}
 			}
+			$form->setSource($src);
 		} else {
 			$this->stdResponse->success = FALSE;
 			$this->stdResponse->message = _("The requested record was not found.");

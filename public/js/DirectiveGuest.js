@@ -185,8 +185,8 @@ com.em.DirectiveGuest.prototype = {
 	configureDialogForm: function(selector) {with (this) {
 		dialogForm = $(selector).dialog({
 			autoOpen: false,
-			height: 320,
-			width: 350,
+			height: 360,
+			width: 370,
 			modal: true,
 			close: function(event, ui) {
 				$(this).remove();
