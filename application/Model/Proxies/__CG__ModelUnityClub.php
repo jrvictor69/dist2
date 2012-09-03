@@ -90,6 +90,18 @@ class UnityClub extends \Model\UnityClub implements \Doctrine\ORM\Proxy\Proxy
         return parent::setClub($club);
     }
 
+    public function getLogoId()
+    {
+        $this->__load();
+        return parent::getLogoId();
+    }
+
+    public function setLogoId($logoId)
+    {
+        $this->__load();
+        return parent::setLogoId($logoId);
+    }
+
     public function getId()
     {
         if ($this->__isInitialized__ === false) {
@@ -162,7 +174,7 @@ class UnityClub extends \Model\UnityClub implements \Doctrine\ORM\Proxy\Proxy
 
     public function __sleep()
     {
-        return array('__isInitialized__', 'name', 'motto', 'description', 'clubId', 'id', 'created', 'changed', 'createdBy', 'changedBy', 'state', 'club');
+        return array('__isInitialized__', 'name', 'motto', 'description', 'clubId', 'logoId', 'id', 'created', 'changed', 'createdBy', 'changedBy', 'state', 'club');
     }
 
     public function __clone()

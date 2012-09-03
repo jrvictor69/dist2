@@ -162,7 +162,7 @@
 					<label>Unity Club</label>
 					<module>admin</module>
 					<controller>unityclub</controller>
-					<action>index</action>
+					<action>read</action>
 					<params>
 						<type>pathfinder</type>
 					</params>

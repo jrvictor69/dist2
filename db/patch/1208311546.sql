@@ -8,16 +8,22 @@ CREATE  TABLE IF NOT EXISTS `tblUnityClub` (
   `createdBy` 	INT(11) 	DEFAULT NULL,
   `changedBy` 	INT(11) 	DEFAULT NULL,
   `state` 		TINYINT(1) 	NOT NULL DEFAULT '1',
-  `clubId`		INT 		NOT NULL,
+  `clubId`		INT			NOT NULL,
+  `logoId`		INT			DEFAULT NULL,
   CONSTRAINT `pk_tblUnityClub`
 	PRIMARY KEY (`id`) ,
 
   KEY `i_tblUnityClub_id` (`id`),
   INDEX `i_tblUnityClub_state_id` (`state`, `id`),
   INDEX `fk_tblUnityClub_clubId` (`clubId`),
+  INDEX `fk_tblUnityClub_logoId` (`logoId`),
   
   CONSTRAINT `fk_tblUnityClub_clubId`
 	FOREIGN KEY (`clubId`)
 	REFERENCES `tblClubPathfinder` (`id`)
+	ON UPDATE CASCADE,
+  CONSTRAINT `fk_tblUnityClub_logoId`
+	FOREIGN KEY (`logoId`)
+	REFERENCES `tblImageDataVault` (`id`)
 	ON UPDATE CASCADE)
 ENGINE = INNODB

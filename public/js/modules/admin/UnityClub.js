@@ -193,8 +193,8 @@ com.em.UnityClub.prototype = {
 	configureDialogForm: function(selector) {with (this) {
 		dialogForm = $(selector).dialog({
 			autoOpen: false,
-			height: 165,
-			width: 350,
+			height: 430,
+			width: 360,
 			modal: true,
 			close: function(event, ui) {
 				$(this).remove();
@@ -394,7 +394,16 @@ com.em.UnityClub.prototype = {
 				'name':{
 					required: true,
 					maxlength: 100
-				}
+				},
+				'motto':{
+					required: true
+				},
+				'file':{
+					accept: "git|jpg|png"
+				},
+				'club':{
+					required: true
+				},
 			}
 		});
 	},

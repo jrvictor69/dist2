@@ -51,6 +51,12 @@ class UnityClub extends DomainObject {
 	private $club;
 
 	/**
+	 * @Column(type="integer")
+	 * @var int
+	 */
+	private $logoId;
+
+	/**
 	 * @return string
 	 */
 	public function getName() {
@@ -111,6 +117,22 @@ class UnityClub extends DomainObject {
 	 */
 	public function setClub($club) {
 		$this->club = $club;
+		return $this;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getLogoId() {
+		return $this->logoId;
+	}
+
+	/**
+	 * @param int $logoId
+	 * @return UnityClub
+	 */
+	public function setLogoId($logoId) {
+		$this->logoId = $logoId;
 		return $this;
 	}
 }

@@ -37,25 +37,141 @@ class Admin_UnityClubController extends App_Controller_Action {
 		$formFilter = new Admin_Form_SearchFilter();
 		$formFilter->getElement('nameFilter')->setLabel(_("Name Unity Club"));
 		$this->view->formFilter = $formFilter;
-
-		$club = $this->_entityManager->find('Model\ClubPathfinder',1);
-		$unity = new Model\UnityClub();
-
-
-		$unity->setName("second unity new")->setDescription("description")->setClub($club)->setMotto("motto")->setCreated(new \DateTime('now'));
-
-		$this->_entityManager->persist($unity);
-		$this->_entityManager->flush();
-
 	}
 
 	/**
-	 *
 	 * This action shows a form in create mode
 	 * @access public
 	 */
 	public function createAction() {
 		$this->_helper->layout()->disableLayout();
+
+		$form = new Admin_Form_UnityClub();
+		$form->getElement('club')->setMultiOptions($this->getClubPathfinders());
+		$form->setAction($this->_helper->url('save'));
+
+		$src = '/image/profile/female_or_male_default.jpg';
+		$form->setSource($src);
+
+		$this->view->form = $form;
+	}
+
+	/**
+	 * Creates a new Directive
+	 * @access public
+	 */
+	public function saveAction() {
+		if ($this->_request->isPost()) {
+			$form = new Admin_Form_UnityClub();
+			$form->getElement('club')->setMultiOptions($this->getClubPathfinders());
+
+			$formData = $this->getRequest()->getPost();
+
+			if ($form->isValid($formData)) {
+				$club = $this->_entityManager->find('Model\ClubPathfinder', (int)$formData['club']);
+
+				$unityClub = new Model\UnityClub();
+				$unityClub->setName($formData['name'])
+					->setMotto($formData['motto'])
+					->setDescription($formData['description'])
+					->setClub($club)
+					->setCreated(new \DateTime('now'));
+
+				if ($_FILES['file']['error'] !== UPLOAD_ERR_NO_FILE) {
+					if ($_FILES['file']['error'] == UPLOAD_ERR_OK) {
+						$fh = fopen($_FILES['file']['tmp_name'], 'r');
+						$binary = fread($fh, filesize($_FILES['file']['tmp_name']));
+						fclose($fh);
+
+						$mimeType = $_FILES['file']['type'];
+						$fileName = $_FILES['file']['name'];
+
+						$dataVaultMapper = new Model_DataVaultMapper();
+						$dataVault = new Model_DataVault();
+						$dataVault->setFilename($fileName)->setMimeType($mimeType)->setBinary($binary);
+						$dataVaultMapper->save($dataVault);
+
+						$unityClub->setLogoId($dataVault->getId());
+					}
+				}
+
+				$this->_entityManager->persist($unityClub);
+				$this->_entityManager->flush();
+
+				$this->_helper->flashMessenger(array('success' => _("Unity Club saved")));
+				$this->_helper->redirector('read', 'unityclub', 'admin', array('type'=>'pathfinder'));
+			} else {
+				$this->_helper->redirector('read', 'unityclub', 'admin', array('type'=>'pathfinder'));
+			}
+		} else {
+			$this->_helper->redirector('read', 'unityclub', 'admin', array('type'=>'pathfinder'));
+		}
+	}
+
+	/**
+	 * This action shows the form in update mode for Directive.
+	 * @access public
+	 */
+	public function updateAction() {
+		$this->_helper->layout()->disableLayout();
+
+		$form = new Admin_Form_UnityClub();
+		$form->getElement('club')->setMultiOptions($this->getClubPathfinders());
+
+		$id = $this->_getParam('id', 0);
+		$unityClub = $this->_entityManager->find('Model\UnityClub', $id);
+		if ($unityClub != NULL) {
+			$form->getElement('name')->setValue($unityClub->getName());
+			$form->getElement('motto')->setValue($unityClub->getMotto());
+			$form->getElement('description')->setValue($unityClub->getDescription());
+			$form->getElement('club')->setValue($unityClub->getClub()->getId());
+
+			$imageDataVaultMapper = new Model_ImageDataVaultMapper();
+			$imagePicture = $imageDataVaultMapper->find($unityClub->getLogoId());
+
+			if ($imagePicture != NULL && $imagePicture->getBinary()) {
+				$src = $this->_helper->url('profile-picture', NULL, NULL, array('id' => $imagePicture->getId(), 'timestamp' => time()));
+			} else {
+				$src = '/image/profile/male_default.jpg';
+			}
+			$form->setSource($src);
+		} else {
+			$this->stdResponse->success = FALSE;
+			$this->stdResponse->message = _("The requested record was not found.");
+			$this->_helper->json($this->stdResponse);
+		}
+
+		$this->view->form = $form;
+	}
+
+	/**
+	 * Sends the binary file vault to the user agent.
+	 * @return void
+	 */
+	public function profilePictureAction() {
+		$this->_helper->layout()->disableLayout();
+		$this->_helper->viewRenderer->setNoRender(TRUE);
+
+		$id = (int)$this->_getParam('id', 0);
+
+		$imageMapper = new Model_ImageDataVaultMapper();
+		$imageLogo = $imageMapper->find($id);
+
+		if ($imageLogo->getBinary()) {
+			$this->_response
+			//No caching
+			->setHeader('Pragma', 'public')
+			->setHeader('Expires', '0')
+			->setHeader('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
+			->setHeader('Cache-Control', 'private')
+			->setHeader('Content-type', $imageLogo->getMimeType())
+			->setHeader('Content-Transfer-Encoding', 'binary')
+			->setHeader('Content-Length', strlen($imageLogo->getBinary()));
+
+			echo $imageLogo->getBinary();
+		} else {
+			$this->_response->setHttpResponseCode(404);
+		}
 	}
 
 	/**
