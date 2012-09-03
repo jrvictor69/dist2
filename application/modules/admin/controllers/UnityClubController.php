@@ -37,6 +37,16 @@ class Admin_UnityClubController extends App_Controller_Action {
 		$formFilter = new Admin_Form_SearchFilter();
 		$formFilter->getElement('nameFilter')->setLabel(_("Name Unity Club"));
 		$this->view->formFilter = $formFilter;
+
+		$club = $this->_entityManager->find('Model\ClubPathfinder',1);
+		$unity = new Model\UnityClub();
+
+
+		$unity->setName("second unity new")->setDescription("description")->setClub($club)->setMotto("motto")->setCreated(new \DateTime('now'));
+
+		$this->_entityManager->persist($unity);
+		$this->_entityManager->flush();
+
 	}
 
 	/**
@@ -46,6 +56,56 @@ class Admin_UnityClubController extends App_Controller_Action {
 	 */
 	public function createAction() {
 		$this->_helper->layout()->disableLayout();
+	}
+
+	/**
+	 *
+	 * Outputs an XHR response containing all entries in directives.
+	 * This action serves as a datasource for the read/index view
+	 * @xhrParam int filter_name
+	 * @xhrParam int iDisplayStart
+	 * @xhrParam int iDisplayLength
+	 */
+	public function readItemsAction() {
+		$sortCol = $this->_getParam('iSortCol_0', 1);
+		$sortDirection = $this->_getParam('sSortDir_0', 'asc');
+
+		$filterParams['name'] = $this->_getParam('filter_name', NULL);
+		$filters = $this->getFilters($filterParams);
+
+		$start = $this->_getParam('iDisplayStart', 0);
+		$limit = $this->_getParam('iDisplayLength', 10);
+		$page = ($start + $limit) / $limit;
+
+		$unityClubRepo = $this->_entityManager->getRepository('Model\UnityClub');
+		$unitiesClub = $unityClubRepo->findByCriteria($filters, $limit, $start, $sortCol, $sortDirection);
+		$total = $unityClubRepo->getTotalCount($filters);
+
+		$posRecord = $start+1;
+		$data = array();
+		foreach ($unitiesClub as $unityClub) {
+			$changed = $unityClub->getChanged();
+			if ($changed != NULL) {
+				$changed = $changed->format('d.m.Y');
+			}
+
+			$row = array();
+			$row[] = $unityClub->getId();
+			$row[] = $unityClub->getName();
+			$row[] = $unityClub->getMotto();
+			$row[] = $unityClub->getDescription();
+			$row[] = $unityClub->getClub()->getName();
+			$row[] = $unityClub->getCreated()->format('d.m.Y');
+			$row[] = $changed;
+			$row[] = '[]';
+			$data[] = $row;
+			$posRecord++;
+		}
+		// response
+		$this->stdResponse->iTotalRecords = $total;
+		$this->stdResponse->iTotalDisplayRecords = $total;
+		$this->stdResponse->aaData = $data;
+		$this->_helper->json($this->stdResponse);
 	}
 
 	/**
