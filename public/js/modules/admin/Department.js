@@ -27,17 +27,17 @@ com.em = com.em ||{};
 		this.actionSort = undefined;
 	};
 com.em.Department.prototype = {
-	
+
 	/**
-	 * 
+	 *
 	 * Initializes JQuery flash message component
 	 */	
 	initFlashMessage: function() {
 		this.alert = new com.em.Alert();
 	},
-	
+
 	/**
-	 * 
+	 *
 	 * Initializes all the events for items on page
 	 */
 	initEvents: function() {with(this) {
@@ -47,35 +47,35 @@ com.em.Department.prototype = {
 				table.oApi._fnAjaxUpdate(table.fnSettings());
 			}
 		});
-		
+
 		$("#searchButton").bind('click', function() {
 			initDisplayStart();
 			table.oApi._fnAjaxUpdate(table.fnSettings());
 		});
-		
+
 		$("#resetButton").bind('click', function() {
 			//set value to all and refresh the input for select
 //			$('#countryFilter').attr('value', 'All');
 //			$('#countryFilter').change();
 			$("#countryFilter option[value="+-1+"]").attr("selected", true);
 			$('#nameFilter').attr('value', '');
-			
+
 			initDisplayStart();
 			table.oApi._fnAjaxUpdate(table.fnSettings());
 		});
-		
+
 		$("#countryFilter").change(function() {
 			var value = $("#countryFilter").val();
 //			if (value == -1) {
 //				$('#nameFilter').attr('value', '');
 //			}
 			initDisplayStart();
-	   		table.oApi._fnAjaxUpdate(table.fnSettings());
+			table.oApi._fnAjaxUpdate(table.fnSettings());
 		});
 	}},
-	
+
 	/**
-	 * 
+	 *
 	 * Initializes Display start of datatable
 	 */
 	initDisplayStart: function() {with(this) {
@@ -84,9 +84,9 @@ com.em.Department.prototype = {
 		//rows by page
 //		oSettings._iDisplayLength = 3;
 	}},
-	
+
 	/**
-	 * 
+	 *
 	 * Sets headers of datatable
 	 * @param pheaders
 	 */
@@ -96,18 +96,18 @@ com.em.Department.prototype = {
 		if (typeof dtHeaders === 'undefined') {
 			dtHeaders = pheaders;
 		}
-		
+
 		var headers = pheaders['headerArray'];
-		
+
 		$("#datatable-headers").empty();
-		
+
 		for ( var i = 0; i < headers.length; i++) {
 			$("#datatable-headers").append('<th>'+headers[i]+'</th>');
 		}
-		
+
 		$("#datatable-headers").append('<th><input type="checkbox" id="check-master" value="0"></th>');
 		$("#datatable-headers").prepend('<th >Id</th>');
-		
+
 		//Adding the event to check-master because it was removed
 		$("#check-master").bind('click', function() {
 			var checked = $("#check-master").attr('checked');
@@ -116,11 +116,11 @@ com.em.Department.prototype = {
 			} else {
 				$('#tblDepartment input[id^=check-slave-]').attr('checked', false);
 			}
-		});		
+		});
 	}},
-	
+
 	/**
-	 * 
+	 *
 	 * Configures the table and elements
 	 * @param selector
 	 */
@@ -134,41 +134,41 @@ com.em.Department.prototype = {
 			"bServerSide"   : true,
 			"sAjaxSource"   : url.toTable,
 			"aoColumns"     : getColumns(),
-		    "sPaginationType" : "full_numbers",
+			"sPaginationType" : "full_numbers",
 			"oLanguage": {
 				"sEmptyTable": "No Catagory found."
 			},
 			"fnDrawCallback": function() {
 				clickToUpdate('#tblDepartment a[id^=update-department-]');
 			},
-			
-			"fnServerData": function (sSource, aoData, fnCallback ) { 
+
+			"fnServerData": function (sSource, aoData, fnCallback ) {
 				//applying filter_name
 				var position = getPosition(aoData, 'filter_name');
-				
+
 				if (position == -1)
-					aoData.push({"name": "filter_name", "value": $('#nameFilter').attr('value')});				
+					aoData.push({"name": "filter_name", "value": $('#nameFilter').attr('value')});
 				else
 					aoData[position].value=$('#nameFilter').attr('value');
-				
+
 				//applying filter_maingroup
 				position = getPosition(aoData,'filter_maingroup');
-				
+
 				if(position == -1)
-					aoData.push({"name": "filter_country", "value": $('#countryFilter').attr('value')});				
+					aoData.push({"name": "filter_country", "value": $('#countryFilter').attr('value')});
 				else
 					aoData[position].value = $('#countryFilter').attr('value');
-				
-	            $.getJSON(sSource, aoData, function (json) {
-	                fnCallback(json);       
-	            } );
+
+				$.getJSON(sSource, aoData, function (json) {
+					fnCallback(json);
+				});
 			}
 		});
 		$(selector).width("100%");
 	}},
-	
+
 	/**
-	 * 
+	 *
 	 * Gets columns configuration for datatable
 	 * @return Array
 	 */
@@ -195,10 +195,10 @@ com.em.Department.prototype = {
 			   return '<input type="checkbox" name="itemIds[]" id="check-slave-'+oObj.aData[0]+'" value="'+oObj.aData[0]+'">';
 			}
 		});
-		
+
 		return columns;
 	}},
-	
+
 	/**
 	 * Shows proccessing display for data table
 	 * @param bShow boolean
@@ -207,7 +207,7 @@ com.em.Department.prototype = {
 		var settings = table.fnSettings();
 		settings.oApi._fnProcessingDisplay(settings, bShow);
 	},
-	
+
 //	processingDisplay : function(bShow) {
 //		if(bShow)
 //			$.blockUI({ css:{ 
@@ -222,9 +222,9 @@ com.em.Department.prototype = {
 //		else
 //			$.unblockUI();
 //	},
-	
+
 	/**
-	 * 
+	 *
 	 * Configures the form
 	 * @param selector (dialog of form)	 
 	 * */
@@ -237,7 +237,7 @@ com.em.Department.prototype = {
 			close: function(event, ui) {
 				$(this).remove();
 			}
-		});				
+		});
 		
 //		$('#formId').submit(function() {
 //			return false;
@@ -246,9 +246,9 @@ com.em.Department.prototype = {
 		// Configs font-size for header dialog and buttons
 		$(selector).parent().css('font-size','0.7em');
 	}},
-	
+
 	/**
-	 * 
+	 *
 	 * Opens dialog and manages the creation of new register
 	 * @param selector
 	 */
@@ -264,7 +264,7 @@ com.em.Department.prototype = {
 				beforeSend : function(XMLHttpRequest) {
 					processingDisplay(true);
 				},
-				
+
 				success: function(data, textStatus, XMLHttpRequest) {
 					if (textStatus == 'success') {
 						var contentType = XMLHttpRequest.getResponseHeader('Content-Type');
@@ -284,11 +284,11 @@ com.em.Department.prototype = {
 						}
 					} 
 				},
-				
+
 				complete: function(jqXHR, textStatus) {
 					processingDisplay(false);
 				},
-				
+
 				error: function(jqXHR, textStatus, errorThrown) {
 					dialogForm.dialog('close');
 					alert.flashError(errorThrown,{header: com.em.Alert.ERROR});
@@ -296,9 +296,9 @@ com.em.Department.prototype = {
 			});
 		});
 	}},
-	
+
 	/**
-	 * 
+	 *
 	 * Opens dialog and manages the update of register
 	 * @param selector
 	 */
@@ -314,7 +314,7 @@ com.em.Department.prototype = {
 				beforeSend: function(XMLHttpRequest) {
 					processingDisplay(true);
 				},
-				
+
 				success: function(data, textStatus, XMLHttpRequest) {
 					if (textStatus == 'success') {
 						var contentType = XMLHttpRequest.getResponseHeader('Content-Type');
@@ -334,11 +334,11 @@ com.em.Department.prototype = {
 						}
 					} 
 				},
-				
+
 				complete: function(jqXHR, textStatus) {
 					processingDisplay(false);
 				},
-				
+
 				error: function(jqXHR, textStatus, errorThrown) {
 					dialogForm.dialog('close');
 					alert.flashError(errorThrown,{header: com.em.Alert.ERROR});
@@ -346,9 +346,9 @@ com.em.Department.prototype = {
 			});
 		});
 	}},
-	
+
 	/**
-	 * 
+	 *
 	 * Deletes n items
 	 * @param selector
 	 */
@@ -363,10 +363,10 @@ com.em.Department.prototype = {
 				return;
 			}
 			var action = $(this).attr('href');
-			
-			jConfirm('Are you sure to delete?', 'Delete Department', function(r) {			    
-			    if (r) {
-			    	$.ajax({
+
+			jConfirm('Are you sure to delete?', 'Delete Department', function(r) {
+				if (r) {
+					$.ajax({
 						dataType: 'json', 
 						type: "POST", 
 						url: action,
@@ -375,7 +375,7 @@ com.em.Department.prototype = {
 						beforeSend : function(XMLHttpRequest) {
 							processingDisplay(true);
 						},
-						
+
 						success: function(data, textStatus, XMLHttpRequest) {
 							if (textStatus == 'success') {
 								if (data.success) {
@@ -386,11 +386,11 @@ com.em.Department.prototype = {
 								}
 							}
 						},
-						
+
 						complete: function(jqXHR, textStatus) {
 							processingDisplay(false);
 						},
-						
+
 						error: function(jqXHR, textStatus, errorThrown) {
 							alert.flashError(errorThrown,{header: com.em.Alert.ERROR});
 						}
@@ -401,34 +401,34 @@ com.em.Department.prototype = {
 			});
 		});
 	}},
-	
+
 	/**
-	 * 
+	 *
 	 * Validates department form
 	 * @param selector
 	 */
 	setValidatorForm : function(selector) {
 		validator = $(selector).validate({
-	        rules:{
-	        	'name':{
+			rules:{
+				'name':{
 					required: true,
 					maxlength: 45	
 				}
-	        }
-	    });
+			}
+		});
 	},
-	
+
 	/**
-	 * 
+	 *
 	 * Sets url for action side server
 	 * @param url json
 	 */
 	setUrl: function(url) {
 		this.url = url;
 	},
-	
+
 	/**
-	 * 
+	 *
 	 * Gets number position of name in array data
 	 * @param array containing sub-arrays with the structure name->valname, value->valvalue
 	 * @param name is the string we are looking for and must match with valname
@@ -442,9 +442,9 @@ com.em.Department.prototype = {
 		}
 		return pos;
 	},
-	
+
 	/**
-	 * 
+	 *
 	 * Shows alert if it exists, if not create a new instance of alert and show it
 	 * @param message to show
 	 * @param header of the message
@@ -455,9 +455,9 @@ com.em.Department.prototype = {
 		}
 		alert.show(message, header);
 	}},
-	
+
 	/**
-	 * 
+	 *
 	 * Shows flash message success if it exists, if not creates a new instance of flash message success and shows it.
 	 * @param message string
 	 * @param header string
@@ -468,9 +468,9 @@ com.em.Department.prototype = {
 		}
 		alert.flashSuccess(message, header);
 	}},
-	
+
 	/**
-	 * 
+	 *
 	 * Shows flash message error if it exists, if not creates a new instance of flash message error and shows it.
 	 * @param message string
 	 * @param header string

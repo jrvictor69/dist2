@@ -27,17 +27,17 @@ com.em = com.em ||{};
 		this.actionSort = undefined;
 	};
 com.em.Pathfinder.prototype = {
-	
+
 	/**
-	 * 
+	 *
 	 * Initializes JQuery flash message component
 	 */	
 	initFlashMessage: function() {
 		this.alert = new com.em.Alert();
 	},
-	
+
 	/**
-	 * 
+	 *
 	 * Initializes all the events for items on page
 	 */
 	initEvents: function() {with(this) {
@@ -47,51 +47,51 @@ com.em.Pathfinder.prototype = {
 				table.oApi._fnAjaxUpdate(table.fnSettings());
 			}
 		});
-		
+
 		$("#searchButton").bind('click', function() {
 			initDisplayStart();
 			table.oApi._fnAjaxUpdate(table.fnSettings());
 		});
-		
+
 		$("#resetButton").bind('click', function() {
 			$('#nameFilter').attr('value', '');
 			initDisplayStart();
 			table.oApi._fnAjaxUpdate(table.fnSettings());
 		});
 	}},
-	
+
 	/**
-	 * 
+	 *
 	 * Initializes Display start of datatable
 	 */
 	initDisplayStart: function() {with(this) {
 		var oSettings = table.fnSettings();
 		oSettings._iDisplayStart = 0;
 	}},
-	
+
 	/**
-	 * 
+	 *
 	 * Sets headers of datatable
 	 * @param pheaders
 	 */
 	setHeaders: function(pheaders){with(this) {
 		pheaders = typeof pheaders !== 'undefined' ? pheaders : dtHeaders;
-			
+
 		if (typeof dtHeaders === 'undefined') {
 			dtHeaders = pheaders;
 		}
-		
+
 		var headers = pheaders['headerArray'];
-		
+
 		$("#datatable-headers").empty();
-		
+
 		for ( var i = 0; i < headers.length; i++) {
 			$("#datatable-headers").append('<th>'+headers[i]+'</th>');
 		}
-		
+
 		$("#datatable-headers").append('<th><input type="checkbox" id="check-master" value="0"></th>');
 		$("#datatable-headers").prepend('<th >Id</th>');
-		
+
 		//Adding the event to check-master because it was removed
 		$("#check-master").bind('click', function() {
 			var checked = $("#check-master").attr('checked');
@@ -100,14 +100,14 @@ com.em.Pathfinder.prototype = {
 			} else {
 				$('#tblPathfinder input[id^=check-slave-]').attr('checked', false);
 			}
-		});		
+		});
 	}},
-	
+
 	/**
-	 * 
+	 *
 	 * Configures the table and elements
 	 * @param selector
-	 */	
+	 */
 	configureTable: function(selector, pdestroy) { with (this) {
 		table = $(selector).dataTable({
 			"bProcessing"   : true,
@@ -118,33 +118,33 @@ com.em.Pathfinder.prototype = {
 			"bServerSide"   : true,
 			"sAjaxSource"   : url.toTable,
 			"aoColumns"     : getColumns(),
-		    "sPaginationType" : "full_numbers",
+			"sPaginationType" : "full_numbers",
 			"oLanguage": {
 				"sEmptyTable": "No Catagory found."
 			},
 			"fnDrawCallback": function() {
 				clickToUpdate('#tblPathfinder a[id^=update-pathfinder-]');
 			},
-			
+
 			"fnServerData": function (sSource, aoData, fnCallback ) { 
 				//applying filter_name
 				var position = getPosition(aoData, 'filter_name');
-				
+
 				if (position == -1)
-					aoData.push({"name": "filter_name","value": $('#nameFilter').attr('value')});				
+					aoData.push({"name": "filter_name","value": $('#nameFilter').attr('value')});
 				else
 					aoData[position].value=$('#nameFilter').attr('value');
-				
-	            $.getJSON(sSource, aoData, function (json) {
-	                fnCallback(json);       
-	            } );
+
+				$.getJSON(sSource, aoData, function (json) {
+					fnCallback(json);
+				} );
 			}
 		});
 		$(selector).width("100%");
 	}},
-	
+
 	/**
-	 * 
+	 *
 	 * Gets columns configuration for datatable
 	 * @return Array
 	 */
@@ -168,13 +168,13 @@ com.em.Pathfinder.prototype = {
 			"sWidth": "2%",
 			"sClass": "checkColumn",
 			fnRender : function (oObj){
-			   return '<input type="checkbox" name="itemIds[]" id="check-slave-'+oObj.aData[0]+'" value="'+oObj.aData[0]+'">';
+				return '<input type="checkbox" name="itemIds[]" id="check-slave-'+oObj.aData[0]+'" value="'+oObj.aData[0]+'">';
 			}
 		});
-		
+
 		return columns;
 	}},
-	
+
 	/**
 	 * Shows proccessing display for data table
 	 * @param bShow boolean
@@ -183,9 +183,9 @@ com.em.Pathfinder.prototype = {
 		var settings = table.fnSettings();
 		settings.oApi._fnProcessingDisplay(settings, bShow);
 	},
-	
+
 	/**
-	 * 
+	 *
 	 * Configures the form
 	 * @param selector (dialog of form)	 
 	 * */
@@ -202,9 +202,9 @@ com.em.Pathfinder.prototype = {
 		// Configs font-size for header dialog and buttons
 		$(selector).parent().css('font-size','0.7em');
 	}},
-	
+
 	/**
-	 * 
+	 *
 	 * Opens dialog and manages the creation of new register
 	 * @param selector
 	 */
@@ -220,7 +220,7 @@ com.em.Pathfinder.prototype = {
 				beforeSend : function(XMLHttpRequest) {
 					processingDisplay(true);
 				},
-				
+
 				success: function(data, textStatus, XMLHttpRequest) {
 					if (textStatus == 'success') {
 						var contentType = XMLHttpRequest.getResponseHeader('Content-Type');
@@ -240,11 +240,11 @@ com.em.Pathfinder.prototype = {
 						}
 					} 
 				},
-				
+
 				complete: function(jqXHR, textStatus) {
 					processingDisplay(false);
 				},
-				
+
 				error: function(jqXHR, textStatus, errorThrown) {
 					dialogForm.dialog('close');
 					alert.flashError(errorThrown,{header : com.em.Alert.ERROR});
@@ -252,9 +252,9 @@ com.em.Pathfinder.prototype = {
 			});
 		});
 	}},
-	
+
 	/**
-	 * 
+	 *
 	 * Opens dialog and manages the update of register
 	 * @param selector
 	 */
@@ -270,7 +270,7 @@ com.em.Pathfinder.prototype = {
 				beforeSend: function(XMLHttpRequest) {
 					processingDisplay(true);
 				},
-				
+
 				success: function(data, textStatus, XMLHttpRequest) {
 					if (textStatus == 'success') {
 						var contentType = XMLHttpRequest.getResponseHeader('Content-Type');
@@ -290,11 +290,11 @@ com.em.Pathfinder.prototype = {
 						}
 					} 
 				},
-				
+
 				complete: function(jqXHR, textStatus) {
 					processingDisplay(false);
 				},
-				
+
 				error: function(jqXHR, textStatus, errorThrown) {
 					dialogForm.dialog('close');
 					alert.flashError(errorThrown,{header: com.em.Alert.ERROR});
@@ -302,9 +302,9 @@ com.em.Pathfinder.prototype = {
 			});
 		});
 	}},
-	
+
 	/**
-	 * 
+	 *
 	 * Deletes n items
 	 * @param selector
 	 */
@@ -319,19 +319,19 @@ com.em.Pathfinder.prototype = {
 				return;
 			}
 			var action = $(this).attr('href');
-			
-			jConfirm('Are you sure to delete?', 'Delete Pathfinder', function(r) {			    
-			    if (r) {
-			    	$.ajax({
-						dataType: 'json', 
-						type: "POST", 
+
+			jConfirm('Are you sure to delete?', 'Delete Pathfinder', function(r) {
+				if (r) {
+					$.ajax({
+						dataType: 'json',
+						type: "POST",
 						url: action,
 						// Gets element checkbox checked
 						data: itemsChecked,
 						beforeSend : function(XMLHttpRequest) {
 							processingDisplay(true);
 						},
-						
+
 						success: function(data, textStatus, XMLHttpRequest) {
 							if (textStatus == 'success') {
 								if (data.success) {
@@ -342,11 +342,11 @@ com.em.Pathfinder.prototype = {
 								}
 							}
 						},
-						
+
 						complete: function(jqXHR, textStatus) {
 							processingDisplay(false);
 						},
-						
+
 						error: function(jqXHR, textStatus, errorThrown) {
 							alert.flashError(errorThrown,{header: com.em.Alert.ERROR});
 						}
@@ -357,9 +357,9 @@ com.em.Pathfinder.prototype = {
 			});
 		});
 	}},
-	
+
 	/**
-	 * 
+	 *
 	 * Configures the name autocomplete of the filter
 	 * @param selector
 	 */
@@ -381,7 +381,7 @@ com.em.Pathfinder.prototype = {
 			}
 		});
 	}},
-	
+
 	/**
 	 *
 	 * Validates pathfinder form
@@ -389,26 +389,26 @@ com.em.Pathfinder.prototype = {
 	 */
 	setValidatorForm : function(selector) {
 		validator = $(selector).validate({
-	        rules:{
-	        	'name':{
+			rules:{
+				'name':{
 					required: true,
 					maxlength: 100
 				}
-	        }
-	    });
+			}
+		});
 	},
-	
+
 	/**
-	 * 
+	 *
 	 * Sets url for action side server
 	 * @param url json
 	 */
 	setUrl: function(url) {
 		this.url = url;
 	},
-	
+
 	/**
-	 * 
+	 *
 	 * Gets number position of name in array data
 	 * @param array containing sub-arrays with the structure name->valname, value->valvalue
 	 * @param name is the string we are looking for and must match with valname
@@ -422,9 +422,9 @@ com.em.Pathfinder.prototype = {
 		}
 		return pos;
 	},
-	
+
 	/**
-	 * 
+	 *
 	 * Shows alert if it exists, if not create a new instance of alert and show it
 	 * @param message to show
 	 * @param header of the message
@@ -435,9 +435,9 @@ com.em.Pathfinder.prototype = {
 		}
 		alert.show(message, header);
 	}},
-	
+
 	/**
-	 * 
+	 *
 	 * Shows flash message success if it exists, if not creates a new instance of flash message success and shows it.
 	 * @param message string
 	 * @param header string
@@ -448,9 +448,9 @@ com.em.Pathfinder.prototype = {
 		}
 		alert.flashSuccess(message, header);
 	}},
-	
+
 	/**
-	 * 
+	 *
 	 * Shows flash message error if it exists, if not creates a new instance of flash message error and shows it.
 	 * @param message string
 	 * @param header string
