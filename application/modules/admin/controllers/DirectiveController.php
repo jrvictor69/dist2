@@ -141,8 +141,8 @@ class Admin_DirectiveController extends App_Controller_Action {
 						$mimeType = $_FILES['file']['type'];
 						$fileName = $_FILES['file']['name'];
 
-						$dataVaultMapper = new Model_DataVaultMapper();
-						$dataVault = new Model_DataVault();
+						$dataVaultMapper = new Model_ImageDataVaultMapper();
+						$dataVault = new Model_ImageDataVault();
 						$dataVault->setFilename($fileName)->setMimeType($mimeType)->setBinary($binary);
 						$dataVaultMapper->save($dataVault);
 

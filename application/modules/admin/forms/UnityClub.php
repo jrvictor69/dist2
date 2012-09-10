@@ -21,10 +21,12 @@ class Admin_Form_UnityClub extends Zend_Form {
 			->setMethod('post')
 			->setAttrib('enctype', 'multipart/form-data')
 
-			->addElement('File', 'file', array(
-					'label' => _('File'),
-					'required'   => TRUE
-			))
+// 			->addElement('File', 'file', array(
+// 					'label' => _('File')
+// // 					'required'   => TRUE
+// 			))
+
+			->addElement('Hidden', 'id')
 
 			->addElement('Text', 'name', array(
 				'label' => _('Name'),

@@ -86,8 +86,8 @@ class Admin_UnityClubController extends App_Controller_Action {
 						$mimeType = $_FILES['file']['type'];
 						$fileName = $_FILES['file']['name'];
 
-						$dataVaultMapper = new Model_DataVaultMapper();
-						$dataVault = new Model_DataVault();
+						$dataVaultMapper = new Model_ImageDataVaultMapper();
+						$dataVault = new Model_ImageDataVault();
 						$dataVault->setFilename($fileName)->setMimeType($mimeType)->setBinary($binary);
 						$dataVaultMapper->save($dataVault);
 
@@ -99,12 +99,12 @@ class Admin_UnityClubController extends App_Controller_Action {
 				$this->_entityManager->flush();
 
 				$this->_helper->flashMessenger(array('success' => _("Unity Club saved")));
-				$this->_helper->redirector('read', 'unityclub', 'admin', array('type'=>'pathfinder'));
+				$this->_helper->redirector('read', 'Unityclub', 'admin', array('type'=>'pathfinder'));
 			} else {
-				$this->_helper->redirector('read', 'unityclub', 'admin', array('type'=>'pathfinder'));
+				$this->_helper->redirector('read', 'Unityclub', 'admin', array('type'=>'pathfinder'));
 			}
 		} else {
-			$this->_helper->redirector('read', 'unityclub', 'admin', array('type'=>'pathfinder'));
+			$this->_helper->redirector('read', 'Unityclub', 'admin', array('type'=>'pathfinder'));
 		}
 	}
 
@@ -117,10 +117,12 @@ class Admin_UnityClubController extends App_Controller_Action {
 
 		$form = new Admin_Form_UnityClub();
 		$form->getElement('club')->setMultiOptions($this->getClubPathfinders());
+		$form->setAction($this->_helper->url('edit'));
 
 		$id = $this->_getParam('id', 0);
 		$unityClub = $this->_entityManager->find('Model\UnityClub', $id);
 		if ($unityClub != NULL) {
+			$form->getElement('id')->setValue($unityClub->getId());
 			$form->getElement('name')->setValue($unityClub->getName());
 			$form->getElement('motto')->setValue($unityClub->getMotto());
 			$form->getElement('description')->setValue($unityClub->getDescription());
@@ -142,6 +144,58 @@ class Admin_UnityClubController extends App_Controller_Action {
 		}
 
 		$this->view->form = $form;
+	}
+
+	/**
+	 * Creates a new Directive
+	 * @access public
+	 */
+	public function editAction() {
+		if ($this->_request->isPost()) {
+			$form = new Admin_Form_UnityClub();
+			$form->getElement('club')->setMultiOptions($this->getClubPathfinders());
+
+			$formData = $this->getRequest()->getPost();
+
+			if ($form->isValid($formData)) {
+				$id = $this->_getParam('id', 0);
+
+				$club = $this->_entityManager->find('Model\ClubPathfinder', (int)$formData['club']);
+
+				$unityClub = $this->_entityManager->find('Model\UnityClub', $id);
+				$unityClub->setName($formData['name'])
+					->setMotto($formData['motto'])
+					->setDescription($formData['description'])
+					->setClub($club)
+					->setChanged(new \DateTime('now'));
+
+				if ($_FILES['file']['error'] !== UPLOAD_ERR_NO_FILE) {
+					if ($_FILES['file']['error'] == UPLOAD_ERR_OK) {
+						$fh = fopen($_FILES['file']['tmp_name'], 'r');
+						$binary = fread($fh, filesize($_FILES['file']['tmp_name']));
+						fclose($fh);
+
+						$mimeType = $_FILES['file']['type'];
+						$fileName = $_FILES['file']['name'];
+
+						$dataVaultMapper = new Model_ImageDataVaultMapper();
+						$dataVault = $dataVaultMapper->find($unityClub->getLogoId(), FALSE);
+						$dataVault->setFilename($fileName)->setMimeType($mimeType)->setBinary($binary);
+						$dataVaultMapper->update($unityClub->getLogoId(), $dataVault);
+					}
+				}
+
+				$this->_entityManager->persist($unityClub);
+				$this->_entityManager->flush();
+
+				$this->_helper->flashMessenger(array('success' => _("Unity Club edited")));
+				$this->_helper->redirector('read', 'Unityclub', 'admin', array('type'=>'pathfinder'));
+			} else {
+				$this->_helper->redirector('read', 'Unityclub', 'admin', array('type'=>'pathfinder'));
+			}
+		} else {
+			$this->_helper->redirector('read', 'Unityclub', 'admin', array('type'=>'pathfinder'));
+		}
 	}
 
 	/**
@@ -235,12 +289,13 @@ class Admin_UnityClubController extends App_Controller_Action {
 	 */
 	private function getFilters($filterParams) {
 		$filters = array ();
+
 		if (empty($filterParams)) {
 			return $filters;
 		}
 
-		if (!empty($filterParams['title'])) {
-			$filters[] = array('field' => 'name', 'filter' => '%'.$filterParams['title'].'%', 'operator' => 'LIKE');
+		if (!empty($filterParams['name'])) {
+			$filters[] = array('field' => 'name', 'filter' => '%'.$filterParams['name'].'%', 'operator' => 'LIKE');
 		}
 
 		return $filters;
