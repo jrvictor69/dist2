@@ -30,7 +30,7 @@ class Admin_UnityClubController extends App_Controller_Action {
 
 	/**
 	 *
-	 * This action shows a paginated list of pictures
+	 * This action shows a paginated list of unities club
 	 * @access public
 	 */
 	public function readAction() {
@@ -57,7 +57,7 @@ class Admin_UnityClubController extends App_Controller_Action {
 	}
 
 	/**
-	 * Creates a new Directive
+	 * Creates a new Unity Club
 	 * @access public
 	 */
 	public function saveAction() {
@@ -109,7 +109,7 @@ class Admin_UnityClubController extends App_Controller_Action {
 	}
 
 	/**
-	 * This action shows the form in update mode for Directive.
+	 * This action shows the form in update mode for Unity Club.
 	 * @access public
 	 */
 	public function updateAction() {
@@ -147,7 +147,7 @@ class Admin_UnityClubController extends App_Controller_Action {
 	}
 
 	/**
-	 * Creates a new Directive
+	 * Updates an Unity Club
 	 * @access public
 	 */
 	public function editAction() {
@@ -196,6 +196,41 @@ class Admin_UnityClubController extends App_Controller_Action {
 		} else {
 			$this->_helper->redirector('read', 'Unityclub', 'admin', array('type'=>'pathfinder'));
 		}
+	}
+
+	/**
+	 *
+	 * Deletes Unity Club
+	 * @access public
+	 * @internal
+	 * 1) Gets the model unity club
+	 * 2) Validates the existance of dependencies
+	 * 3) Changes the state field or records to delete
+	 */
+	public function deleteAction() {
+		$this->_helper->viewRenderer->setNoRender(TRUE);
+
+		$itemIds = $this->_getParam('itemIds', array());
+		if (!empty($itemIds) ) {
+			$removeCount = 0;
+			foreach ($itemIds as $id) {
+				$unityClub = $this->_entityManager->find('Model\UnityClub', $id);
+				$unityClub->setState(FALSE);
+
+				$this->_entityManager->persist($unityClub);
+				$this->_entityManager->flush();
+				$removeCount++;
+			}
+			$message = sprintf(ngettext('%d unity removed.', '%d unities removed.', $removeCount), $removeCount);
+
+			$this->stdResponse->success = TRUE;
+			$this->stdResponse->message = _($message);
+		} else {
+			$this->stdResponse->success = FALSE;
+			$this->stdResponse->message = _("Data submitted is empty.");
+		}
+		// sends response to client
+		$this->_helper->json($this->stdResponse);
 	}
 
 	/**

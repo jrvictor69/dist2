@@ -22,15 +22,16 @@ class UnityClubRepository extends EntityRepository {
 		$query = $this->_em->createQueryBuilder();
 
 		$query->select($this->_alias)
-		->from($this->_entityName, $this->_alias)
-		->setFirstResult($offset)
-		->setMaxResults($limit);
-
+			->from($this->_entityName, $this->_alias)
+			->setFirstResult($offset)
+			->setMaxResults($limit);
 
 		foreach ($filters as $filter) {
 			$query->where("$this->_alias.".$filter['field'].' '.$filter['operator'].' :'.$filter['field']);
 			$query->setParameter($filter['field'], $filter['filter']);
 		}
+
+		$query->where("$this->_alias.state = TRUE");
 
 		$sort = '';
 		switch ($sortColumn) {
