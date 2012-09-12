@@ -396,7 +396,7 @@ class Admin_DirectiveController extends App_Controller_Action {
 		}
 
 		if (!empty($filterParams['name'])) {
-			$filters[] = array('field' => 'name', 'filter' => '%'.$filterParams['name'].'%', 'operator' => 'LIKE');
+			$filters[] = array('field' => 'firstName', 'filter' => '%'.$filterParams['name'].'%', 'operator' => 'LIKE');
 		}
 
 		return $filters;

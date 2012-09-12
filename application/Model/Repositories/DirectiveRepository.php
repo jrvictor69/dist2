@@ -30,7 +30,19 @@ class DirectiveRepository extends EntityRepository {
 	 * @return Array Objects
 	 */
 	public function findByCriteria($filters = array(), $limit = NULL, $offset = NULL, $sortColumn = NULL, $sortDirection = NULL) {
-		$filters['state'] = 1;
+		$query = $this->_em->createQueryBuilder();
+
+		$condName = "";
+		foreach ($filters as $filter) {
+			$condName = "$this->_alias.firstName LIKE :firstName AND ";
+			$query->setParameter($filter['field'], $filter['filter']);
+		}
+
+		$query->select($this->_alias)
+				->from($this->_entityName, $this->_alias)
+				->where("$condName $this->_alias.state = TRUE")
+				->setFirstResult($offset)
+				->setMaxResults($limit);
 
 		$sort = '';
 		switch ($sortColumn) {
@@ -51,10 +63,6 @@ class DirectiveRepository extends EntityRepository {
 				break;
 
 			case 5:
-				$sort = 'changed';
-				break;
-
-			case 5:
 				$sort = 'email';
 				break;
 
@@ -63,19 +71,19 @@ class DirectiveRepository extends EntityRepository {
 				break;
 
 			case 7:
-				$sort = 'changed';
+				$sort = 'created';
 				break;
 
 			case 8:
-				$sort = 'created';
+				$sort = 'changed';
 				break;
 
 			default: $sort = 'id'; $sortDirection = 'desc';
 		}
 
-		$entries = $this->findBy($filters, array($sort => $sortDirection), $limit, $offset);
+		$query->orderBy("$this->_alias.$sort", $sortDirection);
 
-		return $entries;
+		return $query->getQuery()->getResult();
 	}
 
 	/**
@@ -87,15 +95,15 @@ class DirectiveRepository extends EntityRepository {
 	public function getTotalCount($filters = array()) {
 		$query = $this->_em->createQueryBuilder();
 
-		$query->select("count($this->_alias.id)")
-				->from($this->_entityName, $this->_alias);
-
+		$condName = "";
 		foreach ($filters as $filter) {
-			$query->where("$this->_alias.".$filter['field'].' '.$filter['operator'].' :'.$filter['field']);
+			$condName = "$this->_alias.firstName LIKE :firstName AND ";
 			$query->setParameter($filter['field'], $filter['filter']);
 		}
 
-		$query->where("$this->_alias.state = TRUE");
+		$query->select("count($this->_alias.id)")
+			->from($this->_entityName, $this->_alias)
+			->where("$condName $this->_alias.state = TRUE");
 
 		return (int)$query->getQuery()->getSingleScalarResult();
 	}
