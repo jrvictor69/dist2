@@ -322,6 +322,25 @@ class Admin_UnityClubController extends App_Controller_Action {
 	}
 
 	/**
+	 * Outputs an XHR response, loads the names of the unities club.
+	 */
+	public function autocompleteAction() {
+		$filterParams['name'] = $this->_getParam('name_auto', NULL);
+		$filters = $this->getFilters($filterParams);
+
+		$unityClubRepo = $this->_entityManager->getRepository('Model\UnityClub');
+		$unitiesClub = $unityClubRepo->findByCriteria($filters);
+
+		$data = array();
+		foreach ($unitiesClub as $unityClub) {
+			$data[] = $unityClub->getName();
+		}
+
+		$this->stdResponse->items = $data;
+		$this->_helper->json($this->stdResponse);
+	}
+
+	/**
 	 * Returns an associative array where:
 	 * field: title of the table field
 	 * filter: value to match
