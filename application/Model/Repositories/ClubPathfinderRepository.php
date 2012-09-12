@@ -22,14 +22,14 @@ use Doctrine\ORM\EntityRepository;
 class ClubPathfinderRepository extends EntityRepository {
 
 	/**
-	 * 
+	 *
 	 * Alias of the table
 	 * @var string
 	 */
 	private $_alias = 'pathfinder';
 
 	/**
-	 * 
+	 *
 	 * Returns models according the filters
 	 * @param array $filters
 	 * @param int $limit
@@ -83,7 +83,7 @@ class ClubPathfinderRepository extends EntityRepository {
 	}
 
 	/**
-	 * 
+	 *
 	 * Finds count of models according the filters
 	 * @param array $filters
 	 * @return int
@@ -111,7 +111,7 @@ class ClubPathfinderRepository extends EntityRepository {
 	}
 
 	/**
-	 * 
+	 *
 	 * Verifies if the name Club pathfinder already exist it.
 	 * @param string $name
 	 * @return boolean
@@ -122,7 +122,7 @@ class ClubPathfinderRepository extends EntityRepository {
 	}
 
 	/**
-	 * 
+	 *
 	 * Verifies if the id and name Club pathfinder already exist it.
 	 * @param int $id
 	 * @param string $name
@@ -138,5 +138,20 @@ class ClubPathfinderRepository extends EntityRepository {
 	 */
 	public function find($id) {
 		return $this->findOneBy(array('id' => $id, 'state' => TRUE));
+	}
+
+	/**
+	 * Returns all club pathfinders
+	 * @return array
+	 */
+	public function findAllArray() {
+		$clubs = $this->findAll();
+
+		$clubPathfinderArray = array();
+		foreach ($clubs as $club) {
+			$clubPathfinderArray[$club->getId()] = $club->getName();
+		}
+
+		return $clubPathfinderArray;
 	}
 }

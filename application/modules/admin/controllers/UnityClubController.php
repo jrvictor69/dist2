@@ -50,7 +50,7 @@ class Admin_UnityClubController extends App_Controller_Action {
 		$form->getElement('club')->setMultiOptions($this->getClubPathfinders());
 		$form->setAction($this->_helper->url('save'));
 
-		$src = '/image/profile/female_or_male_default.jpg';
+		$src = '/image/profile/smile.jpg';
 		$form->setSource($src);
 
 		$this->view->form = $form;
@@ -134,7 +134,7 @@ class Admin_UnityClubController extends App_Controller_Action {
 			if ($imagePicture != NULL && $imagePicture->getBinary()) {
 				$src = $this->_helper->url('profile-picture', NULL, NULL, array('id' => $imagePicture->getId(), 'timestamp' => time()));
 			} else {
-				$src = '/image/profile/male_default.jpg';
+				$src = '/image/profile/smile.jpg';
 			}
 			$form->setSource($src);
 		} else {
@@ -179,9 +179,18 @@ class Admin_UnityClubController extends App_Controller_Action {
 						$fileName = $_FILES['file']['name'];
 
 						$dataVaultMapper = new Model_ImageDataVaultMapper();
-						$dataVault = $dataVaultMapper->find($unityClub->getLogoId(), FALSE);
-						$dataVault->setFilename($fileName)->setMimeType($mimeType)->setBinary($binary);
-						$dataVaultMapper->update($unityClub->getLogoId(), $dataVault);
+
+						if ($unityClub->getLogoId() != NULL) {// if it has image profile update
+							$dataVault = $dataVaultMapper->find($unityClub->getLogoId(), FALSE);
+							$dataVault->setFilename($fileName)->setMimeType($mimeType)->setBinary($binary);
+							$dataVaultMapper->update($unityClub->getLogoId(), $dataVault);
+						} elseif ($unityClub->getLogoId() == NULL) {// if it don't have image profile create
+							$dataVault = new Model_ImageDataVault();
+							$dataVault->setFilename($fileName)->setMimeType($mimeType)->setBinary($binary);
+							$dataVaultMapper->save($dataVault);
+
+							$unityClub->setLogoId($dataVault->getId());
+						}
 					}
 				}
 
@@ -264,8 +273,7 @@ class Admin_UnityClubController extends App_Controller_Action {
 	}
 
 	/**
-	 *
-	 * Outputs an XHR response containing all entries in directives.
+	 * Outputs an XHR response containing all entries in unities club.
 	 * This action serves as a datasource for the read/index view
 	 * @xhrParam int filter_name
 	 * @xhrParam int iDisplayStart
@@ -314,7 +322,6 @@ class Admin_UnityClubController extends App_Controller_Action {
 	}
 
 	/**
-	 *
 	 * Returns an associative array where:
 	 * field: title of the table field
 	 * filter: value to match
@@ -342,13 +349,6 @@ class Admin_UnityClubController extends App_Controller_Action {
 	 */
 	public function getClubPathfinders() {
 		$clubRepo = $this->_entityManager->getRepository('Model\ClubPathfinder');
-		$clubs = $clubRepo->findAll();
-
-		$clubPathfinderArray = array();
-		foreach ($clubs as $club) {
-			$clubPathfinderArray[$club->getId()] = $club->getName();
-		}
-
-		return $clubPathfinderArray;
+		return $clubRepo->findAllArray();
 	}
 }

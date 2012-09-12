@@ -158,15 +158,15 @@
 						<type>pathfinder</type>
 					</params>
 				</position>
-				<unity>
+				<unityClub>
 					<label>Unity Club</label>
 					<module>admin</module>
-					<controller>unityclub</controller>
+					<controller>Unityclub</controller>
 					<action>read</action>
 					<params>
 						<type>pathfinder</type>
 					</params>
-				</unity>
+				</unityClub>
 			</pages>
 		</pathfinder>
 

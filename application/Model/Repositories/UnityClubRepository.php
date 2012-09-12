@@ -16,22 +16,22 @@ class UnityClubRepository extends EntityRepository {
 	 * Alias of the table
 	 * @var string
 	 */
-	private $_alias = 'unityClub';
+	private $_alias = 'unity';
 
 	public function findByCriteria($filters = array(), $limit = NULL, $offset = NULL, $sortColumn = NULL, $sortDirection = NULL) {
 		$query = $this->_em->createQueryBuilder();
 
-		$query->select($this->_alias)
-			->from($this->_entityName, $this->_alias)
-			->setFirstResult($offset)
-			->setMaxResults($limit);
-
+		$condName = "";
 		foreach ($filters as $filter) {
-			$query->where("$this->_alias.".$filter['field'].' '.$filter['operator'].' :'.$filter['field']);
+			$condName = "$this->_alias.name LIKE :name AND ";
 			$query->setParameter($filter['field'], $filter['filter']);
 		}
 
-		$query->where("$this->_alias.state = TRUE");
+		$query->select($this->_alias)
+				->from($this->_entityName, $this->_alias)
+				->where("$condName $this->_alias.state = TRUE")
+				->setFirstResult($offset)
+				->setMaxResults($limit);
 
 		$sort = '';
 		switch ($sortColumn) {
@@ -40,18 +40,22 @@ class UnityClubRepository extends EntityRepository {
 				break;
 
 			case 2:
-				$sort = 'textbible';
+				$sort = 'motto';
 				break;
 
 			case 3:
-				$sort = 'textbible';
+				$sort = 'description';
 				break;
 
 			case 4:
-				$sort = 'created';
+				$sort = 'clubId';
 				break;
 
 			case 5:
+				$sort = 'created';
+				break;
+
+			case 6:
 				$sort = 'changed';
 				break;
 
@@ -65,69 +69,6 @@ class UnityClubRepository extends EntityRepository {
 
 	/**
 	 *
-	 * Returns models according the filters
-	 * @param array $filters
-	 * @param int $limit
-	 * @param int $offset
-	 * @param int $sortColumn
-	 * @param string $sortDirection
-	 * @return Array Objects
-	*/
-// 	public function findByCriteria($filters = array(), $limit = NULL, $offset = NULL, $sortColumn = NULL, $sortDirection = NULL) {
-// 		$query = $this->_em->createQueryBuilder();
-
-// 		$query->select($this->_alias)
-// 				->from($this->_entityName, $this->_alias)
-// 				->setFirstResult($offset)
-// 				->setMaxResults($limit);
-
-
-// 		foreach ($filters as $filter) {
-// 			$query->where("$this->_alias.".$filter['field'].' '.$filter['operator'].' :'.$filter['field']);
-// 			$query->setParameter($filter['field'], $filter['filter']);
-// 		}
-// // 		$filters['state'] = 1;
-// // var_dump($filters); exit;
-// 		$sort = '';
-// 		switch ($sortColumn) {
-// 			case 1:
-// 				$sort = 'name';
-// 				break;
-
-// 			case 2:
-// 				$sort = 'motto';
-// 				break;
-
-// 			case 3:
-// 				$sort = 'description';
-// 				break;
-
-// 			case 4:
-// 				$sort = 'clubId';
-// 				break;
-
-// 			case 6:
-// 				$sort = 'created';
-// 				break;
-
-// 			case 7:
-// 				$sort = 'changed';
-// 				break;
-
-// 			default: $sort = 'id'; $sortDirection = 'desc';
-// 		}
-
-// // 		$entries = $this->findBy($filters, array($sort => $sortDirection), $limit, $offset);
-
-// // 		return $entries;
-
-// 		$query->orderBy("$this->_alias.$sort", $sortDirection);
-
-// 		return $query->getQuery()->getResult();
-// 	}
-
-	/**
-	 *
 	 * Finds total count of models according the filters
 	 * @param array $filters
 	 * @return int
@@ -135,15 +76,15 @@ class UnityClubRepository extends EntityRepository {
 	public function getTotalCount($filters = array()) {
 		$query = $this->_em->createQueryBuilder();
 
-		$query->select("count($this->_alias.id)")
-			->from($this->_entityName, $this->_alias);
-
+		$condName = "";
 		foreach ($filters as $filter) {
-			$query->where("$this->_alias.".$filter['field'].' '.$filter['operator'].' :'.$filter['field']);
+			$condName = "$this->_alias.name LIKE :name AND ";
 			$query->setParameter($filter['field'], $filter['filter']);
 		}
 
-		$query->where("$this->_alias.state = TRUE");
+		$query->select("count($this->_alias.id)")
+			->from($this->_entityName, $this->_alias)
+			->where("$condName $this->_alias.state = TRUE");
 
 		return (int)$query->getQuery()->getSingleScalarResult();
 	}
