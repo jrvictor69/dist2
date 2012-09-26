@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
-    <navigation>
-    	<home>
+	<navigation>
+		<home>
 			<id>home</id>
 			<label>Home</label>
 			<module>admin</module>
@@ -11,27 +11,27 @@
 				<type>home</type>
 			</params>
 			<pages>
-		    	<about>
-			   		<label>About</label>
-			   		<module>admin</module>
-			   		<controller>index</controller>
-			   		<action>about</action>
-			   		<params>
+				<about>
+					<label>About</label>
+					<module>admin</module>
+					<controller>index</controller>
+					<action>about</action>
+					<params>
 						<type>home</type>
 					</params>
-		    	</about>
-		    	<contact>
-			   		<label>Contact</label>
-			   		<module>admin</module>
-			   		<controller>index</controller>
-			   		<action>contact</action>
-			   		<params>
+				</about>
+				<contact>
+					<label>Contact</label>
+					<module>admin</module>
+					<controller>index</controller>
+					<action>contact</action>
+					<params>
 						<type>home</type>
 					</params>
-			    </contact>
-	   		</pages>
+				</contact>
+			</pages>
 		</home>
-		
+
 		<information>
 			<id>information</id>
 			<label>Information</label>
@@ -44,10 +44,10 @@
 			<pages>
 				<news>
 					<label>News</label>
-			   		<module>admin</module>
-			   		<controller>news</controller>
-			   		<action>index</action>
-			   		<params>
+					<module>admin</module>
+					<controller>news</controller>
+					<action>index</action>
+					<params>
 						<type>information</type>
 					</params>
 				</news>
@@ -61,17 +61,17 @@
 					</params>
 				</picture>
 				<category>
-			   		<label>Category</label>
-			   		<module>admin</module>
-			   		<controller>category</controller>
-			   		<action>index</action>
-			   		<params>
+					<label>Category</label>
+					<module>admin</module>
+					<controller>category</controller>
+					<action>index</action>
+					<params>
 						<type>information</type>
 					</params>
-		    	</category>
+				</category>
 			</pages>
 		</information>
-		
+
 		<organization>
 			<id>organization</id>
 			<label>Organization</label>
@@ -84,43 +84,43 @@
 			<pages>
 				<managerial>
 					<label>Managerial</label>
-			   		<module>admin</module>
-			   		<controller>managerial</controller>
-			   		<action>index</action>
-			   		<params>
+					<module>admin</module>
+					<controller>managerial</controller>
+					<action>index</action>
+					<params>
 						<type>organization</type>
 					</params>
 				</managerial>
 				<country>
-			   		<label>Country</label>
-			   		<module>admin</module>
-			   		<controller>country</controller>
-			   		<action>index</action>
-			   		<params>
+					<label>Country</label>
+					<module>admin</module>
+					<controller>country</controller>
+					<action>index</action>
+					<params>
 						<type>organization</type>
 					</params>
-		    	</country>
-		    	<department>
-			   		<label>Department</label>
-			   		<module>admin</module>
-			   		<controller>department</controller>
-			   		<action>index</action>
-			   		<params>
+				</country>
+				<department>
+					<label>Department</label>
+					<module>admin</module>
+					<controller>department</controller>
+					<action>index</action>
+					<params>
 						<type>organization</type>
 					</params>
-		    	</department>
-		    	<province>
-			   		<label>Provincia</label>
-			   		<module>admin</module>
-			   		<controller>provincia</controller>
-			   		<action>index</action>
-			   		<params>
+				</department>
+				<province>
+					<label>Provincia</label>
+					<module>admin</module>
+					<controller>provincia</controller>
+					<action>index</action>
+					<params>
 						<type>organization</type>
 					</params>
-		    	</province>
+				</province>
 			</pages>
 		</organization>
-		
+
 		<pathfinder>
 			<id>pathfinder</id>
 			<label>Pathfinders</label>
@@ -133,28 +133,28 @@
 			<pages>
 				<clubPathfinder>
 					<label>Club Pathfinders</label>
-			   		<module>admin</module>
-			   		<controller>Pathfinder</controller>
-			   		<action>read</action>
-			   		<params>
+					<module>admin</module>
+					<controller>Pathfinder</controller>
+					<action>read</action>
+					<params>
 						<type>pathfinder</type>
 					</params>
 				</clubPathfinder>
 				<directive>
 					<label>Directive</label>
-			   		<module>admin</module>
-			   		<controller>Directive</controller>
-			   		<action>read</action>
-			   		<params>
+					<module>admin</module>
+					<controller>Directive</controller>
+					<action>read</action>
+					<params>
 						<type>pathfinder</type>
 					</params>
 				</directive>
 				<position>
 					<label>Position</label>
-			   		<module>admin</module>
-			   		<controller>Position</controller>
-			   		<action>read</action>
-			   		<params>
+					<module>admin</module>
+					<controller>Position</controller>
+					<action>read</action>
+					<params>
 						<type>pathfinder</type>
 					</params>
 				</position>
@@ -222,19 +222,19 @@
 			<pages>
 				<userGroup>
 					<label>User Groups</label>
-			   		<module>admin</module>
-			   		<controller>usergroup</controller>
-			   		<action>read</action>
-			   		<params>
+					<module>admin</module>
+					<controller>usergroup</controller>
+					<action>read</action>
+					<params>
 						<type>security</type>
 					</params>
 				</userGroup>
-		    	<privilege>
+				<privilege>
 					<label>Privileges</label>
-			   		<module>admin</module>
-			   		<controller>privilege</controller>
-			   		<action>read</action>
-			   		<params>
+					<module>admin</module>
+					<controller>privilege</controller>
+					<action>read</action>
+					<params>
 						<type>security</type>
 					</params>
 				</privilege>
