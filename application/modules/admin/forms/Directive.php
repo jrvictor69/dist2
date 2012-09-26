@@ -21,6 +21,8 @@ class Admin_Form_Directive extends Zend_Form {
 			->setMethod('post')
 			->setAttrib('enctype', 'multipart/form-data')
 
+			->addElement('Hidden', 'id')
+
 			->addElement('Text', 'firstName', array(
 				'label' => _('Firstname'),
 				'required' => TRUE,

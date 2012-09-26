@@ -75,7 +75,6 @@ class Model_ImageDataVaultMapper {
 	 */
 	public function update($id, Model_ImageDataVault $dataVault) {
 		$result = $this->getDbTable()->find($id);
-
 		if (0 == count($result)) {
 			return;
 		}

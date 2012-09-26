@@ -62,51 +62,6 @@ class Admin_DirectiveController extends App_Controller_Action {
 	 * Creates a new Directive
 	 * @access public
 	 */
-// 	public function createSaveAction() {
-// 		$this->_helper->viewRenderer->setNoRender(TRUE);
-
-// 		$form = new Admin_Form_Directive();
-// 		$form->getElement('sex')->setMultiOptions($this->getGenders());
-// 		$form->getElement('club')->setMultiOptions($this->getClubPathfinders());
-// 		$form->getElement('position')->setMultiOptions($this->getPositions());
-
-// 		$formData = $this->getRequest()->getPost();
-// 		if ($form->isValid($formData)) {
-// 			$club = $this->_entityManager->find('Model\ClubPathfinder', (int)$formData['club']);
-// 			$position = $this->_entityManager->find('Model\Position', (int)$formData['position']);
-
-// 			$directive = new Model\Directive();
-// 			$directive->setIdentityCard(3)
-// 					->setFirstName($formData['firstName'])
-// 					->setLastName($formData['lastName'])
-// 					->setEmail($formData['email'])
-// 					->setPhone($formData['phone'])
-// 					->setPhonemobil($formData['phonemobil'])
-// 					->setSex((int)$formData['sex'])
-// 					->setClub($club)
-// 					->setPosition($position)
-// 					->setCreated(new \DateTime('now'));
-
-// 			$this->_entityManager->persist($directive);
-// 			$this->_entityManager->flush();
-
-// 			$this->stdResponse->success = TRUE;
-// 			$this->stdResponse->message = _("Directive saved");
-
-// 		} else {
-// 			$this->stdResponse->success = FALSE;
-// 			$this->stdResponse->messageArray = $form->getMessages();
-// 			$this->stdResponse->message = _("The form contains error and is not saved");
-// 		}
-// 		// sends response to client
-// 		$this->_helper->json($this->stdResponse);
-// 	}
-
-	/**
-	 *
-	 * Creates a new Directive
-	 * @access public
-	 */
 	public function saveAction() {
 		if ($this->_request->isPost()) {
 			$form = new Admin_Form_Directive();
@@ -141,8 +96,8 @@ class Admin_DirectiveController extends App_Controller_Action {
 						$mimeType = $_FILES['file']['type'];
 						$fileName = $_FILES['file']['name'];
 
-						$dataVaultMapper = new Model_ImageDataVaultMapper();
-						$dataVault = new Model_ImageDataVault();
+						$dataVaultMapper = new Model_DataVaultMapper();
+						$dataVault = new Model_DataVault();
 						$dataVault->setFilename($fileName)->setMimeType($mimeType)->setBinary($binary);
 						$dataVaultMapper->save($dataVault);
 
@@ -153,7 +108,9 @@ class Admin_DirectiveController extends App_Controller_Action {
 				$this->_entityManager->persist($directive);
 				$this->_entityManager->flush();
 
-				$this->_helper->flashMessenger(array('success' => _("Archive saved")));
+				$this->_helper->flashMessenger(array('success' => _("Directive created")));
+				$this->_helper->redirector('read', 'Directive', 'admin', array('type'=>'pathfinder'));
+			} else {
 				$this->_helper->redirector('read', 'Directive', 'admin', array('type'=>'pathfinder'));
 			}
 		} else {
@@ -173,10 +130,12 @@ class Admin_DirectiveController extends App_Controller_Action {
 		$form->getElement('sex')->setMultiOptions($this->getGenders());
 		$form->getElement('club')->setMultiOptions($this->getClubPathfinders());
 		$form->getElement('position')->setMultiOptions($this->getPositions());
+		$form->setAction($this->_helper->url('edit'));
 
 		$id = $this->_getParam('id', 0);
 		$directive = $this->_entityManager->find('Model\Directive', $id);
 		if ($directive != NULL) {
+			$form->getElement('id')->setValue($directive->getId());
 			$form->getElement('firstName')->setValue($directive->getFirstName());
 			$form->getElement('lastName')->setValue($directive->getLastName());
 			$form->getElement('sex')->setValue($directive->getSex());
@@ -186,11 +145,11 @@ class Admin_DirectiveController extends App_Controller_Action {
 			$form->getElement('club')->setValue($directive->getClub()->getId());
 			$form->getElement('position')->setValue($directive->getPosition()->getId());
 
-			$imageDataVaultMapper = new Model_ImageDataVaultMapper();
-			$imagePicture = $imageDataVaultMapper->find($directive->getProfilePictureId());
+			$dataVaultMapper = new Model_DataVaultMapper();
+			$dataVault = $dataVaultMapper->find($directive->getProfilePictureId());
 
-			if ($imagePicture != NULL && $imagePicture->getBinary()) {
-				$src = $this->_helper->url('profile-picture', NULL, NULL, array('id' => $imagePicture->getId(), 'timestamp' => time()));
+			if ($dataVault != NULL && $dataVault->getBinary()) {
+				$src = $this->_helper->url('profile-picture', NULL, NULL, array('id' => $dataVault->getId(), 'timestamp' => time()));
 			} else {
 				if ($directive->getSex() == Model\Person::SEX_MALE) {
 					$src = '/image/profile/male_default.jpg';
@@ -209,31 +168,26 @@ class Admin_DirectiveController extends App_Controller_Action {
 	}
 
 	/**
-	 *
-	 * Updates a Directive
+	 * Updates a Directive of the club pathfinders
 	 * @access public
-	 * 1) Gets the record to edit
-	 * 2) Validates the record was no deleted
-	 * 3) Validates the existance of another Directive with the same name.
-	 * 4) Saves the changes.
 	 */
-	public function updateSaveAction() {
-		$this->_helper->viewRenderer->setNoRender(TRUE);
+	public function editAction() {
+		if ($this->_request->isPost()) {
+			$form = new Admin_Form_Directive();
+			$form->getElement('sex')->setMultiOptions($this->getGenders());
+			$form->getElement('club')->setMultiOptions($this->getClubPathfinders());
+			$form->getElement('position')->setMultiOptions($this->getPositions());
 
-		$form = new Admin_Form_Directive();
-		$form->getElement('sex')->setMultiOptions($this->getGenders());
-		$form->getElement('club')->setMultiOptions($this->getClubPathfinders());
-		$form->getElement('position')->setMultiOptions($this->getPositions());
+			$formData = $this->getRequest()->getPost();
 
-		$formData = $this->getRequest()->getPost();
-		if ($form->isValid($formData)) {
-			$id = $this->_getParam('id', 0);
-			$directive = $this->_entityManager->find('Model\Directive', $id);
-			if ($directive != NULL) {
-				$club = $this->_entityManager->find('Model\ClubPathfinder', (int)$formData['club']);
-				$position = $this->_entityManager->find('Model\Position', (int)$formData['position']);
+			if ($form->isValid($formData)) {
+				$id = $this->_getParam('id', 0);
+				$directive = $this->_entityManager->find('Model\Directive', $id);
+				if ($directive != NULL) {
+					$club = $this->_entityManager->find('Model\ClubPathfinder', (int)$formData['club']);
+					$position = $this->_entityManager->find('Model\Position', (int)$formData['position']);
 
-				$directive->setIdentityCard(3)
+					$directive->setIdentityCard(3)
 						->setFirstName($formData['firstName'])
 						->setLastName($formData['lastName'])
 						->setEmail($formData['email'])
@@ -244,26 +198,49 @@ class Admin_DirectiveController extends App_Controller_Action {
 						->setPosition($position)
 						->setChanged(new \DateTime('now'));
 
-				$this->_entityManager->persist($directive);
-				$this->_entityManager->flush();
+					if ($_FILES['file']['error'] !== UPLOAD_ERR_NO_FILE) {
+						if ($_FILES['file']['error'] == UPLOAD_ERR_OK) {
+							$fh = fopen($_FILES['file']['tmp_name'], 'r');
+							$binary = fread($fh, filesize($_FILES['file']['tmp_name']));
+							fclose($fh);
 
-				$this->stdResponse->success = TRUE;
-				$this->stdResponse->message = _("Directive updated");
+							$mimeType = $_FILES['file']['type'];
+							$fileName = $_FILES['file']['name'];
+
+							$dataVaultMapper = new Model_DataVaultMapper();
+
+							if ($directive->getProfilePictureId() != NULL) {// if it has image profile update
+								$dataVault = $dataVaultMapper->find($directive->getProfilePictureId(), FALSE);
+								$dataVault->setFilename($fileName)->setMimeType($mimeType)->setBinary($binary);
+								$dataVaultMapper->update($directive->getProfilePictureId(), $dataVault);
+							} elseif ($directive->getProfilePictureId() == NULL) {// if it don't have image profile create
+								$dataVault = new Model_DataVault();
+								$dataVault->setFilename($fileName)->setMimeType($mimeType)->setBinary($binary);
+								$dataVaultMapper->save($dataVault);
+
+								$directive->setProfilePictureId($dataVault->getId());
+							}
+						}
+					}
+
+					$this->_entityManager->persist($directive);
+					$this->_entityManager->flush();
+
+					$this->_helper->flashMessenger(array('success' => _("Directive updated")));
+					$this->_helper->redirector('read', 'Directive', 'admin', array('type'=>'pathfinder'));
+				} else {
+					$this->_helper->flashMessenger(array('error' => _("Directive don't found")));
+					$this->_helper->redirector('read', 'Directive', 'admin', array('type'=>'pathfinder'));
+				}
 			} else {
-				$this->stdResponse->success = FALSE;
-				$this->stdResponse->message = _("The Directive does not exists");
+				$this->_helper->redirector('read', 'Directive', 'admin', array('type'=>'pathfinder'));
 			}
 		} else {
-			$this->stdResponse->success = FALSE;
-			$this->stdResponse->messageArray = $form->getMessages();
-			$this->stdResponse->message = _("The form contains error and is not updated");
+			$this->_helper->redirector('read', 'Directive', 'admin', array('type'=>'pathfinder'));
 		}
-		// sends response to client
-		$this->_helper->json($this->stdResponse);
 	}
 
 	/**
-	 *
 	 * Deletes directives
 	 * @access public
 	 * @internal
@@ -307,21 +284,21 @@ class Admin_DirectiveController extends App_Controller_Action {
 
 		$id = (int)$this->_getParam('id', 0);
 
-		$imageMapper = new Model_ImageDataVaultMapper();
-		$imageLogo = $imageMapper->find($id);
+		$dataVaultMapper = new Model_DataVaultMapper();
+		$dataVault = $dataVaultMapper->find($id);
 
-		if ($imageLogo->getBinary()) {
+		if ($dataVault->getBinary()) {
 			$this->_response
 			//No caching
 				->setHeader('Pragma', 'public')
 				->setHeader('Expires', '0')
 				->setHeader('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
 				->setHeader('Cache-Control', 'private')
-				->setHeader('Content-type', $imageLogo->getMimeType())
+				->setHeader('Content-type', $dataVault->getMimeType())
 				->setHeader('Content-Transfer-Encoding', 'binary')
-				->setHeader('Content-Length', strlen($imageLogo->getBinary()));
+				->setHeader('Content-Length', strlen($dataVault->getBinary()));
 
-			echo $imageLogo->getBinary();
+			echo $dataVault->getBinary();
 		} else {
 			$this->_response->setHttpResponseCode(404);
 		}
