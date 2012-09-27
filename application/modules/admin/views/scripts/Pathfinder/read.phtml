@@ -1,4 +1,4 @@
-<?php $this->headScript()->appendFile($this->baseUrl() . "/js/lib/ajax-upload/ajaxupload.js","text/javascript");?>
+<?php $this->headScript()->appendFile($this->baseUrl() . "/js/lib/blueimp-Load-Image/load-image.min.js","text/javascript"); ?>
 <?php $this->headScript()->appendFile($this->baseUrl() . "/js/modules/admin/Pathfinder.js","text/javascript");?>
 <div style="margin:20px;">
 	<?php echo $this->tableHeader('filterHeader', _("Filter Club Pathfinder"));?>
@@ -7,7 +7,7 @@
 	</div>
 	<br>
 	<?php echo $this->tableHeader('pathfinderHeader', _("Club Pathfinders"));?>
-	<?php echo $this->tableList("tblPathfinder");?>	
+	<?php echo $this->tableList("tblPathfinder");?>
 	<div class="buttons right">
 		<?php echo $this->buttonRemove("delete-pathfinder", $this->translate('Remove'), $this->url(array('action'=>'delete')));?>
 		<?php echo $this->buttonAdd("create-pathfinder", $this->translate('Add'), $this->url(array('action'=>'create')));?>
@@ -43,6 +43,6 @@
 	pathfinder.clickToAdd('#create-pathfinder');
 	pathfinder.clickToUpdate('#tblPathfinder a[id^=update-pathfinder-]');
 	pathfinder.clickToDelete('#delete-pathfinder');
-//	pathfinder.configureAuto('input#nameFilter');
+	pathfinder.configureAuto('input#nameFilter');
 });
 </script>

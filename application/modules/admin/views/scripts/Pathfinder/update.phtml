@@ -1,71 +1,31 @@
-<div id="dialog-form" title="<?php echo $this->translate('Edit Position'); ?>" class="header" style="display: none;">
-	<div class='profile_pic'>
-	<!-- // Spinner -->
-	<div id="spinner" style="display:none">
-		<img src="spinner_large.gif" border="0">
-	</div>
-		<!-- // Profile picture -->
-		<img src="<?php echo $this->src;?>" id="profile_img" style="width: 127px; height: 127px;" />
-		<!-- // Button Container -->
-		<div class='change_button' id='change_button'>
-			<!-- // Button -->
-			<div class='change_button_text'>Change my logo</div>
-		</div>
-	</div>
+<div id="dialog-form" title="<?php echo $this->translate('Edit Club Pathfinder'); ?>" class="header" style="display: none;">
 	<?php echo $this->form;?>
 </div>
 
 <script type="text/javascript">
-	com.em.Pathfinder.prototype.dialogButtons = {
-		'<?php echo $this->translate('Update'); ?>': function() {
-			$.ajax({
-				url: '<?php echo $this->url(array('module'=>'admin', 'controller'=>'Pathfinder', 'action'=>'update-save')); ?>',
-				type: "POST",
-				dataType: 'json',
-				data: $('#formId').serialize(),
-				beforeSend: function(XMLHttpRequest) {
-					validator.form();
-					if (!validator.valid()) {
-						com.em.Pathfinder.prototype.flashError('<?php echo _("The form contains error and is not updated");?>', {header: com.em.FlashMessage.ERROR});
-						return false;
-					}
-
-					com.em.Pathfinder.prototype.processingDisplay(true);
-					return true;
+	$(document).ready(function() {
+		var result = $('#result'),
+			load = function (e) {
+			e = e.originalEvent;
+			e.preventDefault();
+			window.loadImage(
+				(e.dataTransfer || e.target).files[0],
+				function (img) {
+					result.children().replaceWith(img);
 				},
-
-				success: function(data, textStatus, XMLHttpRequest) {
-					if (textStatus == 'success') {
-						if (data.success) {
-							dialogForm.dialog('close');
-							table.fnDraw();
-							com.em.Pathfinder.prototype.flashSuccess(data.message, {header: com.em.FlashMessage.SUCCESS});
-						} else {
-							if (data.name_duplicate) {
-								$("#name").parent().find('.error').remove();
-								$("#name").parent().append('<label class="error" for="name" generated="true">'+data.message+'</label>');
-							} else {
-								var name = data.messageArray.name;
-								
-								if (name != undefined) {
-									$('#name').parent().find('.error').remove();
-									$('#name').parent().append('<label class="error" for="name" generated="true">'+name.isEmpty+'</label>');
-								}
-							}
-							com.em.Pathfinder.prototype.flashError(data.message, {header: com.em.FlashMessage.ERROR});
-						}
-					}
-				},
-
-				complete: function(jqXHR, textStatus) {
-					com.em.Pathfinder.prototype.processingDisplay(false);
-				},
-
-				error: function(jqXHR, textStatus, errorThrown) {
-					dialogForm.dialog('close');
-					com.em.Pathfinder.prototype.flashError(errorThrown, {header: com.em.FlashMessage.ERROR});
+				{
+				maxWidth: result.children().outerWidth(),
+				canvas: true
 				}
-			});
+			);
+		};
+
+		$('#file-input').change(load);
+	});
+
+	com.em.Pathfinder.prototype.dialogButtons = {
+		'<?php echo $this->translate('Edit'); ?>': function() {
+			$('#formId').submit();
 		},
 
 		'<?php echo $this->translate('Cancel'); ?>': function() {
@@ -73,3 +33,28 @@
 		}
 	};
 </script>
+
+<style type="text/css">
+	div.profile_pic{
+		position:relative;
+		width:125px;
+	}
+	div.change_button{
+		position:absolute;
+		bottom:0px;
+		left:0px;
+		display:none;
+		background-color:black;
+		font-family: 'tahoma';
+		font-size:11px;
+		text-decoration:underline;
+		color:white;
+		width:125px;
+	}
+	div.change_button_text{
+		padding:10px;
+	}
+	#spinner{
+		position:absolute;
+	}
+</style>

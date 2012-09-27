@@ -22,14 +22,12 @@ use Doctrine\ORM\EntityRepository;
 class ClubPathfinderRepository extends EntityRepository {
 
 	/**
-	 *
 	 * Alias of the table
 	 * @var string
 	 */
 	private $_alias = 'pathfinder';
 
 	/**
-	 *
 	 * Returns models according the filters
 	 * @param array $filters
 	 * @param int $limit
@@ -41,16 +39,17 @@ class ClubPathfinderRepository extends EntityRepository {
 	public function findByCriteria($filters = array(), $limit = NULL, $offset = NULL, $sortColumn = NULL, $sortDirection = NULL) {
 		$query = $this->_em->createQueryBuilder();
 
-		$query->select($this->_alias)
-				->from($this->_entityName, $this->_alias)
-				->setFirstResult($offset)
-				->setMaxResults($limit);
-
-
+		$condName = "";
 		foreach ($filters as $filter) {
-			$query->where("$this->_alias.".$filter['field'].' '.$filter['operator'].' :'.$filter['field']);
+			$condName = "$this->_alias.name LIKE :name AND ";
 			$query->setParameter($filter['field'], $filter['filter']);
 		}
+
+		$query->select($this->_alias)
+				->from($this->_entityName, $this->_alias)
+				->where("$condName $this->_alias.state = TRUE")
+				->setFirstResult($offset)
+				->setMaxResults($limit);
 
 		$sort = '';
 		switch ($sortColumn) {
@@ -74,7 +73,7 @@ class ClubPathfinderRepository extends EntityRepository {
 				$sort = 'changed';
 				break;
 
-			default: $sort = 'name';
+			default: $sort = 'id'; $sortDirection = 'desc';
 		}
 
 		$query->orderBy("$this->_alias.$sort", $sortDirection);
@@ -83,7 +82,6 @@ class ClubPathfinderRepository extends EntityRepository {
 	}
 
 	/**
-	 *
 	 * Finds count of models according the filters
 	 * @param array $filters
 	 * @return int
@@ -91,13 +89,15 @@ class ClubPathfinderRepository extends EntityRepository {
 	public function getTotalCount($filters = array()) {
 		$query = $this->_em->createQueryBuilder();
 
-		$query->select("count($this->_alias.id)")
-				->from($this->_entityName, $this->_alias);
-
+		$condName = "";
 		foreach ($filters as $filter) {
-			$query->where("$this->_alias.".$filter['field'].' '.$filter['operator'].' :'.$filter['field']);
+			$condName = "$this->_alias.name LIKE :name AND ";
 			$query->setParameter($filter['field'], $filter['filter']);
 		}
+
+		$query->select("count($this->_alias.id)")
+				->from($this->_entityName, $this->_alias)
+				->where("$condName $this->_alias.state = TRUE");
 
 		return (int)$query->getQuery()->getSingleScalarResult();
 	}
@@ -111,7 +111,6 @@ class ClubPathfinderRepository extends EntityRepository {
 	}
 
 	/**
-	 *
 	 * Verifies if the name Club pathfinder already exist it.
 	 * @param string $name
 	 * @return boolean

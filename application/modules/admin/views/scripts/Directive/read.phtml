@@ -8,7 +8,7 @@
 	</div>
 	<br>
 	<?php echo $this->tableHeader('directiveHeader', _("Directives"));?>
-	<?php echo $this->tableList("tblDirective");?>	
+	<?php echo $this->tableList("tblDirective");?>
 	<div class="buttons right">
 		<?php echo $this->buttonRemove("delete-directive", $this->translate('Remove'), $this->url(array('action'=>'delete')));?>
 		<?php echo $this->buttonAdd("create-directive", $this->translate('Add'), $this->url(array('action'=>'create')));?>
@@ -47,6 +47,6 @@
 	directive.clickToAdd('#create-directive');
 	directive.clickToUpdate('#tblDirective a[id^=update-directive-]');
 	directive.clickToDelete('#delete-directive');
-//	directive.configureAuto('input#nameFilter');
+	directive.configureAuto('input#nameFilter');
 });
 </script>

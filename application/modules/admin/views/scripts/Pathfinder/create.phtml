@@ -1,106 +1,31 @@
-<div id="dialog-form" title="<?php echo $this->translate('Add Club Pathfinder'); ?>" class="header" style="display: none;">	
-	<!-- // Container -->
-	<div class='profile_pic'>
-	<!-- // Spinner -->
-	<div id="spinner" style="display:none">
-		<img src="spinner_large.gif" border="0">
-	</div>
-		<!-- // Profile picture -->
-		<img src="<?php echo $this->src;?>" id="profile_img" style="width: 127px; height: 127px;" />
-		<!-- // Button Container -->
-		<div class='change_button' id='change_button'>
-			<!-- // Button -->
-			<div class='change_button_text'>Change my logo</div>
-		</div>
-	</div>
+<div id="dialog-form" title="<?php echo $this->translate('Add Club Pathfinder'); ?>" class="header" style="display: none;">
 	<?php echo $this->form;?>
 </div>
 
-<script type="text/javascript">	
-	var button = $('#change_button');
-	var spinner = $('#spinner');
+<script type="text/javascript">
+	$(document).ready(function() {
+		var result = $('#result'),
+			load = function (e) {
+			e = e.originalEvent;
+			e.preventDefault();
+			window.loadImage(
+				(e.dataTransfer || e.target).files[0],
+				function (img) {
+					result.children().replaceWith(img);
+				},
+				{
+				maxWidth: result.children().outerWidth(),
+				canvas: true
+				}
+			);
+		};
 
-	//set the opacity to 0...
-	button.css('opacity', 0);
-	spinner.css('top', ($('.profile_pic').height() - spinner.height()) / 2)
-	spinner.css('left', ($('.profile_pic').width() - spinner.width()) / 2)
-
-	//On mouse over those thumbnail
-	$('.profile_pic').hover(function() {
-		button.css('opacity', .5);
-		button.stop(false,true).fadeIn(200);
-	},
-	function() {
-		button.stop(false,true).fadeOut(200);
-	});
-
-	new AjaxUpload(button,{
-		action: '<?php echo $this->url(array('action'=>'upload-logo'));?>',
-		name: 'myfile',
-		onSubmit : function(file, ext){
-			spinner.css('display', 'block');
-			// you can disable upload button
-			this.disable();
-			},
-		onComplete: function(file, response){
-			button.stop(false,true).fadeOut(200);
-			spinner.css('display', 'none');
-			$('#profile_img').attr('src', response);
-			// enable upload button
-			this.enable();
-		}
+		$('#file-input').change(load);
 	});
 
 	com.em.Pathfinder.prototype.dialogButtons = {
 		'<?php echo $this->translate('Save'); ?>': function() {
-			$.ajax({
-				url: '<?php echo $this->url(array('module'=>'admin', 'controller'=>'Pathfinder', 'action'=>'create-save'));?>',
-				type: "POST",
-				dataType: 'json',
-				data: $('#formId').serialize(),
-				beforeSend: function(XMLHttpRequest) {
-					validator.form();
-					if (!validator.valid()) {
-						com.em.Pathfinder.prototype.flashError('<?php echo _("The form contains error and is not saved");?>', {header: com.em.Alert.ERROR});
-						return false;
-					}
-
-					com.em.Pathfinder.prototype.processingDisplay(true);
-					return true;
-				},
-
-				success: function(data, textStatus, XMLHttpRequest) {
-					if (textStatus == 'success') {
-						if (data.success) {
-							dialogForm.dialog('close');
-							table.fnDraw();
-							com.em.Pathfinder.prototype.flashSuccess(data.message, {header: com.em.Alert.SUCCESS});
-						} else {
-							if (data.name_duplicate) {
-								$("#name").parent().find('.error').remove();
-								$("#name").parent().append('<label class="error" for="name" generated="true">'+data.message+'</label>');
-							} else {
-								var name = data.messageArray.name;
-
-								if (name != undefined) {
-									$('#name').parent().find('.error').remove();
-									$('#name').parent().append('<label class="error" for="name" generated="true">'+name.isEmpty+'</label>');
-								}
-							}
-							com.em.Pathfinder.prototype.flashError(data.message, {header: com.em.Alert.ERROR});
-						}
-					}
-				},
-
-				complete: function(jqXHR, textStatus) {
-					com.em.Pathfinder.prototype.processingDisplay(false);
-				},
-
-				error: function(jqXHR, textStatus, errorThrown) {
-					dialogForm.dialog('close');
-					com.em.Pathfinder.prototype.flashError(errorThrown,{header: com.em.Alert.ERROR});
-				}
-			});
+			$('#formId').submit();
 		},
 
 		'<?php echo $this->translate('Cancel'); ?>': function() {
@@ -112,7 +37,7 @@
 <style type="text/css">
 	div.profile_pic{
 		position:relative;
-		width:125px;	
+		width:125px;
 	}
 	div.change_button{
 		position:absolute;

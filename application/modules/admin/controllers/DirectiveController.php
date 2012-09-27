@@ -357,6 +357,25 @@ class Admin_DirectiveController extends App_Controller_Action {
 	}
 
 	/**
+	 * Outputs an XHR response, loads the first names of the directives.
+	 */
+	public function autocompleteAction() {
+		$filterParams['name'] = $this->_getParam('name_auto', NULL);
+		$filters = $this->getFilters($filterParams);
+
+		$directiveRepo = $this->_entityManager->getRepository('Model\Directive');
+		$directives = $directiveRepo->findByCriteria($filters);
+
+		$data = array();
+		foreach ($directives as $directive) {
+			$data[] = $directive->getFirstName();
+		}
+
+		$this->stdResponse->items = $data;
+		$this->_helper->json($this->stdResponse);
+	}
+
+	/**
 	 *
 	 * Returns an associative array where:
 	 * field: name of the table field

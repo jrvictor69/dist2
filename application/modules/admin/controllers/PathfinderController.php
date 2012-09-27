@@ -19,7 +19,6 @@ class Admin_PathfinderController extends App_Controller_Action {
 	}
 
 	/**
-	 *
 	 * In case no action redirects the action read will be executed
 	 * @access public
 	 */
@@ -28,7 +27,6 @@ class Admin_PathfinderController extends App_Controller_Action {
 	}
 
 	/**
-	 *
 	 * This action shows a paginated list of club pathfinders
 	 */
 	public function readAction() {
@@ -38,7 +36,6 @@ class Admin_PathfinderController extends App_Controller_Action {
 	}
 
 	/**
-	 * 
 	 * This action shows a form in create mode
 	 * @access public
 	 */
@@ -47,57 +44,73 @@ class Admin_PathfinderController extends App_Controller_Action {
 
 		$form = new Admin_Form_ClubPathfinder();
 		$form->getElement('church')->setMultiOptions($this->getChurches());
+		$form->setAction($this->_helper->url('save'));
 
-		$this->view->src = '/js/lib/ajax-upload/ep.jpg';
+		$src = '/image/profile/smile.jpg';
+		$form->setSource($src);
+
 		$this->view->form = $form;
 	}
 
 	/**
-	 *
 	 * Creates a new Club Pathfinder
 	 * @access public
 	 */
-	public function createSaveAction() {
-		$this->_helper->viewRenderer->setNoRender(TRUE);
+	public function saveAction() {
+		if ($this->_request->isPost()) {
+			$form = new Admin_Form_ClubPathfinder();
+			$form->getElement('church')->setMultiOptions($this->getChurches());
 
-		$form = new Admin_Form_ClubPathfinder();
-		$form->getElement('church')->setMultiOptions($this->getChurches());
+			$formData = $this->getRequest()->getPost();
 
-		$formData = $this->getRequest()->getPost();
-		if ($form->isValid($formData)) {
-			$pathfinderRepo = $this->_entityManager->getRepository('Model\ClubPathfinder');
-			if (!$pathfinderRepo->verifyExistName($formData['name'])) {
-				$church = $this->_entityManager->find('Model\Church', (int)$formData['church']);
+			if ($form->isValid($formData)) {
+				$pathfinderRepo = $this->_entityManager->getRepository('Model\ClubPathfinder');
+				if (!$pathfinderRepo->verifyExistName($formData['name'])) {
+					$church = $this->_entityManager->find('Model\Church', (int)$formData['church']);
 
-				$club = new Model\ClubPathfinder();
-				$club->setName($formData['name'])
-					->setTextbible($formData['textbible'])
-					->setAddress($formData['address'])
-					->setCreated(new DateTime('now'))
-					->setChangedBy(Zend_Auth::getInstance()->getIdentity()->id)
-					->setChurch($church);
+					$club = new Model\ClubPathfinder();
+					$club->setName($formData['name'])
+						->setTextbible($formData['textbible'])
+						->setAddress($formData['address'])
+						->setCreated(new DateTime('now'))
+						->setChangedBy(Zend_Auth::getInstance()->getIdentity()->id)
+						->setChurch($church);
 
-				$this->_entityManager->persist($club);
-				$this->_entityManager->flush();
+					if ($_FILES['file']['error'] !== UPLOAD_ERR_NO_FILE) {
+						if ($_FILES['file']['error'] == UPLOAD_ERR_OK) {
+							$fh = fopen($_FILES['file']['tmp_name'], 'r');
+							$binary = fread($fh, filesize($_FILES['file']['tmp_name']));
+							fclose($fh);
 
-				$this->stdResponse->success = TRUE;
-				$this->stdResponse->message = _("Club Pathfinder saved");	
+							$mimeType = $_FILES['file']['type'];
+							$fileName = $_FILES['file']['name'];
+
+							$dataVaultMapper = new Model_ImageDataVaultMapper();
+							$dataVault = new Model_ImageDataVault();
+							$dataVault->setFilename($fileName)->setMimeType($mimeType)->setBinary($binary);
+							$dataVaultMapper->save($dataVault);
+
+							$club->setLogoId($dataVault->getId());
+						}
+					}
+
+					$this->_entityManager->persist($club);
+					$this->_entityManager->flush();
+
+					$this->_helper->flashMessenger(array('success' => _("Club Pathfinder saved")));
+					$this->_helper->redirector('read', 'Pathfinder', 'admin', array('type'=>'pathfinder'));
+				} else {
+					$this->_helper->redirector('read', 'Pathfinder', 'admin', array('type'=>'pathfinder'));
+				}
 			} else {
-				$this->stdResponse->success = FALSE;
-				$this->stdResponse->name_duplicate = TRUE;
-				$this->stdResponse->message = _("The Club Pathfinder already exists");
+				$this->_helper->redirector('read', 'Pathfinder', 'admin', array('type'=>'pathfinder'));
 			}
 		} else {
-			$this->stdResponse->success = FALSE;
-			$this->stdResponse->messageArray = $form->getMessages();
-			$this->stdResponse->message = _("The form contains error and is not saved");
+			$this->_helper->redirector('read', 'Pathfinder', 'admin', array('type'=>'pathfinder'));
 		}
-		// sends response to client
-		$this->_helper->json($this->stdResponse);
 	}
 
 	/**
-	 *
 	 * This action shows the form in update mode for Club Pathfinder.
 	 * @access public
 	 */
@@ -105,10 +118,12 @@ class Admin_PathfinderController extends App_Controller_Action {
 		$this->_helper->layout()->disableLayout();
 		$form = new Admin_Form_ClubPathfinder();
 		$form->getElement('church')->setMultiOptions($this->getChurches());
+		$form->setAction($this->_helper->url('edit'));
 
 		$id = $this->_getParam('id', 0);
 		$club = $this->_entityManager->find('Model\ClubPathfinder', $id);
 		if ($club != NULL) {
+			$form->getElement('id')->setValue($club->getId());
 			$form->getElement('name')->setValue($club->getName());
 			$form->getElement('textbible')->setValue($club->getTextbible());
 			$form->getElement('address')->setValue($club->getAddress());
@@ -118,10 +133,11 @@ class Admin_PathfinderController extends App_Controller_Action {
 			$imageLogo = $imageMapper->find($club->getLogoId());
 
 			if ($imageLogo != NULL && $imageLogo->getBinary()) {
-				$this->view->src = $this->_helper->url('profile-logo', NULL, NULL, array('id' => $imageLogo->getId(), 'timestamp' => time()));
+				$src = $this->_helper->url('profile-logo', NULL, NULL, array('id' => $imageLogo->getId(), 'timestamp' => time()));
 			} else {
-				$this->view->src = '/js/lib/ajax-upload/ep.jpg';
+				$src = '/image/profile/smile.jpg';
 			}
+			$form->setSource($src);
 		} else {
 			$this->stdResponse->success = FALSE;
 			$this->stdResponse->message = _("The requested record was not found.");
@@ -132,26 +148,20 @@ class Admin_PathfinderController extends App_Controller_Action {
 	}
 
 	/**
-	 *
 	 * Updates a Club Pathfinder
 	 * @access public
-	 * 1) Gets the record to edit
-	 * 2) Validates the record was no deleted
-	 * 3) Validates the existance of another Club Pathfinder with the same name.
-	 * 4) Saves the changes.
 	 */
-	public function updateSaveAction() {
-		$this->_helper->viewRenderer->setNoRender(TRUE);
+	public function editAction() {
+		if ($this->_request->isPost()) {
+			$form = new Admin_Form_ClubPathfinder();
+			$form->getElement('church')->setMultiOptions($this->getChurches());
 
-		$form = new Admin_Form_ClubPathfinder();
-		$form->getElement('church')->setMultiOptions($this->getChurches());
-		
-		$formData = $this->getRequest()->getPost();
-		if ($form->isValid($formData)) {
-			$id = $this->_getParam('id', 0);
-			$club = $this->_entityManager->find('Model\ClubPathfinder', $id);
-			$pathfinderRepo = $this->_entityManager->getRepository('Model\ClubPathfinder');
-			if ($club != NULL) {
+			$formData = $this->getRequest()->getPost();
+
+			if ($form->isValid($formData)) {
+				$id = $this->_getParam('id', 0);
+				$club = $this->_entityManager->find('Model\ClubPathfinder', $id);
+				$pathfinderRepo = $this->_entityManager->getRepository('Model\ClubPathfinder');
 				if (!$pathfinderRepo->verifyExistName($formData['name']) || $pathfinderRepo->verifyExistIdAndName($id, $formData['name'])) {
 					$church = $this->_entityManager->find('Model\Church', (int)$formData['church']);
 
@@ -162,31 +172,82 @@ class Admin_PathfinderController extends App_Controller_Action {
 						->setChangedBy(Zend_Auth::getInstance()->getIdentity()->id)
 						->setChurch($church);
 
+					if ($_FILES['file']['error'] !== UPLOAD_ERR_NO_FILE) {
+						if ($_FILES['file']['error'] == UPLOAD_ERR_OK) {
+							$fh = fopen($_FILES['file']['tmp_name'], 'r');
+							$binary = fread($fh, filesize($_FILES['file']['tmp_name']));
+							fclose($fh);
+
+							$mimeType = $_FILES['file']['type'];
+							$fileName = $_FILES['file']['name'];
+
+							$dataVaultMapper = new Model_ImageDataVaultMapper();
+
+							if ($club->getLogoId() != NULL) {// if it has image profile update
+								$dataVault = $dataVaultMapper->find($club->getLogoId(), FALSE);
+								$dataVault->setFilename($fileName)->setMimeType($mimeType)->setBinary($binary);
+								$dataVaultMapper->update($club->getLogoId(), $dataVault);
+							} elseif ($club->getLogoId() == NULL) {// if it don't have image profile create
+								$dataVault = new Model_ImageDataVault();
+								$dataVault->setFilename($fileName)->setMimeType($mimeType)->setBinary($binary);
+								$dataVaultMapper->save($dataVault);
+
+								$club->setLogoId($dataVault->getId());
+							}
+						}
+					}
+
 					$this->_entityManager->persist($club);
 					$this->_entityManager->flush();
 
-					$this->stdResponse->success = TRUE;
-					$this->stdResponse->message = _("Club Pathfinder updated");
+					$this->_helper->flashMessenger(array('success' => _("Club Pathfinder updated")));
+					$this->_helper->redirector('read', 'Pathfinder', 'admin', array('type'=>'pathfinder'));
 				} else {
-					$this->stdResponse->success = FALSE;
-					$this->stdResponse->name_duplicate = TRUE;
-					$this->stdResponse->message = _("The Club Pathfinder already exists");
+					$this->_helper->redirector('read', 'Pathfinder', 'admin', array('type'=>'pathfinder'));
 				}
 			} else {
-				$this->stdResponse->success = FALSE;
-				$this->stdResponse->message = _("The Club Pathfinder does not exists");
+				$this->_helper->redirector('read', 'Pathfinder', 'admin', array('type'=>'pathfinder'));
 			}
 		} else {
+			$this->_helper->redirector('read', 'Pathfinder', 'admin', array('type'=>'pathfinder'));
+		}
+	}
+
+	/**
+	 * Deletes clubs pathfinders
+	 * @access public
+	 * @internal
+	 * 1) Gets the model ClubPathfinder
+	 * 2) Validates the existance of dependencies
+	 * 3) Changes the state field or records to delete
+	 */
+	public function deleteAction() {
+		$this->_helper->viewRenderer->setNoRender(TRUE);
+
+		$itemIds = $this->_getParam('itemIds', array());
+		if (!empty($itemIds) ) {
+			$removeCount = 0;
+			foreach ($itemIds as $id) {
+				$club = $this->_entityManager->find('Model\ClubPathfinder', $id);
+				$club->setState(FALSE);
+
+				$this->_entityManager->persist($club);
+				$this->_entityManager->flush();
+				$removeCount++;
+			}
+			$message = sprintf(ngettext('%d club pathfinder removed.', '%d club pathfinders removed.', $removeCount), $removeCount);
+
+			$this->stdResponse->success = TRUE;
+			$this->stdResponse->message = _($message);
+		} else {
 			$this->stdResponse->success = FALSE;
-			$this->stdResponse->messageArray = $form->getMessages();
-			$this->stdResponse->message = _("The form contains error and is not saved");
+			$this->stdResponse->message = _("Data submitted is empty.");
 		}
 		// sends response to client
 		$this->_helper->json($this->stdResponse);
 	}
 
 	/**
-	 * 
 	 * Outputs an XHR response containing all entries in club pathfinders.
 	 * This action serves as a datasource for the read/index view
 	 * @xhrParam int filter_name
@@ -216,7 +277,7 @@ class Admin_PathfinderController extends App_Controller_Action {
 				$changed = $changed->format('d.m.Y');
 			}
 
-			$row = array();			
+			$row = array();
 			$row[] = $pathfinder->getId();
 			$row[] = $pathfinder->getName();
 			$row[] = $pathfinder->getTextbible();
@@ -235,7 +296,26 @@ class Admin_PathfinderController extends App_Controller_Action {
 	}
 
 	/**
-	 * 
+	 * Outputs an XHR response, loads the first names of clubs pathfinders.
+	 */
+	public function autocompleteAction() {
+		$filterParams['name'] = $this->_getParam('name_auto', NULL);
+		$filters = $this->getFilters($filterParams);
+
+		$clubRepo = $this->_entityManager->getRepository('Model\ClubPathfinder');
+		$clubs = $clubRepo->findByCriteria($filters);
+
+		$data = array();
+		foreach ($clubs as $club) {
+			$data[] = $club->getName();
+		}
+
+		$this->stdResponse->items = $data;
+		$this->_helper->json($this->stdResponse);
+	}
+
+	/**
+	 *
 	 * Returns an associative array where:
 	 * field: name of the table field
 	 * filter: value to match
@@ -245,11 +325,11 @@ class Admin_PathfinderController extends App_Controller_Action {
 	 */
 	private function getFilters($filterParams) {
 		$filters = array ();
-		
+
 		if (empty($filterParams)) {
 			return $filters;
 		}
-		
+
 		if (!empty($filterParams['name'])) {
 			$filters[] = array('field' => 'name', 'filter' => '%'.$filterParams['name'].'%', 'operator' => 'LIKE');
 		}
@@ -257,26 +337,28 @@ class Admin_PathfinderController extends App_Controller_Action {
 		return $filters;
 	}
 
+	/**
+	 * (test)
+	 */
 	public function uploadAction() {
 		$this->_helper->layout()->disableLayout();
 		$this->_helper->viewRenderer->setNoRender(TRUE);
 
 		$target_path = "image/upload/";
 		// Set the new path with the file name
-		$target_path = $target_path . basename( $_FILES['myfile']['name']); 
+		$target_path = $target_path . basename( $_FILES['myfile']['name']);
 		// Move the file to the upload folder
 		if(move_uploaded_file($_FILES['myfile']['tmp_name'], $target_path)) {
 			// print the new image path in the page, and this will recevie the javascripts 'response' variable
-    		echo "/".$target_path;
+			echo "/".$target_path;
 		} else{
 			// Set default the image path if any error in upload.
-    		echo "default.jpg";
+			echo "default.jpg";
 		}
 	}
 
 	/**
-	 *
-	 * Uploads the profile logo
+	 * Uploads the profile logo (test)
 	 * @access public
 	 */
 	public function uploadLogoAction() {
@@ -316,21 +398,21 @@ class Admin_PathfinderController extends App_Controller_Action {
 
 		$id = (int)$this->_getParam('id', 0);
 
-		$imageMapper = new Model_ImageDataVaultMapper();
-		$imageLogo = $imageMapper->find($id);
+		$dataVaultMapper = new Model_ImageDataVaultMapper();
+		$dataVault = $dataVaultMapper->find($id);
 
-		if ($imageLogo->getBinary()) {
+		if ($dataVault->getBinary()) {
 			$this->_response
 			//No caching
 				->setHeader('Pragma', 'public')
 				->setHeader('Expires', '0')
 				->setHeader('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
 				->setHeader('Cache-Control', 'private')
-				->setHeader('Content-type', $imageLogo->getMimeType())
+				->setHeader('Content-type', $dataVault->getMimeType())
 				->setHeader('Content-Transfer-Encoding', 'binary')
-				->setHeader('Content-Length', strlen($imageLogo->getBinary()));
+				->setHeader('Content-Length', strlen($dataVault->getBinary()));
 
-			echo $imageLogo->getBinary();
+			echo $dataVault->getBinary();
 		} else {
 			$this->_response->setHttpResponseCode(404);
 		}
