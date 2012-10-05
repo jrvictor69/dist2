@@ -1,0 +1,51 @@
+<?php $this->headScript()->appendFile($this->baseUrl() . "/js/modules/admin/MemberClub.js","text/javascript");?>
+<?php $this->headScript()->appendFile($this->baseUrl() . "/js/lib/blueimp-Load-Image/load-image.min.js","text/javascript"); ?>
+
+<div style="margin:20px;">
+	<?php echo $this->tableHeader('filterHeader', _("Filter Member Club"));?>
+	<div id="containerFormFilter">
+		<?php echo $this->formFilter;?>
+	</div>
+	<br>
+	<?php echo $this->tableHeader('memberClubHeader', _("Members Club"));?>
+	<?php echo $this->tableList("tblMemberClub");?>
+	<div class="buttons right">
+		<?php echo $this->buttonRemove("delete-memberClub", $this->translate('Remove'), $this->url(array('action'=>'delete')));?>
+		<?php echo $this->buttonAdd("create-memberClub", $this->translate('Add'), $this->url(array('action'=>'create')));?>
+	</div>
+
+	<div id="dialog"><!-- Loads ajax dialog form --></div>
+</div>
+<?php //echo $this->imagelogo;?>
+<script type="text/javascript">
+	$(document).ready(function() {
+	var memberClub = new com.em.MemberClub();
+
+	// network
+	memberClub.setUrl({
+		toTable : '<?php echo $this->url(array('action'=>'read-items'));?>',
+		toBase : '<?php echo $this->baseUrl(); ?>',
+		toUpdate : '<?php echo $this->url(array('action'=>'update')); ?>',
+		toAutocomplete : '<?php echo $this->url(array('action'=>'autocomplete'));?>'
+	});
+
+	var headers = new Object();
+	headers.headerArray = new Array(
+		'<?php echo $this->translate('Name'); ?>',
+		'<?php echo $this->translate('Mobil'); ?>',
+		'<?php echo $this->translate('Phone'); ?>',
+		'<?php echo $this->translate('Email'); ?>',
+		'<?php echo $this->translate('Club Pathfinder'); ?>',
+		'<?php echo $this->translate('Changed'); ?>',
+		'<?php echo $this->translate('Changed'); ?>');
+	memberClub.setHeaders(headers);
+	// configuration of widgets
+	memberClub.configureTable('#tblMemberClub', true);
+
+	// CRUD
+	memberClub.clickToAdd('#create-memberClub');
+	memberClub.clickToUpdate('#tblMemberClub a[id^=update-memberClub-]');
+	memberClub.clickToDelete('#delete-memberClub');
+	memberClub.configureAuto('input#nameFilter');
+});
+</script>

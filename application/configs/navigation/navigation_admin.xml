@@ -149,6 +149,15 @@
 						<type>pathfinder</type>
 					</params>
 				</directive>
+				<memberClub>
+					<label>Member Club</label>
+					<module>admin</module>
+					<controller>Memberclub</controller>
+					<action>index</action>
+					<params>
+						<type>pathfinder</type>
+					</params>
+				</memberClub>
 				<position>
 					<label>Position</label>
 					<module>admin</module>

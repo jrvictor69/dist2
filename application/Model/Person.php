@@ -16,7 +16,7 @@ namespace Model;
  * @Table(name="Person")
  * @InheritanceType("JOINED")
  * @DiscriminatorColumn(name="type", type="string")
- * @DiscriminatorMap({"person"="Person", "guest"="Guest", "directive"="Directive"})
+ * @DiscriminatorMap({"person"="Person", "guest"="Guest", "directive"="Directive", "memberClub"="MemberClub"})
  */
 class Person extends DomainObject {
 	const SEX_MALE		= 1;
