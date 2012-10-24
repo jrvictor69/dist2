@@ -24,12 +24,8 @@ class Admin_MemberClubController extends App_Controller_Action {
 	 */
 	public function indexAction() {
 		$formFilter = new Admin_Form_SearchFilter();
-		$formFilter->getElement('nameFilter')->setLabel(_("Firstname Member Club"));
+		$formFilter->getElement('nameFilter')->setLabel(_("First name Member Club"));
 		$this->view->formFilter = $formFilter;
-
-		$memberClubRepo = $this->_entityManager->getRepository('Model\MemberClub');
-		$directives = $memberClubRepo->findByCriteria();
-// 		var_dump($directives);exit;
 	}
 
 	/**
@@ -70,8 +66,8 @@ class Admin_MemberClubController extends App_Controller_Action {
 				$club = $this->_entityManager->find('Model\ClubPathfinder', (int)$formData['club']);
 				$position = $this->_entityManager->find('Model\Position', (int)$formData['position']);
 
-				$directive = new Model\Directive();
-				$directive->setIdentityCard(3)
+				$member = new Model\MemberClub();
+				$member->setIdentityCard(4)
 					->setFirstName($formData['firstName'])
 					->setLastName($formData['lastName'])
 					->setEmail($formData['email'])
@@ -79,7 +75,6 @@ class Admin_MemberClubController extends App_Controller_Action {
 					->setPhonemobil($formData['phonemobil'])
 					->setSex((int)$formData['sex'])
 					->setClub($club)
-					->setPosition($position)
 					->setCreated(new \DateTime('now'));
 
 				if ($_FILES['file']['error'] !== UPLOAD_ERR_NO_FILE) {
@@ -96,20 +91,20 @@ class Admin_MemberClubController extends App_Controller_Action {
 						$dataVault->setFilename($fileName)->setMimeType($mimeType)->setBinary($binary);
 						$dataVaultMapper->save($dataVault);
 
-						$directive->setProfilePictureId($dataVault->getId());
+						$member->setProfilePictureId($dataVault->getId());
 					}
 				}
 
-				$this->_entityManager->persist($directive);
+				$this->_entityManager->persist($member);
 				$this->_entityManager->flush();
 
-				$this->_helper->flashMessenger(array('success' => _("Directive created")));
-				$this->_helper->redirector('read', 'Directive', 'admin', array('type'=>'pathfinder'));
+				$this->_helper->flashMessenger(array('success' => _("Member Club created")));
+				$this->_helper->redirector('index', 'Memberclub', 'admin', array('type'=>'pathfinder'));
 			} else {
-				$this->_helper->redirector('read', 'Directive', 'admin', array('type'=>'pathfinder'));
+				$this->_helper->redirector('index', 'Memberclub', 'admin', array('type'=>'pathfinder'));
 			}
 		} else {
-			$this->_helper->redirector('read', 'Directive', 'admin', array('type'=>'pathfinder'));
+			$this->_helper->redirector('index', 'Memberclub', 'admin', array('type'=>'pathfinder'));
 		}
 	}
 
@@ -128,27 +123,26 @@ class Admin_MemberClubController extends App_Controller_Action {
 		$form->setAction($this->_helper->url('edit'));
 
 		$id = $this->_getParam('id', 0);
-		$directive = $this->_entityManager->find('Model\Directive', $id);
-		if ($directive != NULL) {
-			$form->getElement('id')->setValue($directive->getId());
-			$form->getElement('firstName')->setValue($directive->getFirstName());
-			$form->getElement('lastName')->setValue($directive->getLastName());
-			$form->getElement('sex')->setValue($directive->getSex());
-			$form->getElement('email')->setValue($directive->getEmail());
-			$form->getElement('phonemobil')->setValue($directive->getPhonemobil());
-			$form->getElement('phone')->setValue($directive->getPhone());
-			$form->getElement('club')->setValue($directive->getClub()->getId());
-			$form->getElement('position')->setValue($directive->getPosition()->getId());
+		$member = $this->_entityManager->find('Model\MemberClub', $id);
+		if ($member != NULL) {
+			$form->getElement('id')->setValue($member->getId());
+			$form->getElement('firstName')->setValue($member->getFirstName());
+			$form->getElement('lastName')->setValue($member->getLastName());
+			$form->getElement('sex')->setValue($member->getSex());
+			$form->getElement('email')->setValue($member->getEmail());
+			$form->getElement('phonemobil')->setValue($member->getPhonemobil());
+			$form->getElement('phone')->setValue($member->getPhone());
+			$form->getElement('club')->setValue($member->getClub()->getId());
 
 			$dataVaultMapper = new Model_DataVaultMapper();
-			$dataVault = $dataVaultMapper->find($directive->getProfilePictureId());
+			$dataVault = $dataVaultMapper->find($member->getProfilePictureId());
 
 			if ($dataVault != NULL && $dataVault->getBinary()) {
 				$src = $this->_helper->url('profile-picture', NULL, NULL, array('id' => $dataVault->getId(), 'timestamp' => time()));
 			} else {
-				if ($directive->getSex() == Model\Person::SEX_MALE) {
+				if ($member->getSex() == Model\Person::SEX_MALE) {
 					$src = '/image/profile/male_default.jpg';
-				} elseif ($directive->getSex() == Model\Person::SEX_FEMALE) {
+				} elseif ($member->getSex() == Model\Person::SEX_FEMALE) {
 					$src = '/image/profile/female_default.jpg';
 				}
 			}
@@ -177,12 +171,12 @@ class Admin_MemberClubController extends App_Controller_Action {
 
 			if ($form->isValid($formData)) {
 				$id = $this->_getParam('id', 0);
-				$directive = $this->_entityManager->find('Model\Directive', $id);
-				if ($directive != NULL) {
+				$member = $this->_entityManager->find('Model\MemberClub', $id);
+				if ($member != NULL) {
 					$club = $this->_entityManager->find('Model\ClubPathfinder', (int)$formData['club']);
 					$position = $this->_entityManager->find('Model\Position', (int)$formData['position']);
 
-					$directive->setIdentityCard(3)
+					$member->setIdentityCard(3)
 						->setFirstName($formData['firstName'])
 						->setLastName($formData['lastName'])
 						->setEmail($formData['email'])
@@ -190,7 +184,6 @@ class Admin_MemberClubController extends App_Controller_Action {
 						->setPhonemobil($formData['phonemobil'])
 						->setSex((int)$formData['sex'])
 						->setClub($club)
-						->setPosition($position)
 						->setChanged(new \DateTime('now'));
 
 					if ($_FILES['file']['error'] !== UPLOAD_ERR_NO_FILE) {
@@ -204,34 +197,34 @@ class Admin_MemberClubController extends App_Controller_Action {
 
 							$dataVaultMapper = new Model_DataVaultMapper();
 
-							if ($directive->getProfilePictureId() != NULL) {// if it has image profile update
-								$dataVault = $dataVaultMapper->find($directive->getProfilePictureId(), FALSE);
+							if ($member->getProfilePictureId() != NULL) {// if it has image profile update
+								$dataVault = $dataVaultMapper->find($member->getProfilePictureId(), FALSE);
 								$dataVault->setFilename($fileName)->setMimeType($mimeType)->setBinary($binary);
-								$dataVaultMapper->update($directive->getProfilePictureId(), $dataVault);
-							} elseif ($directive->getProfilePictureId() == NULL) {// if it don't have image profile create
+								$dataVaultMapper->update($member->getProfilePictureId(), $dataVault);
+							} elseif ($member->getProfilePictureId() == NULL) {// if it don't have image profile create
 								$dataVault = new Model_DataVault();
 								$dataVault->setFilename($fileName)->setMimeType($mimeType)->setBinary($binary);
 								$dataVaultMapper->save($dataVault);
 
-								$directive->setProfilePictureId($dataVault->getId());
+								$member->setProfilePictureId($dataVault->getId());
 							}
 						}
 					}
 
-					$this->_entityManager->persist($directive);
+					$this->_entityManager->persist($member);
 					$this->_entityManager->flush();
 
-					$this->_helper->flashMessenger(array('success' => _("Directive updated")));
-					$this->_helper->redirector('read', 'Directive', 'admin', array('type'=>'pathfinder'));
+					$this->_helper->flashMessenger(array('success' => _("Member Club updated")));
+					$this->_helper->redirector('index', 'Memberclub', 'admin', array('type'=>'pathfinder'));
 				} else {
-					$this->_helper->flashMessenger(array('error' => _("Directive don't found")));
-					$this->_helper->redirector('read', 'Directive', 'admin', array('type'=>'pathfinder'));
+					$this->_helper->flashMessenger(array('error' => _("Directive do not found")));
+					$this->_helper->redirector('index', 'Memberclub', 'admin', array('type'=>'pathfinder'));
 				}
 			} else {
-				$this->_helper->redirector('read', 'Directive', 'admin', array('type'=>'pathfinder'));
+				$this->_helper->redirector('index', 'Memberclub', 'admin', array('type'=>'pathfinder'));
 			}
 		} else {
-			$this->_helper->redirector('read', 'Directive', 'admin', array('type'=>'pathfinder'));
+			$this->_helper->redirector('index', 'Memberclub', 'admin', array('type'=>'pathfinder'));
 		}
 	}
 
@@ -306,47 +299,47 @@ class Admin_MemberClubController extends App_Controller_Action {
 	 * @xhrParam int iDisplayStart
 	 * @xhrParam int iDisplayLength
 	 */
-	public function readItemsAction() {
-// 		$sortCol = $this->_getParam('iSortCol_0', 1);
-// 		$sortDirection = $this->_getParam('sSortDir_0', 'asc');
+	public function dsReadItemsAction() {
+		$sortCol = $this->_getParam('iSortCol_0', 1);
+		$sortDirection = $this->_getParam('sSortDir_0', 'asc');
 
-// 		$filterParams['name'] = $this->_getParam('filter_name', NULL);
-// 		$filters = $this->getFilters($filterParams);
+		$filterParams['name'] = $this->_getParam('filter_name', NULL);
+		$filters = $this->getFilters($filterParams);
 
-// 		$start = $this->_getParam('iDisplayStart', 0);
-// 		$limit = $this->_getParam('iDisplayLength', 10);
-// 		$page = ($start + $limit) / $limit;
+		$start = $this->_getParam('iDisplayStart', 0);
+		$limit = $this->_getParam('iDisplayLength', 10);
+		$page = ($start + $limit) / $limit;
 
-// 		$memberClubRepo = $this->_entityManager->getRepository('Model\MemberClub');
-// 		$directives = $memberClubRepo->findByCriteria($filters, $limit, $start, $sortCol, $sortDirection);
-// 		$total = $memberClubRepo->getTotalCount($filters);
+		$memberClubRepo = $this->_entityManager->getRepository('Model\MemberClub');
+		$directives = $memberClubRepo->findByCriteria($filters, $limit, $start, $sortCol, $sortDirection);
+		$total = $memberClubRepo->getTotalCount($filters);
 
-// 		$posRecord = $start+1;
-// 		$data = array();
-// 		foreach ($directives as $directive) {
-// 			$changed = $directive->getChanged();
-// 			if ($changed != NULL) {
-// 				$changed = $changed->format('d.m.Y');
-// 			}
+		$posRecord = $start+1;
+		$data = array();
+		foreach ($directives as $directive) {
+			$changed = $directive->getChanged();
+			if ($changed != NULL) {
+				$changed = $changed->format('d.m.Y');
+			}
 
-// 			$row = array();
-// 			$row[] = $directive->getId();
-// 			$row[] = $directive->getName();
-// 			$row[] = $directive->getPhonemobil();
-// 			$row[] = $directive->getPhone();
-// 			$row[] = $directive->getEmail();
-// 			$row[] = $directive->getClub()->getName();
-// 			$row[] = $directive->getCreated()->format('d.m.Y');
-// 			$row[] = $changed;
-// 			$row[] = '[]';
-// 			$data[] = $row;
-// 			$posRecord++;
-// 		}
-// 		// response
-// 		$this->stdResponse->iTotalRecords = $total;
-// 		$this->stdResponse->iTotalDisplayRecords = $total;
-// 		$this->stdResponse->aaData = $data;
-// 		$this->_helper->json($this->stdResponse);
+			$row = array();
+			$row[] = $directive->getId();
+			$row[] = $directive->getName();
+			$row[] = $directive->getPhonemobil();
+			$row[] = $directive->getPhone();
+			$row[] = $directive->getEmail();
+			$row[] = $directive->getClub()->getName();
+			$row[] = $directive->getCreated()->format('d.m.Y');
+			$row[] = $changed;
+			$row[] = '[]';
+			$data[] = $row;
+			$posRecord++;
+		}
+		// response
+		$this->stdResponse->iTotalRecords = $total;
+		$this->stdResponse->iTotalDisplayRecords = $total;
+		$this->stdResponse->aaData = $data;
+		$this->_helper->json($this->stdResponse);
 	}
 
 	/**

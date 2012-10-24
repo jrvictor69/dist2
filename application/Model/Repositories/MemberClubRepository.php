@@ -16,17 +16,17 @@ class MemberClubRepository extends EntityRepository {
 	 * Alias of the table
 	 * @var string
 	 */
-	private $_alias = 'member';
+	private $_alias = 'memberClub';
 
 	/**
-	 * Finds models according the filters
+	 * Returns models according the filters
 	 * @param array $filters
 	 * @param int $limit
 	 * @param int $offset
 	 * @param int $sortColumn
 	 * @param string $sortDirection
 	 * @return Array Objects
-	*/
+	 */
 	public function findByCriteria($filters = array(), $limit = NULL, $offset = NULL, $sortColumn = NULL, $sortDirection = NULL) {
 		$query = $this->_em->createQueryBuilder();
 
@@ -76,13 +76,13 @@ class MemberClubRepository extends EntityRepository {
 		}
 
 		$query->orderBy("$this->_alias.$sort", $sortDirection);
-var_dump($query->getQuery()); exit;
+
 		return $query->getQuery()->getResult();
 	}
 
 	/**
 	 * Finds total count of models according the filters
-	 * @param unknown_type $filters
+	 * @param array $filters
 	 * @return int
 	 */
 	public function getTotalCount($filters = array()) {

@@ -74,6 +74,22 @@ class MemberClub extends Person {
 	}
 
 	/**
+	 * @return string
+	 */
+	public function getHistory() {
+		return $this->history;
+	}
+
+	/**
+	 * @param string $history
+	 * @return MemberClub
+	 */
+	public function setHistory($history) {
+		$this->history = $history;
+		return $this;
+	}
+
+	/**
 	 * @return ClubPathfinder
 	 */
 	public function getClub() {

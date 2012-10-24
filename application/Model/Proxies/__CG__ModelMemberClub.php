@@ -66,6 +66,18 @@ class MemberClub extends \Model\MemberClub implements \Doctrine\ORM\Proxy\Proxy
         return parent::setNote($note);
     }
 
+    public function getHistory()
+    {
+        $this->__load();
+        return parent::getHistory();
+    }
+
+    public function setHistory($history)
+    {
+        $this->__load();
+        return parent::setHistory($history);
+    }
+
     public function getClub()
     {
         $this->__load();
