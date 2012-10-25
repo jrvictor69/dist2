@@ -19,8 +19,8 @@ class Admin_MemberClubController extends App_Controller_Action {
 	}
 
 	/**
-	 *
-	 * This action shows a paginated list of directives
+	 * This action shows a paginated list of members club
+	 * @access public
 	 */
 	public function indexAction() {
 		$formFilter = new Admin_Form_SearchFilter();
@@ -29,7 +29,6 @@ class Admin_MemberClubController extends App_Controller_Action {
 	}
 
 	/**
-	 *
 	 * This action shows a form in create mode
 	 * @access public
 	 */
@@ -49,8 +48,7 @@ class Admin_MemberClubController extends App_Controller_Action {
 	}
 
 	/**
-	 *
-	 * Creates a new Directive
+	 * Creates a new Member Club
 	 * @access public
 	 */
 	public function saveAction() {
@@ -109,8 +107,7 @@ class Admin_MemberClubController extends App_Controller_Action {
 	}
 
 	/**
-	 *
-	 * This action shows the form in update mode for Directive.
+	 * This action shows the form to update a member club.
 	 * @access public
 	 */
 	public function updateAction() {
@@ -157,7 +154,7 @@ class Admin_MemberClubController extends App_Controller_Action {
 	}
 
 	/**
-	 * Updates a Directive of the club pathfinders
+	 * Updates a Member Club of the club pathfinder
 	 * @access public
 	 */
 	public function editAction() {
@@ -217,7 +214,7 @@ class Admin_MemberClubController extends App_Controller_Action {
 					$this->_helper->flashMessenger(array('success' => _("Member Club updated")));
 					$this->_helper->redirector('index', 'Memberclub', 'admin', array('type'=>'pathfinder'));
 				} else {
-					$this->_helper->flashMessenger(array('error' => _("Directive do not found")));
+					$this->_helper->flashMessenger(array('error' => _("Member Club do not found")));
 					$this->_helper->redirector('index', 'Memberclub', 'admin', array('type'=>'pathfinder'));
 				}
 			} else {
@@ -229,10 +226,10 @@ class Admin_MemberClubController extends App_Controller_Action {
 	}
 
 	/**
-	 * Deletes directives
+	 * Deletes members club
 	 * @access public
 	 * @internal
-	 * 1) Gets the model directive
+	 * 1) Gets the model Member Club
 	 * 2) Validates the existance of dependencies
 	 * 3) Changes the state field or records to delete
 	 */
@@ -243,14 +240,14 @@ class Admin_MemberClubController extends App_Controller_Action {
 		if (!empty($itemIds) ) {
 			$removeCount = 0;
 			foreach ($itemIds as $id) {
-				$directive = $this->_entityManager->find('Model\Directive', $id);
-				$directive->setState(FALSE);
+				$member = $this->_entityManager->find('Model\MemberClub', $id);
+				$member->setState(FALSE);
 
-				$this->_entityManager->persist($directive);
+				$this->_entityManager->persist($member);
 				$this->_entityManager->flush();
 				$removeCount++;
 			}
-			$message = sprintf(ngettext('%d directive removed.', '%d directives removed.', $removeCount), $removeCount);
+			$message = sprintf(ngettext('%d member club removed.', '%d members club removed.', $removeCount), $removeCount);
 
 			$this->stdResponse->success = TRUE;
 			$this->stdResponse->message = _($message);
@@ -293,8 +290,8 @@ class Admin_MemberClubController extends App_Controller_Action {
 	}
 
 	/**
-	 * Outputs an XHR response containing all entries in directives.
-	 * This action serves as a datasource for the read/index view
+	 * Outputs an XHR response containing all entries in members clubs.
+	 * This action serves as a datasource for the index view
 	 * @xhrParam int filter_name
 	 * @xhrParam int iDisplayStart
 	 * @xhrParam int iDisplayLength
@@ -311,25 +308,25 @@ class Admin_MemberClubController extends App_Controller_Action {
 		$page = ($start + $limit) / $limit;
 
 		$memberClubRepo = $this->_entityManager->getRepository('Model\MemberClub');
-		$directives = $memberClubRepo->findByCriteria($filters, $limit, $start, $sortCol, $sortDirection);
+		$members = $memberClubRepo->findByCriteria($filters, $limit, $start, $sortCol, $sortDirection);
 		$total = $memberClubRepo->getTotalCount($filters);
 
 		$posRecord = $start+1;
 		$data = array();
-		foreach ($directives as $directive) {
-			$changed = $directive->getChanged();
+		foreach ($members as $member) {
+			$changed = $member->getChanged();
 			if ($changed != NULL) {
 				$changed = $changed->format('d.m.Y');
 			}
 
 			$row = array();
-			$row[] = $directive->getId();
-			$row[] = $directive->getName();
-			$row[] = $directive->getPhonemobil();
-			$row[] = $directive->getPhone();
-			$row[] = $directive->getEmail();
-			$row[] = $directive->getClub()->getName();
-			$row[] = $directive->getCreated()->format('d.m.Y');
+			$row[] = $member->getId();
+			$row[] = $member->getName();
+			$row[] = $member->getPhonemobil();
+			$row[] = $member->getPhone();
+			$row[] = $member->getEmail();
+			$row[] = $member->getClub()->getName();
+			$row[] = $member->getCreated()->format('d.m.Y');
 			$row[] = $changed;
 			$row[] = '[]';
 			$data[] = $row;
@@ -343,18 +340,18 @@ class Admin_MemberClubController extends App_Controller_Action {
 	}
 
 	/**
-	 * Outputs an XHR response, loads the first names of the directives.
+	 * Outputs an XHR response, loads the first names of the members club.
 	 */
 	public function autocompleteAction() {
 		$filterParams['name'] = $this->_getParam('name_auto', NULL);
 		$filters = $this->getFilters($filterParams);
 
-		$directiveRepo = $this->_entityManager->getRepository('Model\Directive');
-		$directives = $directiveRepo->findByCriteria($filters);
+		$memberRepo = $this->_entityManager->getRepository('Model\MemberClub');
+		$members = $memberRepo->findByCriteria($filters);
 
 		$data = array();
-		foreach ($directives as $directive) {
-			$data[] = $directive->getFirstName();
+		foreach ($members as $member) {
+			$data[] = $member->getFirstName();
 		}
 
 		$this->stdResponse->items = $data;
@@ -362,7 +359,6 @@ class Admin_MemberClubController extends App_Controller_Action {
 	}
 
 	/**
-	 *
 	 * Returns an associative array where:
 	 * field: name of the table field
 	 * filter: value to match
