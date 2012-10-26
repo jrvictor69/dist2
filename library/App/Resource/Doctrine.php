@@ -1,7 +1,7 @@
 <?php
 /**
  * Doctrine resource for DIST 2
- * 
+ *
  * @package App
  * @subpackage Resource
  * @category Dist
@@ -13,7 +13,7 @@
 class App_Resource_Doctrine extends Zend_Application_Resource_ResourceAbstract {
 
 	/**
-	 * 
+	 *
 	 * Configuration options for Doctrine.
 	 * @var \Doctrine\ORM\Configuration()
 	 */
@@ -33,11 +33,11 @@ class App_Resource_Doctrine extends Zend_Application_Resource_ResourceAbstract {
 		// Metadata driver
 		$this->_initMetadataDriver();
 
-		// Sets up caches 
+		// Sets up caches
 		$this->_initCache();
 
 		// Proxy configuration
-		$this->_initProxy(); 
+		$this->_initProxy();
 
 		// Database connection information
 		$connectionOptions = $this->_initConnection();
@@ -52,12 +52,12 @@ class App_Resource_Doctrine extends Zend_Application_Resource_ResourceAbstract {
 		// Table Prefix (by now the table prefix is tbl it can change some time)
 		$tablePrefix = new DoctrineExtensions\TablePrefix('tbl');
 		$evm->addEventListener(\Doctrine\ORM\Events::loadClassMetadata, $tablePrefix);
-		
+
 		return $em;
 	}
 
 	/**
-	 * 
+	 *
 	 * Inits class loader
 	 * @return void
 	 */
@@ -66,7 +66,7 @@ class App_Resource_Doctrine extends Zend_Application_Resource_ResourceAbstract {
 		// Entities
 		// The namespace of the classes to load.
 		// $includePath The base include path to use.
-		$classLoader = new \Doctrine\Common\ClassLoader( 
+		$classLoader = new \Doctrine\Common\ClassLoader(
 			$options['metadata']['entitiesPathNamespace'],
 			$options['metadata']['entitiesPath']
 		);
@@ -97,47 +97,47 @@ class App_Resource_Doctrine extends Zend_Application_Resource_ResourceAbstract {
 	}
 
 	/**
-	 * 
+	 *
 	 * Initializes metadata driver from resource options.
 	 * @return void
 	 */
 	protected function _initMetadataDriver() {
 		$options = $this->getOptions();
 		$mappingPaths = $options['metadata']['mappingPaths'];
-		$driver = $this->_config->newDefaultAnnotationDriver($mappingPaths);        
+		$driver = $this->_config->newDefaultAnnotationDriver($mappingPaths);
 		$this->_config->setMetadataDriverImpl($driver);
 	}
 
 	/**
-	 * 
+	 *
 	 * Initializes Doctrine cache configuration from resource options.
 	 * @return void
 	 */
 	protected function _initCache() {
 		$options = $this->getOptions();
-//		switch($options['cache']) {
-//			case 'apc':
-//				$cache = new \Doctrine\Common\Cache\ApcCache();
-//			break;
-//
-//			case 'memcache':
-//				$cache = new \Doctrine\Common\Cache\MemcacheCache();
-//			break;
-//
-//			case 'xcache':
-//				$cache = new \Doctrine\Common\Cache\XcacheCache();
-//			break;
-//
-//			default:
-//				$cache = new \Doctrine\Common\Cache\ArrayCache();
-//		}
-//
-//		$this->_config->setMetadataCacheImpl($cache);
-//		$this->_config->setQueryCacheImpl($cache);
+		switch($options['cache']) {
+			case 'apc':
+				$cache = new \Doctrine\Common\Cache\ApcCache();
+			break;
+
+			case 'memcache':
+				$cache = new \Doctrine\Common\Cache\MemcacheCache();
+			break;
+
+			case 'xcache':
+				$cache = new \Doctrine\Common\Cache\XcacheCache();
+			break;
+
+			default:
+				$cache = new \Doctrine\Common\Cache\ArrayCache();
+		}
+
+// 		$this->_config->setMetadataCacheImpl($cache);
+// 		$this->_config->setQueryCacheImpl($cache);
 	}
 
 	/**
-	 * 
+	 *
 	 * Initializes Doctrine proxy configuration from resource options.
 	 * @return void
 	 */
@@ -150,7 +150,7 @@ class App_Resource_Doctrine extends Zend_Application_Resource_ResourceAbstract {
 	}
 
 	/**
-	 * 
+	 *
 	 * Initializes Doctrine connection configuration from resource options.
 	 * @return void
 	 */
