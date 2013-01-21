@@ -87,6 +87,11 @@ class PathfinderController extends App_Controller_Action {
 		$this->view->subTitle = sprintf(_('Members of the Club %s'), $club->getName());
 	}
 
+	public function escuelasabaticaAction() {
+		$this->view->title = sprintf(_('Club %s'), 'Escuela Sabatica');
+		$this->view->subTitle = sprintf(_('Members of the Escuela Sabatica %s'), 'Nuevo Palmar');
+	}
+
 	/**
 	 *
 	 * This action shows the form to view the profile of the Directive.
