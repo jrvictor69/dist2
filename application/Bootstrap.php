@@ -11,13 +11,11 @@
 class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
 
 	/**
-	 * 
 	 * @var Zend_View
 	 */
 	private $view;
 
 	/**
-	 * 
 	 * Init autoload the resources
 	 */
 	public function _initAutoloadPackage() {
@@ -27,7 +25,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
 	}
 
 	/**
-	 * 
 	 * Init autoload the resources ZendX_JQuery_View_Helper
 	 */
 	public function _initViewResource() {
@@ -41,7 +38,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
 	}
 
 	/**
-	 * 
 	 * Config zend navigation
 	 */
 	public function _initNavigation() {
@@ -54,9 +50,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
 		Zend_Registry::set('navigation', $navigation);
 		$this->view->navigation($navigation);
 	}
-	
+
 	/**
-	 *
 	 * Append scripts file to layout
 	 */
 	public function _initHeadScriptAndStyle() {
@@ -92,7 +87,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
 	}
 
 	/**
-	 * 
 	 * Register plugins
 	 */
 	public function _initRegisterPlugin() {
@@ -115,7 +109,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
 	}
 
 	/**
-	 * 
 	 * Init action helpers
 	 */
 	public function _initActionHelper() {
@@ -125,7 +118,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
 	}
 
 	/**
-	 * 
 	 * Init Config
 	 */
 	protected function _initConfig() {
@@ -133,12 +125,20 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
 		Zend_Registry::set('config', $config);
 		return $config;
 	}
-	
-	 protected function _initLayoutHelper() {
-//        $this->bootstrap('frontController');
-//        $this->bootstrap('frontController');
-//        $layout = Zend_Controller_Action_HelperBroker::addHelper(
-//            new ModuleLayoutLoader());
+
+	protected function _initLayoutHelper() {
+// 		$this->bootstrap('frontController');
+// 		$this->bootstrap('frontController');
+// 		$layout = Zend_Controller_Action_HelperBroker::addHelper(new ModuleLayoutLoader());
+	}
+
+	protected function _initTranslations() {
+		Zend_Loader::loadClass('Zend_Translate');
+		$lang = new Zend_Translate('gettext', APPLICATION_PATH.'/configs/language/es/menu.mo','en_US');
+		Zend_Registry::set('Zend_Translate', $lang);
+
+// 		$lang_msm = new Zend_Translate('gettext', APPLICATION_PATH.'/configs/language/es/LC_MESSAGES/msmform.mo','en_US');
+// 		Zend_Validate_Abstract::setDefaultTranslator($lang_msm);
 	}
 
 }
