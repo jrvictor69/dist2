@@ -58,7 +58,7 @@ h2 {
     #tabs a:hover span {
       background-position:100% -42px;
       }
-      
+
 /*@autor victor*/
 #tabs ul li a.active {background-position:0% -42px;}
 #tabs ul li a.active span {background-position:100% -42px;}

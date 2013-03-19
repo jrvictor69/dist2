@@ -77,7 +77,7 @@ class App_Controller_Plugin_ViewSetup extends Zend_Controller_Plugin_Abstract {
 				$view->navigation($navigation);
 				Zend_Registry::set('navigation', $navigation);
 				$layout->activeProtocol = TRUE;
-				
+
 				$menuPrincipal = $navigation->findBy('id', $request->getParam('type'));
 				$menuPrincipal->setActive(TRUE);
 			} else {

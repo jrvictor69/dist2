@@ -257,7 +257,7 @@ class Guest_IndexController extends App_Controller_Action {
 		if (!empty($filterParams['name'])) {
 			$filters[] = array('field' => 'name', 'filter' => '%'.$filterParams['name'].'%', 'operator' => 'LIKE');
 		}
-				
+
 		return $filters;
 	}
 	

@@ -46,7 +46,7 @@ class Admin_NewsController extends App_Controller_Action {
         		$newsMapper = new Model_NewsMapper();
         		if (!$newsMapper->verifyExistTitle($formData['title'])) {
         			$fileName = $_FILES['imageFile']['name'];
-        			
+
         			$imageFile = $form->getElement('imageFile');
         			try {
 		 				$imageFile->receive();

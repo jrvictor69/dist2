@@ -30,7 +30,7 @@
 			   	<visionMission>
 			   		<label>Vision  Mission</label>
 			   		<controller>Whowe</controller>
-			   		<action>visionmission</action>  
+			   		<action>visionmission</action>
 			    </visionMission>
 		    	<logo>
 			   		<label>Our Logo</label>

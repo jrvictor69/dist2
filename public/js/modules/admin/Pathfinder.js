@@ -123,7 +123,7 @@ com.em.Pathfinder.prototype = {
 				"sEmptyTable": "No Catagory found."
 			},
 			"fnDrawCallback": function() {
-				clickToUpdate('#tblCategory a[id^=update-category-]');
+				clickToUpdate('#tblPathfinder a[id^=update-pathfinder-]');
 			},
 			
 			"fnServerData": function (sSource, aoData, fnCallback ) { 
@@ -153,13 +153,14 @@ com.em.Pathfinder.prototype = {
 		//Sets every element of the table headers
 		columns.push({bVisible:false});
 		columns.push({
-			"sWidth": "25%",
+			"sWidth": "15%",
 			"bSercheable": "true",
 			fnRender : function (oObj){
 				return '<a id="update-pathfinder-'+oObj.aData[0]+'" href="'+url.toUpdate+'/id/'+oObj.aData[0]+'">'+oObj.aData[1]+'</a>';
 				}
 			});
-		columns.push({"sWidth": "53%"});
+		columns.push({"sWidth": "20%"});
+		columns.push({"sWidth": "43%"});
 		columns.push({"sWidth": "10%"});
 		columns.push({"sWidth": "10%"});
 		columns.push({
@@ -191,7 +192,7 @@ com.em.Pathfinder.prototype = {
 	configureDialogForm: function(selector) {with (this) {
 		dialogForm = $(selector).dialog({
 			autoOpen: false,
-			height: 165,
+			height: 320,
 			width: 350,
 			modal: false,
 			close: function(event, ui) {

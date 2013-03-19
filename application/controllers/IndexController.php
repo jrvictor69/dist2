@@ -29,7 +29,7 @@ class IndexController extends App_Controller_Action {
 		$pictures = $pictureMapper->findByCriteria();
 		$this->view->pictures = $pictures;				        
     }
-    
+
 	public function aboutAction() {
 		
 	}
@@ -38,4 +38,3 @@ class IndexController extends App_Controller_Action {
 		
 	}
 }
-

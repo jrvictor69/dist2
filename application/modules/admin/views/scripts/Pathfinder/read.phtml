@@ -1,47 +1,48 @@
 <?php $this->headScript()->appendFile($this->baseUrl() . "/js/lib/ajax-upload/ajaxupload.js","text/javascript");?>
-<?php $this->headScript()->appendFile($this->baseUrl() . "/js/modules/admin/Category.js","text/javascript");?>
+<?php $this->headScript()->appendFile($this->baseUrl() . "/js/modules/admin/Pathfinder.js","text/javascript");?>
 <div style="margin:20px;">
-	<?php echo $this->tableHeader('filterHeader', _("Filter Category"));?>
+	<?php echo $this->tableHeader('filterHeader', _("Filter Club Pathfinder"));?>
 	<div id="containerFormFilter">
 		<?php echo $this->formFilter; ?>
 	</div>
 	<br>
-	<?php echo $this->tableHeader('categoryHeader', _("Categories"));?>
-	<?php echo $this->tableList("tblCategory");?>	
+	<?php echo $this->tableHeader('pathfinderHeader', _("Club Pathfinders"));?>
+	<?php echo $this->tableList("tblPathfinder");?>	
 	<div class="buttons right">
-		<?php echo $this->buttonRemove("delete-category", $this->translate('Remove'), $this->url(array('action'=>'delete')));?>
-		<?php echo $this->buttonAdd("create-category", $this->translate('Add'), $this->url(array('action'=>'create')));?>
+		<?php echo $this->buttonRemove("delete-pathfinder", $this->translate('Remove'), $this->url(array('action'=>'delete')));?>
+		<?php echo $this->buttonAdd("create-pathfinder", $this->translate('Add'), $this->url(array('action'=>'create')));?>
 	</div>
-		
+
 	<div id="dialog"><!-- Loads ajax dialog form --></div>
 </div>
-
+<?php //echo $this->imagelogo;?>
 <script type="text/javascript">
 	$(document).ready(function() {
-	var category = new com.em.Category();
-			
+	var pathfinder = new com.em.Pathfinder();
+
 	// network
-	category.setUrl({
+	pathfinder.setUrl({
 		toTable : '<?php echo $this->url(array('action'=>'read-items'));?>',
 		toBase : '<?php echo $this->baseUrl(); ?>',
 		toUpdate : '<?php echo $this->url(array('action'=>'update')); ?>',
 		toAutocomplete : '<?php echo $this->url(array('action'=>'autocomplete'));?>'
 	});
-	
+
 	var headers = new Object();
 	headers.headerArray = new Array(
 		'<?php echo $this->translate('Name'); ?>',
-		'<?php echo $this->translate('Description'); ?>',
-		'<?php echo $this->translate('Created'); ?>',
+		'<?php echo $this->translate('Text bible'); ?>',
+		'<?php echo $this->translate('Address'); ?>',
+		'<?php echo $this->translate('Changed'); ?>',
 		'<?php echo $this->translate('Changed'); ?>');
-	category.setHeaders(headers);
+	pathfinder.setHeaders(headers);
 	// configuration of widgets
-	category.configureTable('#tblCategory', true);
-	
+	pathfinder.configureTable('#tblPathfinder', true);
+
 	// CRUD
-	category.clickToAdd('#create-category');
-	category.clickToUpdate('#tblCategory a[id^=update-category-]');
-	category.clickToDelete('#delete-category');
-	category.configureAuto('input#nameFilter');
+	pathfinder.clickToAdd('#create-pathfinder');
+	pathfinder.clickToUpdate('#tblPathfinder a[id^=update-pathfinder-]');
+	pathfinder.clickToDelete('#delete-pathfinder');
+//	pathfinder.configureAuto('input#nameFilter');
 });
 </script>
