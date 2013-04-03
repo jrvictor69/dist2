@@ -38,9 +38,9 @@
 						<type>search</type>
 					</params>
 				</history>
-			</pages>			
+			</pages>
 		</search>
-		
+
 		<log>
 			<id>log</id>
 			<label>Log</label>
@@ -50,7 +50,7 @@
 			<params>
 				<type>log</type>
 			</params>
-			<pages>				
+			<pages>
 				<archive>
 					<label>Archive</label>
 					<module>member</module>
@@ -60,7 +60,7 @@
 						<type>log</type>
 					</params>
 				</archive>
-			</pages>			
+			</pages>
 		</log>
 	</navigation>
 </config>

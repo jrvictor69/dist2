@@ -1,57 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
-    <navigation>
-    	<home>
-	   		<id>home</id>
+	<navigation>
+		<home>
+			<id>home</id>
 			<label>Home</label>
 			<controller>Index</controller>
 			<action>home</action>
 			<pages>
-		    	<home>
-			   		<label>Home</label>
-			   		<controller>Index</controller>
-			   		<action>home</action>
-			   	</home>
-	   		</pages>   		
-    	</home>
-    	
-    	<whowe>
+				<home>
+					<label>Home</label>
+					<controller>Index</controller>
+					<action>home</action>
+				</home>
+			</pages>
+		</home>
+
+		<whowe>
 			<id>whowe</id>
 			<label>Who We?</label>
 			<uri>#</uri>
-<!--	   		<action>index</action>-->
-<!--			<controller>whowe</controller>-->
-	   		<pages>
-		    	<history>
-			   		<label>Our History</label>			   		
-			   		<controller>Whowe</controller>
-			   		<action>history</action>
-			   	</history>
-			   	<visionMission>
-			   		<label>Vision  Mission</label>
-			   		<controller>Whowe</controller>
-			   		<action>visionmission</action>
-			    </visionMission>
-		    	<logo>
-			   		<label>Our Logo</label>
-			   		<controller>Whowe</controller>
-			   		<action>logo</action>    	
-			    </logo>
-			    <belief>
-			   		<label>Our Belief</label>		   		
+			<action>index</action>
+			<controller>whowe</controller>
+			<pages>
+				<history>
+					<label>Our History</label>
 					<controller>Whowe</controller>
-					<action>belief</action>    	
-			    </belief>
-	   		</pages>    		
-    	</whowe>
-    	
-    	<news>
-    		<label>News</label>	   		
+					<action>history</action>
+				</history>
+				<visionMission>
+					<label>Vision  Mission</label>
+					<controller>Whowe</controller>
+					<action>visionmission</action>
+				</visionMission>
+				<logo>
+					<label>Our Logo</label>
+					<controller>Whowe</controller>
+					<action>logo</action>
+				</logo>
+				<belief>
+					<label>Our Belief</label>
+					<controller>Whowe</controller>
+					<action>belief</action>
+				</belief>
+			</pages>
+		</whowe>
+
+		<news>
+			<label>News</label>
 			<controller>News</controller>
 			<action>index</action>
-    		<pages>
-     			<ja>
-     				<id>newsja</id>
+			<pages>
+				<ja>
+					<id>newsja</id>
 					<label>Young</label>
 					<controller>News</controller>
 					<action>read</action>
@@ -62,15 +62,15 @@
 					<action>guides</action>
 				</guides>
 			</pages>
-    	</news>
-    	
-    	<pathfinder>
-    		<id>pathfinder</id>
-    		<label>Conquistadores</label>	   		
+		</news>
+
+		<pathfinder>
+			<id>pathfinder</id>
+			<label>Conquistadores</label>
 			<uri>#</uri>
-    		<pages>
-     			<alas>
-     				<id>alas</id>
+			<pages>
+				<alas>
+					<id>alas</id>
 					<label>Alas de Orion</label>
 					<controller>Pathfinder</controller>
 					<action>alasorion</action>
@@ -106,6 +106,6 @@
 					<action>orion</action>
 				</orion>
 			</pages>
-    	</pathfinder>
-    </navigation>
+		</pathfinder>
+	</navigation>
 </config>
