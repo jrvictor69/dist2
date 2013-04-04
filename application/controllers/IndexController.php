@@ -18,23 +18,23 @@ class IndexController extends App_Controller_Action {
 		parent::init();
 	}
 
-    public function indexAction() {
+	public function indexAction() {
 		$this->_helper->redirector("home");
-    }
+	}
 
 	public function homeAction() {
 		$this->view->navigation()->getContainer()->findOneBy('id', 'home')->setActive(TRUE);
-		
+
 		$pictureMapper = new Model_PictureMapper();
 		$pictures = $pictureMapper->findByCriteria();
-		$this->view->pictures = $pictures;				        
-    }
+		$this->view->pictures = $pictures;
+	}
 
 	public function aboutAction() {
-		
+
 	}
-	
+
 	public function contactAction() {
-		
+
 	}
 }

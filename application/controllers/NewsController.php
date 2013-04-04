@@ -9,6 +9,7 @@
  */
 
 class NewsController extends App_Controller_Action {
+
 	/**
 	 * (non-PHPdoc)
 	 * @see App_Controller_Action::init()
@@ -19,42 +20,53 @@ class NewsController extends App_Controller_Action {
 		$response->insert("sidebar", $this->view->render("sidebar.phtml"));
 	}
 
-    public function indexAction() {
-//		$this->_helper->redirector("read");
-		$this->_helper->redirector('read', NULL, NULL, array('type'=>'news'));
-    }
-    
-	public function jaAction() {
-		$this->view->navigation()->getContainer()->findOneBy('id', 'newsja')->setActive(TRUE);
-	}
-    
-	public function readAction() {
-		$formFilter = new Form_SearchFilter();
-		$this->view->formFilter = $formFilter;
-		
+	/**
+	 * Shows all the latest news
+	 */
+	public function indexAction() {
 		$newsMapper = new Model_NewsMapper();
 		$news = $newsMapper->findByCriteria();
-		$this->view->news = $news; 
-    }
-    
-	public function resultAction() {
-		$this->view->navigation()->getContainer()->findOneBy('id', 'newsja')->setActive(TRUE);
-		
-		$formFilter = new Form_SearchFilter();
-		$this->view->formFilter = $formFilter;
-    }
-    
+		$this->view->news = $news;
+	}
+
+	/**
+	 * Shows the news at detail
+	 */
 	public function singleAction() {
 		$this->view->navigation()->getContainer()->findOneBy('id', 'newsja')->setActive(TRUE);
-		
+
 		$id = $this->_request->getParam('id', 0);
 		$newsMapper = new Model_NewsMapper();
 		$news = $newsMapper->find($id);
-		$this->view->news = $news;		
-    }
-    
+
+		if ($news->getImagename() == NULL) {
+			$news->setImagename('newsdefault.gif');
+		}
+
+		$this->view->news = $news;
+	}
+
+	public function jaAction() {
+		$this->view->navigation()->getContainer()->findOneBy('id', 'newsja')->setActive(TRUE);
+	}
+
+	public function readAction() {
+		$formFilter = new Form_SearchFilter();
+		$this->view->formFilter = $formFilter;
+
+		$newsMapper = new Model_NewsMapper();
+		$news = $newsMapper->findByCriteria();
+		$this->view->news = $news;
+	}
+
+	public function resultAction() {
+		$this->view->navigation()->getContainer()->findOneBy('id', 'newsja')->setActive(TRUE);
+
+		$formFilter = new Form_SearchFilter();
+		$this->view->formFilter = $formFilter;
+	}
+
 	/**
-	 * 
 	 * Outputs an XHR response containing all entries in news.
 	 * This action serves as a datasource for the read/index view
 	 * @xhrParam int filter_title
@@ -67,7 +79,7 @@ class NewsController extends App_Controller_Action {
 
 		$filterParams['nameFilter'] = $this->_getParam('filter_name', NULL);
 		$filters = $this->getFilters($filterParams);
-		
+
 		$start = $this->_getParam('iDisplayStart', 0);
         $limit = $this->_getParam('iDisplayLength', 10);
         $page = ($start + $limit) / $limit;
@@ -75,7 +87,7 @@ class NewsController extends App_Controller_Action {
 		$newsMapper = new Model_NewsMapper();
 		$news = $newsMapper->findByCriteria($filters, $limit, $start, $sortCol, $sortDirection);
 		$total = $newsMapper->getTotalCount($filters);
-		
+
 		$posRecord = $start+1;
 		$data = array();
 		foreach ($news as $information) {
@@ -85,7 +97,7 @@ class NewsController extends App_Controller_Action {
 				$changed = new Zend_Date($information->getChanged());
 				$changed = $changed->toString("dd.MM.YYYY");
 			}
-			
+
 			$row = array();
 			$row[] = $information->getId();
 			$row[] = $information->getTitle();
@@ -100,9 +112,9 @@ class NewsController extends App_Controller_Action {
 		$this->stdResponse->aaData = $data;
 		$this->_helper->json($this->stdResponse);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * Returns an associative array where:
 	 * field: name of the table field
 	 * filter: value to match
@@ -115,11 +127,11 @@ class NewsController extends App_Controller_Action {
 		if (empty($filterParams)) {
 			return $filters;
 		}
-				
+
 		if (!empty($filterParams['nameFilter'])) {
 			$filters[] = array('field' => 'title', 'filter' => '%'.$filterParams['nameFilter'].'%', 'operator' => 'LIKE');
 		}
-				
+
 		return $filters;
 	}
 }
