@@ -10,89 +10,77 @@
  */
 
 class Model_News extends Model_Entity {
-	
+
 	/**
-	 * 
 	 * @var string
 	 */
 	private $title;
-	
+
 	/**
-	 * 
 	 * @var string
 	 */
 	private $summary;
-	
+
 	/**
-	 * 
 	 * @var string
 	 */
 	private $contain;
-	
+
 	/**
-	 * 
 	 * @var string
 	 */
 	private $fount;
 
 	/**
-	 * 
 	 * @var string
 	 */
 	private $imagename;
-	
+
 	/**
-	 * 
 	 * @var date
 	 */
 	private $newsdate;
-	
+
 	/**
-	 * 
 	 * @var int
 	 */
 	private $createdBy;
-	
+
 	/**
-	 * 
 	 * @var int
 	 */
 	private $changedBy;
-	
+
 	/**
-	 * 
 	 * Id of the Category this model is associated with.
 	 * @var int
 	 */
 	private $categoryId;
-	
+
 	/**
-	 * 
 	 * Category this model is associated with.
 	 * @var Model_Category
 	 */
 	private $category;
-	
+
 	/**
-	 * 
 	 * Id of the Managerial this model is associated with.
 	 * @var int
 	 */
 	private $managerialId;
-	
+
 	/**
-	 * 
 	 * Managerial this model is associated with.
 	 * @var Model_Managerial
 	 */
 	private $managerial;
-	
+
 	public function __construct(array $options = null) {
-        if (is_array($options)) {
-            $this->setOptions($options);
-        }
-    }
-    
+		if (is_array($options)) {
+			$this->setOptions($options);
+		}
+	}
+
 	/**
 	 * @return string
 	 */
@@ -167,7 +155,7 @@ class Model_News extends Model_Entity {
 	/**
 	 * @param string $imagename
 	 * @return Model_News
-	 * 
+	 *
 	 */
 	public function setImagename($imagename) {
 		$this->imagename = $imagename;
@@ -221,7 +209,7 @@ class Model_News extends Model_Entity {
 		$this->changedBy = $changedBy;
 		return $this;
 	}
-	
+
 	/**
 	 * @return Model_Category
 	 */
@@ -239,7 +227,7 @@ class Model_News extends Model_Entity {
 		$this->categoryId = $category->getId();
 		return $this;
 	}
-	
+
 	/**
 	 * @return Model_Managerial
 	 */

@@ -104,6 +104,18 @@ class Admin_NewsController extends App_Controller_Action {
 				$news = $newsMapper->find($id);
 				if ($news != NULL) {//security
 					if (!$newsMapper->verifyExistTitle($formData['title']) || $newsMapper->verifyExistIdAndTitle($id, $formData['title'])) {
+						$fileName = $_FILES['imageFile']['name'];
+						if ($fileName != NULL) {
+							$imageFile = $form->getElement('imageFile');
+							try {
+								$imageFile->receive();
+							} catch (Zend_File_Transfer_Exception $e) {
+								$e->getMessage();
+							}
+						} else {
+							$fileName = $news->getImagename();
+						}
+
 						// Managerial
 						$managerialId = Zend_Auth::getInstance()->getIdentity()->id;
 						$managerial = new Model_Managerial();
@@ -119,7 +131,7 @@ class Admin_NewsController extends App_Controller_Action {
 							->setFount($formData['fount'])
 							->setTitle($formData['title'])
 							->setContain($formData['contain'])
-							->setImagename("image test")
+							->setImagename($fileName)
 							->setChangedBy($managerialId)
 							;
 
@@ -155,7 +167,6 @@ class Admin_NewsController extends App_Controller_Action {
 	}
 
 	/**
-	 *
 	 * This action returns content to load the form
 	 */
 	public function loadAction() {
