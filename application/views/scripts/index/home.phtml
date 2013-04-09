@@ -13,7 +13,7 @@
             <li><img data-frame="/image/upload/galleryview/photos/crops/bp2.jpg" src="/image/upload/galleryview/photos/bp2.jpg" title="Is He Still There?!" data-description="One morning while on the Big Island of Hawaii, i exploring my surroundings to see if i could find something to photograph. I almost went back inside when something on this huge palm tree leaf caught my eye. I stayed around and it was this little gecko, startled by my presence he was hidden between the ridges of the leaf. He would pop his head up periodically to check his surroundings, as soon as he saw i was still there he would hide again. We played this game for a while until i got the shot. Holualoa big Island, Hawaii. (Photo and caption by Lorenzo Menendez/Nature/National Geographic Photo Contest)" /></li>
             <li><img data-frame="http://www.spaceforaname.com/galleryview/img/photos/crops/bp4.jpg" src="http://www.spaceforaname.com/galleryview/img/photos/bp4.jpg" title="Noni Nectar For Green Gecko" data-description="Madagascar Gold Dust Day Gecko licking nectar from a young noni fruit in Kailua, Hawaii. These geckos were living all around the hale' we were staying in, enjoying the noni and basking on the railing and sunny steps to our place. They were very shy mostly, except this one must have enjoyed the nectar so much as to let me get a shot of their favorite activity. They seemed to tend the noni very attentively throughout the day. August 2010, Chandra S Sherin. Kona Village Resort, Kailua - Kona, Hawaii. (Photo and Caption by Chandra Sherin/Nature/National Geographic Photo Contest)" /></li>
             <li><img data-frame="http://www.spaceforaname.com/galleryview/img/photos/crops/bp7.jpg" src="http://www.spaceforaname.com/galleryview/img/photos/bp7.jpg" title="Flight of an Eagle Owl" data-description="A large adult eagle owl in flight. Lingfield, Surrey, UK. (Photo and caption by Mark Bridger/Nature/National Geographic Photo Contest)" /></li>
-            <li><img data-frame="http://www.spaceforaname.com/galleryview/img/photos/crops/bp14.jpg" src="http://www.spaceforaname.com/galleryview/img/photos/bp14.jpg" title="Winter Lollipops" data-description="Winter is extremely beautiful in Lithuania. It was an early morning and minus 25 degrees Celsius outside. This landscape feels out of this world, but in fact it's in the outskirts of my home city, Kaunas—just a mile away from my house. Oftentimes beauty lies just a step away from our door. Kaunas, Lithuania (Photo and caption by Matas Juras/Nature/National Geographic Photo Contest)" /></li>
+            <li><img data-frame="http://www.spaceforaname.com/galleryview/img/photos/crops/bp14.jpg" src="http://www.spaceforaname.com/galleryview/img/photos/bp14.jpg" title="Winter Lollipops" data-description="Winter is extremely beautiful in Lithuania. It was an early morning and minus 25 degrees Celsius outside. This landscape feels out of this world, but in fact it's in the outskirts of my home city, Kaunasï¿½just a mile away from my house. Oftentimes beauty lies just a step away from our door. Kaunas, Lithuania (Photo and caption by Matas Juras/Nature/National Geographic Photo Contest)" /></li>
             <li><img data-frame="http://www.spaceforaname.com/galleryview/img/photos/crops/bp26.jpg" src="http://www.spaceforaname.com/galleryview/img/photos/bp26.jpg" title="Day of Youth" data-description="Muslim girls at the day of the youth on the 11th of February. The girls are walking in a procession to the mayor of the village and are singing about the power of Cameroon. Lagdo, Cameroon. (Photo and caption by Ronnie Dankelman/People/National Geographic Photo Contest)" /></li>
             <li><img data-frame="http://www.spaceforaname.com/galleryview/img/photos/crops/bp27.jpg" src="http://www.spaceforaname.com/galleryview/img/photos/bp27.jpg" title="Sunbathing Underwater" data-description="The sun gives us energy even underwater. This image was captured during freediving (diving on a single breath without scuba gear) in the Red Sea. Eel Garden, Dahab, Sinai, Egypt. (Photo and caption by Vaclav Krpelik/People/National Geographic Photo Contest)" />
             <li><img data-frame="http://www.spaceforaname.com/galleryview/img/photos/crops/bp28.jpg" src="http://www.spaceforaname.com/galleryview/img/photos/bp28.jpg" title="Untitled" data-description="Children filled with happiness playing in the water. Brazil. (Photo and caption by Seth Solo/People/National Geographic Photo Contest)" />
@@ -26,10 +26,10 @@
         <br>
         <ul id="myGallery2">
         <?php foreach ($this->pictures as $picture) {?>
-        	<li><img data-frame="<?php echo $picture->getSrcCrops() . $picture->getFile()->getFilename();?>" src="<?php echo $picture->getSrc() . $picture->getFile()->getFilename();?>" title="<?php echo $picture->getTitle();?>" data-description="<?php echo $picture->getDescription();?>"/></li>
-        <?php }?> 
+			<li><img data-frame="<?php echo $picture->getSrcCrop() . $picture->getFilenameCrop();?>" src="<?php echo $picture->getSrc() . $picture->getFilename();?>" title="<?php echo $picture->getTitle();?>" data-description="<?php echo $picture->getDescription();?>"/></li>
+        <?php }?>
         </ul>
- 
+
  		<br>
 
 <!-- TABS -->
@@ -71,11 +71,11 @@
 		</ul>
 	</div>
 	<!-- ENDS posts -->
-								
+
 	<!-- Information  -->
 	<div>
 		<div class="plain-text">
-			<h6>Pellentesque habitant morbi tristique senectus et netus et malesuada.</h6> 
+			<h6>Pellentesque habitant morbi tristique senectus et netus et malesuada.</h6>
 			<p>Fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Cursus faucibus, tortor neque egestas augue, eu vulputate magna eros eu erat. Aliquam erat volutpat. Nam dui mi, tincidunt quis, accumsan porttitor, facilisis luctus, metus. </p>
 			<p>Fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Cursus faucibus, tortor neque egestas augue, eu vulputate magna eros eu erat. Aliquam erat volutpat. Nam dui mi, tincidunt quis, accumsan porttitor, facilisis luctus, metus.Fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper <a href="single.html">This is a link</a>. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Cursus faucibus, tortor neque egestas augue, eu vulputate magna eros eu erat. Aliquam erat volutpat. Nam dui mi, tincidunt quis, accumsan porttitor, facilisis luctus, metus. </p>
 			<a href="single.html" class="link-button"><span>Read more &#8594;</span></a>
@@ -84,7 +84,7 @@
 	<!-- ENDS Information -->
 
 	<!-- Posts -->
-	
+
 	<div>
 		<ul class="blocks-thumbs thumbs-rollover">
 			<li>
@@ -113,9 +113,9 @@
 			</li>
 		</ul>
 	</div>
-	<!-- ENDS posts -->								
+	<!-- ENDS posts -->
 </div>
-<!-- ENDS TABS -->      
+<!-- ENDS TABS -->
 <script type="text/javascript">
 	$(function(){
 		$('#myGallery').galleryView({
@@ -125,7 +125,7 @@
 		show_panels: true, 				//BOOLEAN - flag to show or hide panel portion of gallery
 		show_panel_nav: true, 			//BOOLEAN - flag to show or hide panel navigation buttons
 		enable_overlays: true, 			//BOOLEAN - flag to show or hide panel overlays
-		
+
 		panel_width: 800, 				//INT - width of gallery panel (in pixels)
 		panel_height: 400, 				//INT - height of gallery panel (in pixels)
 		panel_animation: 'slide', 		//STRING - animation method for panel transitions (crossfade,fade,slide,none)
@@ -139,7 +139,7 @@
 		show_filmstrip_nav: true, 		//BOOLEAN - flag indicating whether to display navigation buttons
 		enable_slideshow: true,			//BOOLEAN - flag indicating whether to display slideshow play/pause button
 		autoplay: true,					//BOOLEAN - flag to start slideshow on gallery load
-		show_captions: true, 			//BOOLEAN - flag to show or hide frame captions	
+		show_captions: true, 			//BOOLEAN - flag to show or hide frame captions
 		filmstrip_size: 3, 				//INT - number of frames to show in filmstrip-only gallery
 		filmstrip_style: 'scroll', 		//STRING - type of filmstrip to use (scroll = display one line of frames, scroll filmstrip if necessary, showall = display multiple rows of frames if necessary)
 		filmstrip_position: 'bottom', 	//STRING - position of filmstrip within gallery (bottom, top, left, right)
@@ -152,74 +152,74 @@
 		infobar_opacity: 1				//FLOAT - transparency for info bar
 		});
 
-		$('#myGallery2').galleryView({
-			transition_speed: 1000,
-			transition_interval: 2000,
-			easing: 'swing',
-			show_panels: true,
-			show_panel_nav: true,
-			enable_overlays: true,
-			
-			panel_width: 800,
-			panel_height: 400,
-			panel_animation: 'slide',
-			panel_scale: 'crop',
-			overlay_position: 'bottom',
-			pan_images: true,
-			pan_style: 'drag',
-			pan_smoothness: 15,
-			start_frame: 1,
-			show_filmstrip: true,
-			show_filmstrip_nav: true,
-			enable_slideshow: true,
-			autoplay: true,
-			show_captions: true,	
-			filmstrip_size: 3,
-			filmstrip_style: 'scroll',
-			filmstrip_position: 'bottom',
-			frame_width: 164,
-			frame_height: 80,
-			frame_opacity: 0.5,
-			frame_scale: 'crop',
-			frame_gap: 5,
-			show_infobar: true,
-			infobar_opacity: 1
-			});
+	$('#myGallery2').galleryView({
+		transition_speed: 1000,
+		transition_interval: 2000,
+		easing: 'swing',
+		show_panels: true,
+		show_panel_nav: true,
+		enable_overlays: true,
+
+		panel_width: 800,
+		panel_height: 400,
+		panel_animation: 'slide',
+		panel_scale: 'crop',
+		overlay_position: 'bottom',
+		pan_images: true,
+		pan_style: 'drag',
+		pan_smoothness: 15,
+		start_frame: 1,
+		show_filmstrip: true,
+		show_filmstrip_nav: true,
+		enable_slideshow: true,
+		autoplay: true,
+		show_captions: true,
+		filmstrip_size: 3,
+		filmstrip_style: 'scroll',
+		filmstrip_position: 'bottom',
+		frame_width: 164,
+		frame_height: 80,
+		frame_opacity: 0.5,
+		frame_scale: 'crop',
+		frame_gap: 5,
+		show_infobar: true,
+		infobar_opacity: 1
+		});
 	});
 
 
 // tabs ------------------------------------------------------ //
 
 //	$( "#tabs2" ).tabs();
-	
-	
+
+
 	$("ul.tabs").tabs("div.panes > div", {effect: 'fade'});
-	
+
 	// Thumbs rollover --------------------------------------------- //
-	
+
 	$('.thumbs-rollover li a img').hover(function(){
 		// on rollover
-		$(this).stop().animate({ 
-			opacity: "0.5" 
+		$(this).stop().animate({
+			opacity: "0.5"
 		}, "fast");
-	} , function() { 
+	} , function() {
 		// on out
 		$(this).stop().animate({
-			opacity: "1" 
+			opacity: "1"
 		}, "fast");
 	});
 
 // Blog posts rollover --------------------------------------------- //
-	
+
 //	$('#posts .post').hover(function(){
 //		// on rollover
-//		$(this).children('.thumb-shadow').children('.post-thumbnail').children(".cover").stop().animate({ 
+//		$(this).children('.thumb-shadow').children('.post-thumbnail').children(".cover").stop().animate({
 //			left: "312"
 //		}, "fast");
-//	} , function() { 
+//	} , function() {
 //		// on out
 //		$(this).children('.thumb-shadow').children('.post-thumbnail').children(".cover").stop().animate({
-//			left: "0" 
+//			left: "0"
 //		}, "fast");
 //	});
 </script>

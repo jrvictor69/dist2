@@ -25,8 +25,9 @@ class IndexController extends App_Controller_Action {
 	public function homeAction() {
 		$this->view->navigation()->getContainer()->findOneBy('id', 'home')->setActive(TRUE);
 
-		$pictureMapper = new Model_PictureMapper();
-		$pictures = $pictureMapper->findByCriteria();
+		$pictureRepo = $this->_entityManager->getRepository('Model\Picture');
+		$pictures = $pictureRepo->findAll();
+
 		$this->view->pictures = $pictures;
 	}
 
