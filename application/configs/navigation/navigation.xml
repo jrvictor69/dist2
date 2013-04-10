@@ -5,12 +5,12 @@
 			<id>home</id>
 			<label>Home</label>
 			<controller>Index</controller>
-			<action>home</action>
+			<action>index</action>
 			<pages>
 				<home>
 					<label>Home</label>
 					<controller>Index</controller>
-					<action>home</action>
+					<action>index</action>
 				</home>
 			</pages>
 		</home>

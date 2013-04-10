@@ -19,7 +19,12 @@ class IndexController extends App_Controller_Action {
 	}
 
 	public function indexAction() {
-		$this->_helper->redirector("home");
+	    $this->view->navigation()->getContainer()->findOneBy('id', 'home')->setActive(TRUE);
+
+	    $pictureRepo = $this->_entityManager->getRepository('Model\Picture');
+	    $pictures = $pictureRepo->findAll();
+
+	    $this->view->pictures = $pictures;
 	}
 
 	public function homeAction() {
